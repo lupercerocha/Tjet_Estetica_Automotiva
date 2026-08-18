@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T-Jet Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;0,900;1,900&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TEMA ============ */
+:root{
+  /* escuro — base navy TABBOR, mais azul que preto */
+  --fundo:#0A1B2E;
+  --fundo2:#0D2038;
+  --painel:#102A46;
+  --painel2:#153352;
+  --linha:#1E4368;
+  --azul:#2E9BF0;
+  --azul-forte:#17A2F5;
+  --teal:#00C5C8;
+  --texto:#E4EEF8;
+  --texto2:#A9C2D8;
+  --fumaca:#7B9AB8;
+  --ok:#2DD4A7;
+  --alerta:#FFB65C;
+  --perigo:#F4685F;
+  --vidro:rgba(126,158,190,.4);
+  --sombra:0 18px 40px rgba(2,10,22,.5);
+  --sombra-sm:0 4px 14px rgba(2,10,22,.35);
+}
+html[data-theme="light"]{
+  /* claro — pastéis sobre azul suave */
+  --fundo:#EEF4FB;
+  --fundo2:#F6FAFE;
+  --painel:#FFFFFF;
+  --painel2:#E9F1FB;
+  --linha:#D6E5F4;
+  --azul:#1B7FD1;
+  --azul-forte:#1273C7;
+  --teal:#0FA9AC;
+  --texto:#0C2338;
+  --texto2:#3D5A75;
+  --fumaca:#6484A2;
+  --ok:#0FA47E;
+  --alerta:#D98A22;
+  --perigo:#D9544B;
+  --vidro:rgba(120,155,190,.28);
+  --sombra:0 14px 34px rgba(20,62,110,.10);
+  --sombra-sm:0 2px 10px rgba(20,62,110,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--fundo);color:var(--texto);
+  font-family:'Barlow',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;
+}
+.mono{font-family:'JetBrains Mono',monospace}
+h1,h2,h3{font-family:'Archivo',sans-serif;letter-spacing:-.02em;line-height:1.15}
+
+/* ============ ESTRUTURA ============ */
+.app{display:grid;grid-template-columns:1fr;min-height:100vh}
+@media(min-width:900px){
+  .app{grid-template-columns:252px 1fr}
+}
+
+/* ---- menu lateral (desktop) ---- */
+.side{
+  display:none;background:var(--fundo2);border-right:1px solid var(--linha);
+  padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+@media(min-width:900px){.side{display:block}}
+.side-brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;border-bottom:1px solid var(--linha);margin-bottom:18px}
+.side-brand h1{font-weight:900;font-style:italic;font-size:1.1rem;text-transform:uppercase}
+.side-brand small{display:block;font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.16em;color:var(--fumaca);text-transform:uppercase;margin-top:2px}
+.side-grp{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--fumaca);padding:0 10px;margin:18px 0 7px}
+.side-grp:first-of-type{margin-top:0}
+.snav{
+  display:flex;align-items:center;gap:11px;width:100%;background:none;border:0;cursor:pointer;
+  padding:9px 10px;border-radius:10px;color:var(--texto2);font:inherit;font-size:.92rem;text-align:left;transition:.18s;
+}
+.snav:hover{background:var(--painel);color:var(--texto)}
+.snav.on{background:color-mix(in srgb,var(--azul) 16%,transparent);color:var(--azul);font-weight:600}
+.snav svg{flex:none;stroke:currentColor}
+.snav .cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.62rem;background:var(--alerta);color:#20140A;border-radius:100px;padding:1px 7px;font-weight:700}
+
+/* ---- topo ---- */
+.top{
+  position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--fundo) 90%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--linha);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.top-brand{display:flex;align-items:center;gap:10px}
+@media(min-width:900px){.top-brand{display:none}}
+.top-brand h1{font-weight:900;font-style:italic;font-size:1rem;text-transform:uppercase}
+.top-title{display:none}
+.top.alt .top-brand{display:none}
+.top.alt .top-title{display:block}
+@media(min-width:900px){
+  .top-title{display:block}
+  .top-title h2{font-weight:800;font-size:1.15rem}
+  .top-title span{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fumaca)}
+}
+.top-r{display:flex;align-items:center;gap:8px}
+.ib{
+  width:36px;height:36px;border-radius:11px;background:var(--painel);border:1px solid var(--linha);
+  display:flex;align-items:center;justify-content:center;color:var(--fumaca);cursor:pointer;transition:.18s;flex:none;
+}
+.ib:hover{border-color:var(--azul);color:var(--azul)}
+.ib svg{stroke:currentColor}
+
+/* ---- conteúdo ---- */
+main{padding:18px 18px 96px;max-width:1180px;width:100%;margin:0 auto}
+@media(min-width:900px){main{padding:26px 30px 40px}}
+.hello{margin-bottom:18px}
+.hello h2{font-weight:900;font-style:italic;font-size:clamp(1.35rem,3.4vw,1.9rem);text-transform:uppercase}
+.hello p{color:var(--fumaca);font-size:.9rem;margin-top:3px}
+
+/* métricas */
+.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:700px){.metrics{grid-template-columns:repeat(4,1fr)}}
+.metric{
+  background:var(--painel);border:1px solid var(--linha);border-radius:15px;padding:15px 16px;
+  box-shadow:var(--sombra-sm);position:relative;overflow:hidden;
+}
+.metric::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--mc,var(--azul))}
+.metric .lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fumaca);margin-bottom:6px}
+.metric b{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.7rem;letter-spacing:-.03em;display:block;color:var(--mc,var(--azul))}
+.metric .sub{font-size:.75rem;color:var(--fumaca);margin-top:2px}
+
+/* insight */
+.insight{
+  display:flex;align-items:center;gap:13px;cursor:pointer;width:100%;text-align:left;font:inherit;color:inherit;
+  background:linear-gradient(120deg,color-mix(in srgb,var(--teal) 16%,var(--painel)),var(--painel) 62%);
+  border:1px solid color-mix(in srgb,var(--teal) 34%,var(--linha));border-radius:15px;padding:15px 16px;margin-bottom:24px;
+  box-shadow:var(--sombra-sm);transition:.2s;
+}
+.insight:hover{border-color:var(--teal)}
+.insight-ic{width:36px;height:36px;border-radius:11px;background:color-mix(in srgb,var(--teal) 20%,transparent);display:flex;align-items:center;justify-content:center;flex:none;color:var(--teal)}
+.insight b{font-family:'Archivo',sans-serif;font-weight:800;font-size:.92rem;display:block}
+.insight span{font-size:.8rem;color:var(--fumaca);display:block;margin-top:2px}
+.insight .arw{margin-left:auto;color:var(--teal);flex:none}
+
+/* módulos */
+.grp{margin-bottom:22px}
+.grp-lbl{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--fumaca);margin-bottom:10px;display:flex;align-items:center;gap:10px;
+}
+.grp-lbl::after{content:"";height:1px;background:var(--linha);flex:1}
+.mods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:640px){.mods{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1000px){.mods{grid-template-columns:repeat(6,1fr)}}
+.mod{
+  background:var(--painel);border:1px solid var(--linha);border-radius:15px;padding:16px 10px 13px;
+  display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;position:relative;
+  transition:transform .16s,border-color .16s,box-shadow .16s;box-shadow:var(--sombra-sm);
+}
+.mod:hover{border-color:color-mix(in srgb,var(--m) 55%,var(--linha));transform:translateY(-2px)}
+.mod:active{transform:scale(.97)}
+.mod-ic{
+  width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--m) 16%,transparent);color:var(--m);
+}
+html[data-theme="light"] .mod-ic{background:color-mix(in srgb,var(--m) 15%,#fff)}
+.mod-ic svg{stroke:currentColor}
+.mod .nm{font-family:'Archivo',sans-serif;font-weight:700;font-size:.72rem;text-align:center;line-height:1.2;color:var(--texto)}
+.mod .sub{font-size:.63rem;color:var(--fumaca);text-align:center;line-height:1.2}
+.badge{
+  position:absolute;top:9px;right:9px;background:var(--alerta);color:#20140A;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:700;
+  min-width:18px;height:18px;padding:0 5px;border-radius:100px;display:flex;align-items:center;justify-content:center;
+}
+
+/* barra inferior (celular) */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;
+  background:color-mix(in srgb,var(--fundo2) 94%,transparent);backdrop-filter:blur(14px);
+  border-top:1px solid var(--linha);padding:7px 6px calc(7px + env(safe-area-inset-bottom));
+}
+@media(min-width:900px){.tabbar{display:none}}
+.tab{
+  flex:1;background:none;border:0;cursor:pointer;color:var(--fumaca);font:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:11px;position:relative;transition:.18s;
+}
+.tab svg{stroke:currentColor}
+.tab span{font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase}
+.tab.on{color:var(--azul)}
+.tab .cnt{
+  position:absolute;top:2px;right:calc(50% - 20px);background:var(--alerta);color:#20140A;
+  font-size:.52rem;font-weight:700;min-width:15px;height:15px;padding:0 4px;border-radius:100px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.foot{text-align:center;padding:22px 0 4px}
+.foot span{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--fumaca);opacity:.7;letter-spacing:.12em}
+
+/* ============ TROCA DE TELAS ============ */
+.view{display:none}
+.view.on{display:block}
+.back-btn{display:none}
+.back-btn.show{display:flex}
+
+/* ============ TELA DE ENTRADA ============ */
+.scr-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.scr-head h2{font-weight:900;font-style:italic;font-size:clamp(1.3rem,3.2vw,1.75rem);text-transform:uppercase}
+.scr-head .ctrl{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;color:var(--fumaca);background:var(--painel);border:1px solid var(--linha);border-radius:100px;padding:5px 12px}
+.scr-head .ctrl b{color:var(--azul)}
+
+.card{background:var(--painel);border:1px solid var(--linha);border-radius:16px;padding:18px;box-shadow:var(--sombra-sm);margin-bottom:14px}
+.card-lbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fumaca);margin-bottom:12px}
+
+/* leitura de placa */
+.scanplate{width:100%;max-width:280px;margin:0 auto;background:linear-gradient(#FBFCFD,#E4EAEF);border:3px solid #0A0D12;border-radius:10px;padding:7px;box-shadow:0 12px 28px rgba(2,10,22,.4);position:relative;overflow:hidden}
+.scanplate-top{background:#1B44C8;color:#fff;border-radius:4px 4px 0 0;height:18px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.1em}
+.scanplate-num{font-family:'Archivo',sans-serif;font-weight:900;color:#0A0D12;text-align:center;font-size:clamp(1.5rem,6vw,2.1rem);letter-spacing:.05em;padding:7px 0 4px}
+.scanline{position:absolute;left:0;right:0;height:3px;top:0;background:linear-gradient(90deg,transparent,var(--teal),transparent);box-shadow:0 0 18px var(--teal);opacity:0}
+.scanning .scanline{animation:scan 1.3s cubic-bezier(.5,0,.5,1) forwards}
+@keyframes scan{0%{opacity:1;top:0}100%{opacity:0;top:100%}}
+.scan-cta{display:block;width:100%;max-width:280px;margin:12px auto 0;background:var(--azul);color:#fff;border:0;border-radius:11px;padding:11px;font-family:'Archivo',sans-serif;font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.02em;cursor:pointer;transition:.18s}
+.scan-cta:hover{filter:brightness(1.08)}
+.scan-hint{text-align:center;font-size:.72rem;color:var(--fumaca);margin-top:9px}
+
+.memo{max-width:280px;margin:14px auto 0;background:var(--painel2);border:1px solid var(--linha);border-radius:13px;padding:13px;opacity:0;transform:translateY(10px);transition:.4s}
+.memo.show{opacity:1;transform:none}
+.memo-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--linha);font-size:.82rem}
+.memo-row:last-child{border:0;padding-bottom:0}
+.memo-row span:first-child{color:var(--fumaca);font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding-top:2px}
+.memo-row span:last-child{font-weight:600;text-align:right}
+.memo-row .hl{color:var(--teal) !important}
+
+.divider-or{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--fumaca);font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
+.divider-or::before,.divider-or::after{content:"";height:1px;background:var(--linha);flex:1}
+
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.78rem;color:var(--fumaca);margin-bottom:6px}
+.field input[type=text],.field textarea{
+  width:100%;background:var(--painel2);border:1px solid var(--linha);border-radius:10px;padding:11px 12px;
+  font:inherit;font-size:.92rem;color:var(--texto);transition:.18s;
+}
+.field input[type=text]:focus,.field textarea:focus{outline:none;border-color:var(--azul)}
+.field textarea{resize:vertical;min-height:64px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  background:var(--painel2);border:1px solid var(--linha);border-radius:100px;padding:8px 14px;
+  font-size:.82rem;color:var(--texto2);cursor:pointer;transition:.16s;
+}
+.chip.on{background:color-mix(in srgb,var(--azul) 18%,transparent);border-color:var(--azul);color:var(--azul);font-weight:600}
+
+.color-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dot-color{width:26px;height:26px;border-radius:50%;border:2px solid var(--linha);cursor:pointer;flex:none;transition:.16s}
+.dot-color.on{border-color:var(--azul);transform:scale(1.12)}
+.cdot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:6px;border:1px solid rgba(255,255,255,.18);vertical-align:-1px}
+
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+@media(min-width:520px){.photos{grid-template-columns:repeat(6,1fr)}}
+.photo-add{
+  aspect-ratio:1;background:var(--painel2);border:1.5px dashed var(--linha);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;color:var(--fumaca);cursor:pointer;transition:.16s;
+}
+.photo-add:hover{border-color:var(--azul);color:var(--azul)}
+.photo-add.main{grid-column:span 3;aspect-ratio:auto;height:120px;flex-direction:column;gap:6px}
+@media(min-width:520px){.photo-add.main{grid-column:span 6}}
+.photo-add.main span{font-size:.66rem;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase}
+
+.svc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:var(--painel2);border:1px solid var(--linha);border-radius:12px;margin-bottom:11px}
+.svc-row b{font-size:.92rem}
+.svc-row .price{font-family:'JetBrains Mono',monospace;color:var(--fumaca);font-size:.85rem}
+.btn-outline{width:100%;background:none;border:1.5px dashed var(--linha);color:var(--texto2);border-radius:11px;padding:12px;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer;transition:.16s}
+.btn-outline:hover{border-color:var(--azul);color:var(--azul);border-style:solid}
+
+.checkline{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.85rem;color:var(--texto2);cursor:pointer}
+.checkline input{width:17px;height:17px;accent-color:var(--azul)}
+
+.datebtn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.datebtn{
+  display:flex;align-items:center;gap:9px;background:var(--painel2);border:1px solid var(--linha);border-radius:11px;
+  padding:11px 13px;color:var(--texto2);cursor:pointer;font-size:.85rem;transition:.16s;
+}
+.datebtn:hover{border-color:var(--azul)}
+.datebtn svg{color:var(--fumaca);flex:none}
+
+.mapcard{display:flex;align-items:center;gap:14px}
+.mapcard svg{flex:none}
+.mapcard .tx{flex:1}
+.mapcard .tx b{display:block;font-size:.88rem;margin-bottom:2px}
+.mapcard .tx span{font-size:.76rem;color:var(--fumaca)}
+
+.toggleline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toggleline .tx b{display:block;font-size:.88rem}
+.toggleline .tx span{font-size:.75rem;color:var(--fumaca)}
+.switch{position:relative;width:44px;height:25px;flex:none;background:var(--linha);border-radius:100px;border:0;cursor:pointer;transition:.2s}
+.switch::after{content:"";position:absolute;top:2.5px;left:2.5px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch.on{background:var(--azul)}
+.switch.on::after{left:21.5px}
+
+.entrar-btn{
+  width:100%;background:linear-gradient(120deg,var(--azul),var(--azul-forte));color:#fff;border:0;border-radius:13px;
+  padding:16px;font-family:'Archivo',sans-serif;font-weight:900;font-size:1rem;text-transform:uppercase;letter-spacing:.02em;
+  cursor:pointer;margin-top:6px;box-shadow:var(--sombra-sm);transition:.18s;
+}
+.entrar-btn:hover{filter:brightness(1.06)}
+
+/* ---------- autocomplete ---------- */
+.field{position:relative}
+.visits-pill{
+  display:inline-flex;align-items:center;gap:5px;background:color-mix(in srgb,var(--teal) 15%,transparent);
+  color:var(--teal);border:0;border-radius:100px;padding:3px 10px 3px 8px;font-size:.72rem;font-weight:600;
+  cursor:pointer;margin-left:8px;font-family:'Barlow',sans-serif;
+}
+.field-label-row{display:flex;align-items:center;margin-bottom:6px}
+.field-label-row label{margin:0}
+.suggest{
+  position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--painel);border:1px solid var(--linha);
+  border-radius:12px;box-shadow:var(--sombra);z-index:20;overflow:hidden;display:none;max-height:220px;overflow-y:auto;
+}
+.suggest.show{display:block}
+.sug-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;cursor:pointer;transition:.14s;border-bottom:1px solid var(--linha)}
+.sug-item:last-child{border-bottom:0}
+.sug-item:hover{background:var(--painel2)}
+.sug-item b{font-size:.85rem}
+.sug-item span{font-size:.7rem;color:var(--fumaca);font-family:'JetBrains Mono',monospace}
+.obs-chip{
+  display:inline-block;margin-top:8px;background:color-mix(in srgb,var(--alerta) 16%,transparent);color:var(--alerta);
+  border-radius:9px;padding:6px 10px;font-size:.76rem;
+}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(2,10,22,.6);backdrop-filter:blur(3px);z-index:80;display:none;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+@media(min-width:640px){.overlay{align-items:center}}
+.modal{
+  background:var(--painel);border:1px solid var(--linha);border-radius:20px 20px 0 0;width:100%;max-width:420px;
+  max-height:80vh;overflow-y:auto;padding:20px;transform:translateY(30px);opacity:0;transition:.28s;
+}
+@media(min-width:640px){.modal{border-radius:18px}}
+.overlay.show .modal{transform:none;opacity:1}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.modal-head h3{font-family:'Archivo',sans-serif;font-weight:800;font-size:1.05rem}
+.modal-close{width:30px;height:30px;border-radius:9px;background:var(--painel2);border:0;color:var(--fumaca);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.modal-sub{font-size:.78rem;color:var(--fumaca);margin-bottom:16px}
+.hist-item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--linha)}
+.hist-item:last-child{border:0}
+.hist-item b{font-size:.86rem;display:block}
+.hist-item .d{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--fumaca);margin-top:2px}
+.hist-item .v{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--teal);white-space:nowrap}
+
+/* ---------- serviços ---------- */
+.svc-catalogo{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.svc-chip{
+  background:var(--painel2);border:1px solid var(--linha);border-radius:11px;padding:9px 12px;cursor:pointer;
+  transition:.16s;font-size:.8rem;display:flex;flex-direction:column;gap:2px;min-width:118px;
+}
+.svc-chip:hover{border-color:var(--azul)}
+.svc-chip.added{opacity:.4;pointer-events:none}
+.svc-chip b{font-size:.8rem;color:var(--texto)}
+.svc-chip span{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--fumaca)}
+.svc-chip span.aberto{color:var(--alerta)}
+
+.svc-sel{display:none;margin-top:4px}
+.svc-sel.show{display:block}
+.svc-sel-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--painel2);border:1px solid var(--linha);border-radius:11px;margin-bottom:8px}
+.svc-sel-item .nm{flex:1;min-width:0;font-size:.85rem;font-weight:600}
+.svc-sel-item input.pinput{
+  width:82px;background:var(--painel);border:1px solid var(--linha);border-radius:8px;padding:6px 8px;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--texto);text-align:right;
+}
+.svc-sel-item .fixo{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--texto);width:82px;text-align:right}
+.svc-sel-item .rm{width:26px;height:26px;border-radius:8px;background:none;border:1px solid var(--linha);color:var(--fumaca);cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center}
+.svc-sel-item .rm:hover{border-color:var(--perigo);color:var(--perigo)}
+.svc-empty{font-size:.82rem;color:var(--fumaca);padding:6px 2px 14px}
+
+.svc-total{display:flex;align-items:center;justify-content:space-between;padding-top:14px;margin-top:4px;border-top:1px solid var(--linha)}
+.svc-total span:first-child{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fumaca)}
+.svc-total b{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.55rem;color:var(--teal);letter-spacing:-.02em}
+
+/* ---------- horário / fila ---------- */
+.slot-panel{display:none;margin-top:10px;background:var(--painel2);border:1px solid var(--linha);border-radius:12px;padding:8px}
+.slot-panel.show{display:block}
+.slot-opt{display:flex;justify-content:space-between;align-items:center;padding:10px 10px;border-radius:9px;cursor:pointer;transition:.14s}
+.slot-opt:hover{background:var(--painel)}
+.slot-opt b{font-size:.85rem}
+.slot-opt span{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--fumaca)}
+.datebtn.picked{border-color:var(--azul);color:var(--azul)}
+
+/* ---------- status de whatsapp ---------- */
+.wa-status{
+  display:flex;align-items:center;gap:6px;background:none;border:0;padding:7px 2px 0;cursor:pointer;
+  font-size:.72rem;color:var(--fumaca);font-family:'Barlow',sans-serif;
+}
+.wa-status[data-s="ok"]{color:var(--ok)}
+.wa-status[data-s="no"]{color:var(--perigo)}
+
+/* ---------- pátio ---------- */
+.clock-card{
+  display:flex;align-items:center;justify-content:space-between;background:var(--painel);border:1px solid var(--linha);
+  border-radius:15px;padding:14px 17px;margin-bottom:12px;box-shadow:var(--sombra-sm);
+}
+.clock-card .cl{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.4rem;letter-spacing:-.02em;color:var(--azul)}
+.clock-card .cl-lbl{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fumaca);margin-top:2px}
+.clock-card .cl-r{text-align:right}
+
+.alert-banner{
+  display:flex;align-items:center;gap:11px;background:color-mix(in srgb,var(--perigo) 14%,var(--painel));
+  border:1px solid color-mix(in srgb,var(--perigo) 40%,var(--linha));border-radius:13px;padding:12px 14px;margin-bottom:14px;
+  display:none;
+}
+.alert-banner.show{display:flex}
+.alert-banner b{font-size:.85rem;color:var(--perigo);display:block}
+.alert-banner span{font-size:.76rem;color:var(--fumaca)}
+
+.pcarro{
+  background:var(--painel);border:1px solid var(--linha);border-left:3px solid var(--azul);border-radius:14px;
+  padding:14px 15px;margin-bottom:10px;cursor:pointer;transition:.16s;box-shadow:var(--sombra-sm);
+}
+.pcarro:hover{border-left-color:var(--teal)}
+.pcarro.atrasado{border-left-color:var(--perigo)}
+.pcarro-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pcarro-ord{
+  width:23px;height:23px;border-radius:7px;background:var(--painel2);color:var(--fumaca);flex:none;
+  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;
+}
+.pcarro.atrasado .pcarro-ord{background:color-mix(in srgb,var(--perigo) 22%,transparent);color:var(--perigo)}
+.pcarro-nm{flex:1;min-width:0}
+.pcarro-nm b{font-size:.9rem;display:block}
+.pcarro-nm span{font-size:.72rem;color:var(--fumaca)}
+.st-chip{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:100px;flex:none}
+.st-aguardando{background:color-mix(in srgb,var(--fumaca) 20%,transparent);color:var(--fumaca)}
+.st-lavando{background:color-mix(in srgb,var(--azul) 20%,transparent);color:var(--azul)}
+.st-secando{background:color-mix(in srgb,var(--teal) 20%,transparent);color:var(--teal)}
+.st-pronto{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
+
+.pcarro-svc{font-size:.76rem;color:var(--texto2);margin:2px 0 8px 33px;line-height:1.35}
+.pcarro-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.75rem;color:var(--fumaca)}
+.pcarro-slack{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.92rem;flex:none}
+.pcarro-slack.risco{color:var(--alerta)}
+.pcarro-slack.atraso{color:var(--perigo)}
+.wa-dot{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;margin-right:4px}
+
+/* detalhe do carro (modal) */
+.det-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--linha);font-size:.85rem}
+.det-row:last-child{border:0}
+.det-row span:first-child{color:var(--fumaca);font-size:.72rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.08em;padding-top:2px}
+.det-row span:last-child{font-weight:600;text-align:right}
+.status-btns{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}
+.stbtn{
+  flex:1;min-width:80px;background:var(--painel2);border:1px solid var(--linha);border-radius:10px;padding:9px 6px;
+  font-size:.74rem;font-weight:600;color:var(--texto2);cursor:pointer;transition:.16s;text-align:center;
+}
+.stbtn.on{background:color-mix(in srgb,var(--azul) 20%,transparent);border-color:var(--azul);color:var(--azul)}
+.apont-list{margin-top:6px}
+.apont-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--linha);font-size:.82rem}
+.apont-item:last-child{border:0}
+.apont-item .h{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--fumaca);flex:none;padding-top:1px}
+.apont-add{display:flex;gap:8px;margin-top:12px}
+.apont-add input{flex:1;background:var(--painel2);border:1px solid var(--linha);border-radius:9px;padding:9px 11px;font:inherit;font-size:.82rem;color:var(--texto)}
+.apont-add button{background:var(--azul);color:#fff;border:0;border-radius:9px;padding:0 15px;font-weight:700;font-size:.78rem;cursor:pointer;flex:none}
+
+/* ---------- notas internas (CRM) ---------- */
+.crm-toggle{
+  display:flex;align-items:center;gap:8px;width:100%;background:var(--painel2);border:1px dashed var(--linha);
+  border-radius:11px;padding:10px 12px;margin-top:12px;cursor:pointer;font:inherit;color:var(--fumaca);transition:.16s;
+}
+.crm-toggle:hover{border-color:var(--perigo)}
+.crm-toggle svg{flex:none;color:var(--fumaca)}
+.crm-toggle .tx{flex:1;text-align:left;font-size:.78rem}
+.crm-toggle .tx b{display:block;color:var(--texto2);font-size:.8rem}
+.crm-toggle .cnt2{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;background:color-mix(in srgb,var(--perigo) 18%,transparent);
+  color:var(--perigo);border-radius:100px;padding:2px 8px;flex:none;
+}
+.crm-panel{display:none;margin-top:10px;background:color-mix(in srgb,var(--perigo) 6%,var(--painel2));border:1px solid color-mix(in srgb,var(--perigo) 30%,var(--linha));border-radius:12px;padding:13px}
+.crm-panel.show{display:block}
+.crm-warn{display:flex;align-items:center;gap:7px;font-size:.7rem;color:var(--perigo);margin-bottom:11px;font-weight:600}
+.crm-item{padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--perigo) 18%,var(--linha));font-size:.82rem}
+.crm-item:last-child{border:0}
+.crm-item .d{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--fumaca);margin-bottom:2px}
+.crm-empty{font-size:.78rem;color:var(--fumaca);padding:4px 0 8px}
+.crm-add{display:flex;gap:8px;margin-top:10px}
+.crm-add input{flex:1;background:var(--painel);border:1px solid var(--linha);border-radius:9px;padding:9px 11px;font:inherit;font-size:.8rem;color:var(--texto)}
+.crm-add button{background:var(--perigo);color:#fff;border:0;border-radius:9px;padding:0 14px;font-weight:700;font-size:.76rem;cursor:pointer;flex:none}
+
+/* ---------- ordem manual / automática ---------- */
+.ordem-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px}
+.ordem-switch{display:flex;align-items:center;gap:8px;background:none;border:0;cursor:pointer;font:inherit;color:var(--fumaca)}
+.ordem-switch span:first-child{font-size:.72rem}
+.ordem-hint{font-size:.72rem;color:var(--fumaca);margin-bottom:12px}
+
+.drag-handle{
+  color:var(--fumaca);cursor:grab;flex:none;padding:2px;touch-action:none;display:flex;align-items:center;
+}
+.drag-handle:active{cursor:grabbing}
+.prisma-chip{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;color:var(--azul);
+  background:color-mix(in srgb,var(--azul) 14%,transparent);border-radius:8px;padding:4px 9px;flex:none;cursor:pointer;
+}
+.sortable-ghost{opacity:.35}
+.sortable-chosen{box-shadow:0 8px 22px rgba(2,10,22,.3)}
+
+/* ---------- vínculo carro × cliente (não trava, só avisa) ---------- */
+.vinculo-banner{
+  display:none;align-items:flex-start;gap:10px;background:color-mix(in srgb,var(--alerta) 14%,var(--painel2));
+  border:1px solid color-mix(in srgb,var(--alerta) 40%,var(--linha));border-radius:11px;padding:11px 12px;margin-top:10px;
+}
+.vinculo-banner.show{display:flex}
+.vinculo-banner.info{background:color-mix(in srgb,var(--teal) 12%,var(--painel2));border-color:color-mix(in srgb,var(--teal) 35%,var(--linha))}
+.vinculo-banner svg{color:var(--alerta);flex:none;margin-top:1px}
+.vinculo-banner.info svg{color:var(--teal)}
+.vinculo-banner .tx{flex:1;min-width:0}
+.vinculo-banner b{font-size:.8rem;display:block;color:var(--texto)}
+.vinculo-banner span{font-size:.72rem;color:var(--fumaca)}
+.vinculo-banner button{
+  background:var(--alerta);color:#20140A;border:0;border-radius:8px;padding:6px 11px;font-size:.7rem;font-weight:700;
+  cursor:pointer;flex:none;white-space:nowrap;
+}
+.veic-chip{position:relative}
+.veic-chip.on{background:color-mix(in srgb,var(--teal) 18%,transparent);border-color:var(--teal);color:var(--teal)}
+
+/* ---------- vistoria de avarias ---------- */
+.modal-wide{max-width:520px}
+.view-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
+.view-tab{
+  flex:none;background:var(--painel2);border:1px solid var(--linha);border-radius:100px;padding:7px 14px;
+  font-size:.76rem;font-weight:600;color:var(--texto2);cursor:pointer;white-space:nowrap;transition:.16s;
+}
+.view-tab.on{background:color-mix(in srgb,var(--azul) 18%,transparent);border-color:var(--azul);color:var(--azul)}
+.avaria-mapwrap{background:var(--painel2);border:1px solid var(--linha);border-radius:13px;padding:14px}
+#avariaSvg{width:100%;height:auto;cursor:crosshair;touch-action:manipulation;display:block}
+.avaria-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.tool-btn{
+  flex:1;min-width:96px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--painel2);
+  border:1px solid var(--linha);border-radius:10px;padding:9px 8px;font-size:.74rem;font-weight:600;color:var(--texto2);
+  cursor:pointer;transition:.16s;
+}
+.tool-btn:hover{border-color:var(--azul);color:var(--azul)}
+.tool-btn.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,var(--linha))}
+.tool-btn.ok:hover{border-color:var(--ok)}
+.rm-avaria{width:24px;height:24px;border-radius:7px;background:none;border:1px solid var(--linha);color:var(--fumaca);cursor:pointer;flex:none;font-size:1rem;line-height:1}
+.rm-avaria:hover{border-color:var(--perigo);color:var(--perigo)}
+.apont-item{display:flex;align-items:center;gap:10px}
+.apont-item .h{width:auto}
+.avaria-tag{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--azul);background:color-mix(in srgb,var(--azul) 14%,transparent);border-radius:6px;padding:2px 6px;flex:none}
+
+/* ---------- campos editáveis do detalhe do pátio ---------- */
+.edit-hint{font-weight:400;text-transform:none;letter-spacing:0;font-size:.66rem;color:var(--fumaca);margin-left:6px}
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2px}
+.det-f{
+  background:var(--painel2);border:1px solid var(--linha);border-radius:10px;padding:8px 10px;cursor:pointer;transition:.16s;
+}
+.det-f:hover{border-color:var(--azul)}
+.det-f.readonly{cursor:default;opacity:.85}
+.det-f.readonly:hover{border-color:var(--linha)}
+.det-f.wide{grid-column:1/-1}
+.det-f span{display:block;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fumaca);margin-bottom:3px}
+.det-f b{font-size:.86rem;font-weight:600;color:var(--texto);word-break:break-word}
+.det-f b.vazio{color:var(--fumaca);font-weight:400;font-style:italic}
+.pag-chip.on{background:color-mix(in srgb,var(--ok) 20%,transparent);border-color:var(--ok);color:var(--ok)}
+
+/* ---------- painel de saída / pagamento dividido ---------- */
+.saida-panel{display:none;border-top:1px dashed var(--linha);margin-top:8px;padding-top:4px}
+.saida-panel.show{display:block}
+.forma-chip.on{background:color-mix(in srgb,var(--azul) 20%,transparent);border-color:var(--azul);color:var(--azul)}
+.pag-add{display:flex;gap:8px;margin-top:9px}
+.pag-add input{flex:1;background:var(--painel2);border:1px solid var(--linha);border-radius:10px;padding:10px 12px;font:inherit;font-size:.86rem;color:var(--texto)}
+.pag-add button{background:var(--azul);color:#fff;border:0;border-radius:10px;padding:0 16px;font-weight:700;font-size:.82rem;cursor:pointer;flex:none}
+.pag-linha{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--painel2);border:1px solid var(--linha);border-radius:10px;margin-bottom:7px}
+.pag-linha b{flex:1;font-size:.84rem}
+.pag-linha span{font-family:'JetBrains Mono',monospace;font-size:.84rem;color:var(--teal)}
+.pag-resumo{background:var(--painel2);border:1px solid var(--linha);border-radius:12px;padding:12px 14px;margin-top:10px}
+.pag-resumo-row{display:flex;justify-content:space-between;padding:5px 0;font-size:.85rem}
+.pag-resumo-row span{color:var(--fumaca)}
+.pag-resumo-row.destaque{border-top:1px solid var(--linha);margin-top:4px;padding-top:9px}
+.pag-resumo-row.destaque b{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.2rem}
+.pag-resumo-row.destaque span{font-weight:700;color:var(--texto)}
+.avaria-entrada-item{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:.84rem;border-bottom:1px solid var(--linha)}
+.avaria-entrada-item:last-child{border:0}
+.avaria-entrada-item svg{color:var(--alerta);flex:none}
+
+/* ---------- clientes ---------- */
+.cl-card{
+  display:flex;align-items:center;gap:12px;background:var(--painel);border:1px solid var(--linha);border-radius:14px;
+  padding:13px 14px;margin-bottom:9px;cursor:pointer;transition:.16s;box-shadow:var(--sombra-sm);
+}
+.cl-card:hover{border-color:var(--azul)}
+.cl-av{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb,var(--teal) 18%,transparent);color:var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:.9rem;flex:none}
+.cl-info{flex:1;min-width:0}
+.cl-info b{font-size:.9rem;display:block}
+.cl-info span{font-size:.74rem;color:var(--fumaca)}
+.cl-badges{display:flex;gap:5px;flex:none}
+.cl-badge{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:3px 8px;border-radius:100px;background:var(--painel2);color:var(--fumaca)}
+.cl-badge.mensal{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.veic-mini{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--painel2);border:1px solid var(--linha);border-radius:10px;margin-bottom:7px;font-size:.83rem}
+.veic-mini span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--fumaca)}
+
+/* ---------- pagamentos (cadastro) ---------- */
+.pgto-row{display:flex;align-items:center;justify-content:space-between;background:var(--painel);border:1px solid var(--linha);border-radius:12px;padding:12px 14px;margin-bottom:9px;box-shadow:var(--sombra-sm)}
+.pgto-row b{font-size:.9rem}
+.pgto-row button{background:none;border:1px solid var(--linha);color:var(--fumaca);border-radius:8px;width:30px;height:30px;cursor:pointer}
+.pgto-row button:hover{border-color:var(--perigo);color:var(--perigo)}
+
+/* ---------- indicadores ---------- */
+.fonte{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--fumaca);opacity:.8}
+.rank-row{display:flex;align-items:center;gap:12px;background:var(--painel);border:1px solid var(--linha);border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--sombra-sm)}
+.rank-pos{width:24px;height:24px;border-radius:50%;background:var(--painel2);color:var(--fumaca);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;flex:none}
+.rank-row:first-child .rank-pos{background:color-mix(in srgb,var(--alerta) 22%,transparent);color:var(--alerta)}
+.rank-nm{flex:1;min-width:0}
+.rank-nm b{font-size:.87rem;display:block}
+.rank-nm span{font-size:.72rem;color:var(--fumaca)}
+.rank-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;color:var(--teal);font-weight:700;flex:none}
+.insight-item{display:flex;gap:11px;background:var(--painel);border:1px solid var(--linha);border-radius:13px;padding:12px 13px;margin-bottom:8px;box-shadow:var(--sombra-sm)}
+.insight-item .im{width:8px;height:8px;border-radius:50%;flex:none;margin-top:6px}
+.insight-item h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:.87rem;margin-bottom:2px}
+.insight-item p{font-size:.78rem;color:var(--fumaca)}
+
+button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== MENU LATERAL (web) ===== -->
+  <aside class="side">
+    <div class="side-brand">
+      <svg width="34" height="34" viewBox="0 0 60 60" aria-hidden="true">
+        <rect width="60" height="60" rx="15" fill="var(--azul)" opacity=".16"/>
+        <path d="M12,34 C18,30 26,28 33,27 L44,17 C47,15 52,14 56,15" fill="none" stroke="var(--azul)" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="20" cy="38" r="5" fill="none" stroke="var(--azul)" stroke-width="4"/>
+        <circle cx="46" cy="38" r="5" fill="none" stroke="var(--azul)" stroke-width="4"/>
+      </svg>
+      <div><h1>T-jet</h1><small>Sistema</small></div>
+    </div>
+
+    <div class="side-grp">Operação</div>
+    <button class="snav on" data-view="home"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11l9-7 9 7v9H3z"/></svg> Início</button>
+    <button class="snav" data-view="entrada"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 4H4v16h5M15 8l5 4-5 4M9 12h11"/></svg> Entrada</button>
+    <button class="snav" data-view="patio"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11l2-6h14l2 6M5 11h14v7H5z"/></svg> Pátio <span class="cnt">1</span></button>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 4h5v16h-5M9 8l-5 4 5 4M4 12h11"/></svg> Saída</button>
+
+    <div class="side-grp">Gestão</div>
+    <button class="snav" data-view="clientes"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg> Clientes</button>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agendar</button>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 3h10l2 4v14H5V7z"/><path d="M9 12h6M9 16h6"/></svg> Orçamento</button>
+
+    <div class="side-grp">Negócio</div>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg> Estoque</button>
+    <button class="snav" data-view="pagamentos"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Pagamentos</button>
+    <button class="snav" data-view="indicadores"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg> Indicadores</button>
+
+    <div class="side-grp">Sistema</div>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg> Revisão programada</button>
+    <button class="snav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9 2 2 0 11-2.8 2.8 1.7 1.7 0 00-2.9 1.2 2 2 0 01-4 0 1.7 1.7 0 00-2.9-1.2 2 2 0 11-2.8-2.8A1.7 1.7 0 003.5 14a2 2 0 010-4 1.7 1.7 0 001.2-2.9 2 2 0 112.8-2.8A1.7 1.7 0 0010.4 3.1a2 2 0 014 0 1.7 1.7 0 002.9 1.2 2 2 0 112.8 2.8A1.7 1.7 0 0020.5 10a2 2 0 010 4 1.7 1.7 0 00-1.1 1z"/></svg> Admin</button>
+  </aside>
+
+  <!-- ===== ÁREA PRINCIPAL ===== -->
+  <div>
+    <header class="top">
+      <div class="top-brand">
+        <svg width="30" height="30" viewBox="0 0 60 60" aria-hidden="true">
+          <rect width="60" height="60" rx="15" fill="var(--azul)" opacity=".16"/>
+          <path d="M12,34 C18,30 26,28 33,27 L44,17 C47,15 52,14 56,15" fill="none" stroke="var(--azul)" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="20" cy="38" r="5" fill="none" stroke="var(--azul)" stroke-width="4"/>
+          <circle cx="46" cy="38" r="5" fill="none" stroke="var(--azul)" stroke-width="4"/>
+        </svg>
+        <h1>T-jet</h1>
+      </div>
+      <button class="ib back-btn" id="back" aria-label="Voltar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <div class="top-title">
+        <h2 id="scrTitle">Início</h2>
+        <span id="scrSub">T-Jet Estética Automotiva</span>
+      </div>
+      <div class="top-r">
+        <button class="ib" id="theme" aria-label="Alternar tema">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.5 1.5M18.3 18.3l1.5 1.5M2 12h2M20 12h2M4.2 19.8l1.5-1.5M18.3 5.7l1.5-1.5"/></svg>
+        </button>
+        <button class="ib" aria-label="Notificações">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 21a2 2 0 004 0"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+    <div class="view on" id="view-home">
+      <div class="hello">
+        <h2>Bom trabalho hoje</h2>
+        <p>Terça, 18 de agosto · 19:42</p>
+      </div>
+
+      <div class="metrics">
+        <div class="metric" style="--mc:var(--azul)">
+          <div class="lbl">No pátio</div><b>1</b><div class="sub">1 aguardando serviço</div>
+        </div>
+        <div class="metric" style="--mc:var(--ok)">
+          <div class="lbl">Concluídos</div><b>14</b><div class="sub">hoje</div>
+        </div>
+        <div class="metric" style="--mc:var(--teal)">
+          <div class="lbl">Faturado</div><b>R$ 612</b><div class="sub">hoje</div>
+        </div>
+        <div class="metric" style="--mc:var(--alerta)">
+          <div class="lbl">Ticket médio</div><b>R$ 44</b><div class="sub">média do dia</div>
+        </div>
+      </div>
+
+      <button class="insight">
+        <span class="insight-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.6 5.9L19.5 10l-5.9 1.6L12 17.5l-1.6-5.9L4.5 10l5.9-1.6z"/></svg></span>
+        <span><b>3 recomendações para hoje</b><span>7 clientes sumindo · terça de manhã ociosa · 12 carros prontos para polimento</span></span>
+        <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+
+      <div class="grp">
+        <div class="grp-lbl">Operação</div>
+        <div class="mods">
+          <button class="mod" style="--m:var(--ok)" data-nav="entrada">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 4H4v16h5M15 8l5 4-5 4M9 12h11"/></svg></span>
+            <span class="nm">Entrada</span><span class="sub">Receber veículo</span>
+          </button>
+          <button class="mod" style="--m:var(--azul)" data-nav="patio">
+            <span class="badge">1</span>
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11l2-6h14l2 6M5 11h14v7H5z"/><circle cx="8" cy="18" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="18" r="1.3" fill="currentColor" stroke="none"/></svg></span>
+            <span class="nm">Pátio</span><span class="sub">1 no pátio</span>
+          </button>
+          <button class="mod" style="--m:var(--alerta)">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 4h5v16h-5M9 8l-5 4 5 4M4 12h11"/></svg></span>
+            <span class="nm">Saída</span><span class="sub">Entregar e avisar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grp">
+        <div class="grp-lbl">Gestão</div>
+        <div class="mods">
+          <button class="mod" style="--m:var(--teal)" data-nav="clientes">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+            <span class="nm">Clientes</span><span class="sub">Cadastro e CRM</span>
+          </button>
+          <button class="mod" style="--m:var(--teal)">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+            <span class="nm">Agendar</span><span class="sub">2 para amanhã</span>
+          </button>
+          <button class="mod" style="--m:var(--teal)">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 3h10l2 4v14H5V7z"/><path d="M9 12h6M9 16h6"/><path d="M9 8.5l1.5 1.5L14 6.5"/></svg></span>
+            <span class="nm">Orçamento</span><span class="sub">Simular serviço</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grp">
+        <div class="grp-lbl">Negócio</div>
+        <div class="mods">
+          <button class="mod" style="--m:#9B8CF5">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg></span>
+            <span class="nm">Estoque</span><span class="sub">2 itens acabando</span>
+          </button>
+          <button class="mod" style="--m:#9B8CF5" data-nav="pagamentos">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+            <span class="nm">Pagamentos</span><span class="sub">Formas aceitas</span>
+          </button>
+          <button class="mod" style="--m:var(--azul)" data-nav="indicadores">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span>
+            <span class="nm">Indicadores</span><span class="sub">Ranking e giro</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grp">
+        <div class="grp-lbl">Sistema</div>
+        <div class="mods">
+          <button class="mod" style="--m:var(--fumaca)">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
+            <span class="nm">Revisão<br>programada</span><span class="sub">Retornos previstos</span>
+          </button>
+          <button class="mod" style="--m:var(--fumaca)">
+            <span class="mod-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9 2 2 0 11-2.8 2.8 1.7 1.7 0 00-2.9 1.2 2 2 0 01-4 0 1.7 1.7 0 00-2.9-1.2 2 2 0 11-2.8-2.8A1.7 1.7 0 003.5 14a2 2 0 010-4 1.7 1.7 0 001.2-2.9 2 2 0 112.8-2.8A1.7 1.7 0 0010.4 3.1a2 2 0 014 0 1.7 1.7 0 002.9 1.2 2 2 0 112.8 2.8A1.7 1.7 0 0020.5 10a2 2 0 010 4 1.7 1.7 0 00-1.1 1z"/></svg></span>
+            <span class="nm">Admin</span><span class="sub">Serviços e equipe</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+
+    <div class="view" id="view-entrada">
+      <div class="scr-head">
+        <div>
+          <h2>Entrada de veículo</h2>
+        </div>
+        <span class="ctrl">Nº controle <b>59934</b></span>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Leitura de placa</div>
+        <div class="scanplate" id="plate">
+          <div class="scanplate-top"><span>BRASIL</span><span>PB</span></div>
+          <div class="scanplate-num" id="plateNum">• • • • • • •</div>
+          <div class="scanline"></div>
+        </div>
+        <button class="scan-cta" id="scanBtn">Fotografar placa</button>
+        <p class="scan-hint">Reconhece o veículo e o cliente automaticamente</p>
+        <button class="btn-outline" id="digitarPlacaBtn" style="max-width:280px;margin:8px auto 0;display:block">Carro longe? Digitar a placa</button>
+        <div class="memo" id="memo"></div>
+      </div>
+
+      <div class="divider-or" id="manualSection">as duas formas funcionam igual</div>
+
+      <div class="card">
+        <div class="field">
+          <div class="field-label-row">
+            <label>Nome do cliente</label>
+            <button class="visits-pill" id="visitsPill" style="display:none">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+              <span id="visitsCount">0</span> visitas
+            </button>
+          </div>
+          <input type="text" id="nomeInput" placeholder="Digite 3 letras para buscar" autocomplete="off">
+          <div class="suggest" id="nomeSuggest"></div>
+          <div class="obs-chip" id="obsChip" style="display:none"></div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Telefone (WhatsApp)</label>
+          <input type="text" id="telInput" placeholder="(83) 9 9999-9999">
+          <button class="wa-status" id="waStatus" data-s="unk">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/></svg>
+            <span>Não verificado — toque para confirmar</span>
+          </button>
+        </div>
+
+        <button class="crm-toggle" id="crmToggle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+          <span class="tx"><b>Notas internas do cliente</b>Não aparece pro cliente · visível só pra equipe</span>
+          <span class="cnt2" id="crmCount">0</span>
+        </button>
+        <div class="crm-panel" id="crmPanel">
+          <div class="crm-warn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+            Informação administrativa — nunca entra em mensagem, ticket ou tela do cliente
+          </div>
+          <div id="crmList"></div>
+          <div class="crm-add">
+            <input type="text" id="crmInput" placeholder="Ex. atrasou pagamento na última vez">
+            <button id="crmAdd">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="field">
+          <label>Placa</label>
+          <input type="text" id="placaInput" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
+          <div class="suggest" id="placaSuggest"></div>
+          <div class="chips" id="veicPicker" style="display:none;margin-top:10px"></div>
+          <div class="vinculo-banner" id="vinculoBanner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+            <div class="tx"><b id="vinculoTitulo"></b><span id="vinculoSub"></span></div>
+            <button id="vinculoBtn"></button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Categoria do veículo</label>
+          <div class="chips" id="categoriaChips">
+            <span class="chip on">Pequeno</span>
+            <span class="chip">Médio</span>
+            <span class="chip">Grande</span>
+            <span class="chip">Moto</span>
+            <span class="chip">SUV</span>
+            <span class="chip">Pickup</span>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field" style="margin-bottom:0">
+            <div class="field-label-row">
+              <label>Modelo</label>
+              <button class="visits-pill" id="fipeUpdateBtn" style="background:none;color:var(--fumaca)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                <span id="fipeUpdateLbl">Atualizar lista</span>
+              </button>
+            </div>
+            <input type="text" id="modeloInput" placeholder="Digite 2 letras — ex. civ" autocomplete="off">
+            <div class="suggest" id="modeloSuggest"></div>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Cor</label>
+            <div class="chips" id="corChips">
+              <span class="chip cor-chip on" data-cor="Preto"><i class="cdot" style="background:#101317"></i>Preto</span>
+              <span class="chip cor-chip" data-cor="Cinza"><i class="cdot" style="background:#7A7F85"></i>Cinza</span>
+              <span class="chip cor-chip" data-cor="Branco"><i class="cdot" style="background:#E4E7EA"></i>Branco</span>
+              <span class="chip cor-chip" data-cor="Azul"><i class="cdot" style="background:#2B4D8C"></i>Azul</span>
+              <span class="chip cor-chip" data-cor="Prata"><i class="cdot" style="background:#C7CDD3"></i>Prata</span>
+              <span class="chip cor-chip" data-cor="Vermelho"><i class="cdot" style="background:#B5342E"></i>Vermelho</span>
+              <span class="chip cor-chip" data-cor="Verde"><i class="cdot" style="background:#2F7D4F"></i>Verde</span>
+              <span class="chip cor-chip" data-cor="Laranja"><i class="cdot" style="background:#D9772E"></i>Laranja</span>
+              <span class="chip cor-chip" data-cor="Amarelo"><i class="cdot" style="background:#E4C13C"></i>Amarelo</span>
+              <span class="chip cor-chip" data-cor="Bege"><i class="cdot" style="background:#D8C6A8"></i>Bege</span>
+              <span class="chip cor-chip" data-cor="outra">Outra cor</span>
+            </div>
+            <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Fotos do veículo</div>
+        <div class="photos">
+          <button class="photo-add main">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6l1.5-2h5L16 6"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <span>Foto principal</span>
+          </button>
+          <button class="photo-add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="photo-add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="photo-add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="photo-add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button class="photo-add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Vistoria de avarias</div>
+        <div class="mapcard" id="avariaResumoCard" style="cursor:pointer">
+          <svg width="72" height="40" viewBox="0 0 200 100" aria-hidden="true">
+            <path d="M18,66 C30,58 50,54 68,52 L96,32 C102,28 112,26 124,26 L156,26 C172,26 186,32 194,42 L194,66 Z" fill="none" stroke="var(--fumaca)" stroke-width="3"/>
+            <circle cx="62" cy="70" r="10" fill="none" stroke="var(--fumaca)" stroke-width="3"/>
+            <circle cx="158" cy="70" r="10" fill="none" stroke="var(--fumaca)" stroke-width="3"/>
+          </svg>
+          <div class="tx"><b id="avariaResumoTitulo">Nenhuma avaria registrada</b><span id="avariaResumoSub">Toque para marcar riscos e amassados no mapa</span></div>
+        </div>
+        <button class="btn-outline" id="avariaBtn" style="margin-top:12px">Registrar avarias</button>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Serviços cadastrados — toque para adicionar</div>
+        <div class="svc-catalogo" id="svcCatalogo"></div>
+
+        <div class="svc-empty" id="svcEmpty">Nenhum serviço selecionado</div>
+        <div class="svc-sel" id="svcSel"></div>
+        <div class="svc-total">
+          <span>Total</span>
+          <b id="svcTotalValor">R$ 0,00</b>
+        </div>
+
+        <label class="checkline">
+          <input type="checkbox" id="sendMsgCheck" checked>
+          Enviar mensagem ao cliente pelo WhatsApp
+        </label>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Previsão de entrega</div>
+        <div class="datebtn-row">
+          <span class="datebtn picked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Hoje</span>
+          <span class="datebtn" id="horaBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span id="horaLabel">Escolher horário</span></span>
+        </div>
+        <div class="slot-panel" id="slotPanel"></div>
+      </div>
+
+      <div class="card">
+        <div class="field" style="margin-bottom:14px">
+          <label>Observações</label>
+          <textarea placeholder="Ex. cliente pediu atenção no banco do motorista"></textarea>
+        </div>
+        <div class="toggleline">
+          <div class="tx"><b>Imprimir ticket</b><span>Impressora Bluetooth do balcão</span></div>
+          <button class="switch" id="ticketSwitch" aria-label="Imprimir ticket"></button>
+        </div>
+      </div>
+
+      <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+
+    <div class="view" id="view-patio">
+      <div class="scr-head">
+        <div><h2>Pátio</h2></div>
+      </div>
+
+      <div class="clock-card">
+        <div>
+          <div class="cl" id="relogioTx">08:40</div>
+          <div class="cl-lbl">Relógio da operação</div>
+        </div>
+        <div class="cl-r">
+          <div class="cl" id="noPatioTx" style="color:var(--teal)">2</div>
+          <div class="cl-lbl">No pátio agora</div>
+        </div>
+      </div>
+
+      <div class="alert-banner" id="alertBanner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--perigo)" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <div><b id="alertTitulo">1 carro atrasado</b><span id="alertSub">Priorize antes dos demais</span></div>
+      </div>
+
+      <div class="ordem-head">
+        <div class="card-lbl" style="margin-bottom:0">Ordem de lavagem</div>
+        <button class="ordem-switch" id="modoAutoBtn">
+          <span>Automática por prazo</span>
+          <span class="switch on" id="modoAutoSwitch"></span>
+        </button>
+      </div>
+      <p class="ordem-hint">Arraste pela alça ⠿ para reordenar na mão — isso desliga o automático</p>
+      <div id="filaPatio"></div>
+
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+
+    <div class="view" id="view-clientes">
+      <div class="scr-head">
+        <div><h2>Clientes</h2></div>
+        <button class="ib" id="novoClienteBtn" style="width:auto;padding:0 14px;gap:7px;display:flex;align-items:center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="mono" style="font-size:.66rem;letter-spacing:.1em">Novo</span>
+        </button>
+      </div>
+      <div class="field">
+        <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
+      </div>
+      <div id="clientesLista"></div>
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+
+    <div class="view" id="view-pagamentos">
+      <div class="scr-head"><div><h2>Formas de pagamento</h2></div></div>
+      <p class="ordem-hint">Aceitas no fechamento da Saída — some deste catálogo assim que cadastrar</p>
+      <div id="pagamentosLista"></div>
+      <div class="card" style="margin-top:6px">
+        <div class="card-lbl">Nova forma de pagamento</div>
+        <div class="pag-add">
+          <input type="text" id="novaFormaInput" placeholder="Ex. Vale-refeição, Boleto...">
+          <button id="novaFormaAddBtn">Adicionar</button>
+        </div>
+      </div>
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+
+    <div class="view" id="view-indicadores">
+      <div class="scr-head"><div><h2>Indicadores</h2></div></div>
+
+      <div class="metrics">
+        <div class="metric" style="--mc:var(--azul)"><div class="lbl">Faturado hoje</div><b id="indFaturado">R$ 0</b><div class="sub">carros entregues</div></div>
+        <div class="metric" style="--mc:var(--ok)"><div class="lbl">Carros hoje</div><b id="indCarros">0</b><div class="sub">entrada + pátio</div></div>
+        <div class="metric" style="--mc:var(--teal)"><div class="lbl">Ticket médio</div><b id="indTicket">R$ 0</b><div class="sub">histórico geral</div></div>
+        <div class="metric" style="--mc:var(--alerta)"><div class="lbl">Atrasados agora</div><b id="indAtrasados">0</b><div class="sub">no pátio</div></div>
+      </div>
+
+      <button class="insight">
+        <span class="insight-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.6 5.9L19.5 10l-5.9 1.6L12 17.5l-1.6-5.9L4.5 10l5.9-1.6z"/></svg></span>
+        <span><b>O que fazer hoje</b><span id="insightResumo">calculando…</span></span>
+        <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div id="insightsList"></div>
+
+      <div class="card-lbl" style="margin-top:18px">Ranking de clientes — por valor gasto</div>
+      <div id="rankClientes"></div>
+
+      <div class="card-lbl" style="margin-top:16px">Serviços mais pedidos</div>
+      <div id="rankServicos"></div>
+
+      <p class="fonte" style="text-align:left;margin-top:16px">Calculado a partir do histórico de clientes e do pátio de hoje — dados de demonstração.</p>
+      <div class="foot"><span>T-JET SISTEMA · V0.1</span></div>
+    </div>
+    </main>
+  </div>
+</div>
+
+<div class="overlay" id="histOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="histNome">Histórico do cliente</h3>
+      <button class="modal-close" id="histClose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="modal-sub" id="histSub"></div>
+    <div id="histList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="avariaOverlay">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3>Inspeção veicular</h3>
+      <button class="modal-close" id="avariaClose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="view-tabs" id="viewTabs"></div>
+    <div class="modal-sub">Toque no desenho pra marcar onde está a avaria e descreva o que é</div>
+    <div class="avaria-mapwrap">
+      <svg id="avariaSvg" aria-label="Mapa do veículo — toque para marcar avaria"></svg>
+    </div>
+    <div class="avaria-tools">
+      <button class="tool-btn" id="avariaUndo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-1"/></svg> Desfazer</button>
+      <button class="tool-btn" id="avariaLimpar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7h16M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2m-8 0v12a2 2 0 002 2h4a2 2 0 002-2V7"/></svg> Limpar vista</button>
+      <button class="tool-btn" id="avariaAddSemPonto"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg> Sem marcar</button>
+      <button class="tool-btn ok" id="avariaSemDefeito">Sem defeito</button>
+    </div>
+    <div class="card-lbl" style="margin-top:14px">Avarias registradas</div>
+    <div id="avariaList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="clienteOverlay">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 id="clDetNome">Cliente</h3>
+      <button class="modal-close" id="clDetClose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+
+    <div class="card-lbl">Dados <span class="edit-hint">toque para editar</span></div>
+    <div class="det-grid">
+      <div class="det-f" data-cf="nome"><span>Nome</span><b id="clfNome"></b></div>
+      <div class="det-f" data-cf="apelido"><span>Como prefere ser chamado</span><b id="clfApelido"></b></div>
+      <div class="det-f" data-cf="tel"><span>Telefone</span><b id="clfTel"></b></div>
+      <div class="det-f readonly"><span>Mensalista</span><b id="clfMensalista"></b></div>
+    </div>
+    <div class="det-f wide" data-cf="obs" style="margin-top:8px"><span>Observação (visível à equipe no atendimento)</span><b id="clfObs"></b></div>
+
+    <div class="card-lbl" style="margin-top:14px">Veículos</div>
+    <div id="clVeiculos"></div>
+
+    <div class="card-lbl" style="margin-top:14px">Histórico de visitas</div>
+    <div id="clHistorico"></div>
+
+    <button class="crm-toggle" id="clCrmToggle" style="margin-top:16px">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+      <span class="tx"><b>Notas internas (CRM)</b>Não aparece pro cliente · visível só pra equipe</span>
+      <span class="cnt2" id="clCrmCount">0</span>
+    </button>
+    <div class="crm-panel" id="clCrmPanel">
+      <div class="crm-warn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        Informação administrativa — nunca entra em mensagem, ticket ou tela do cliente
+      </div>
+      <div id="clCrmList"></div>
+      <div class="crm-add">
+        <input type="text" id="clCrmInput" placeholder="Ex. atrasou pagamento na última vez">
+        <button id="clCrmAdd">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="patioOverlay">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 id="patioNome">Veículo</h3>
+      <button class="modal-close" id="patioClose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+
+    <div class="card-lbl">Veículo <span class="edit-hint">toque num campo pra editar</span></div>
+    <div class="det-grid">
+      <div class="det-f" data-campo="placa"><span>Placa</span><b id="dfPlaca"></b></div>
+      <div class="det-f" data-campo="marca"><span>Marca</span><b id="dfMarca"></b></div>
+      <div class="det-f" data-campo="modelo"><span>Modelo</span><b id="dfModelo"></b></div>
+      <div class="det-f" data-campo="cor"><span>Cor</span><b id="dfCor"></b></div>
+    </div>
+
+    <div class="card-lbl" style="margin-top:14px">Cliente</div>
+    <div class="det-grid">
+      <div class="det-f" data-campo="cliente"><span>Nome</span><b id="dfCliente"></b></div>
+      <div class="det-f" data-campo="tel"><span>Telefone</span><b id="dfTel"></b></div>
+    </div>
+    <div class="det-f wide" data-campo="obs" style="margin-top:8px"><span>Observação</span><b id="dfObs"></b></div>
+
+    <div class="card-lbl" style="margin-top:14px">Tempos</div>
+    <div class="det-grid">
+      <div class="det-f" data-campo="entrada"><span>Entrada</span><b id="dfEntrada"></b></div>
+      <div class="det-f" data-campo="previsao"><span>Previsão de saída</span><b id="dfPrevisao"></b></div>
+      <div class="det-f readonly"><span>Tempo no pátio</span><b id="dfNoPatio"></b></div>
+      <div class="det-f readonly"><span>Tempo restante</span><b id="dfRestante"></b></div>
+    </div>
+
+    <div class="status-btns" id="patioStatusBtns"></div>
+
+    <div class="card-lbl" style="margin-top:14px">Serviços</div>
+    <div id="patioSvcList"></div>
+    <div class="svc-catalogo" id="patioSvcCatalogo" style="margin-top:8px"></div>
+    <div class="svc-total"><span>Total do serviço</span><b id="patioTotalValor">R$ 0,00</b></div>
+
+    <button class="entrar-btn" id="entregarVeiculoBtn" style="margin-top:14px">Entregar veículo</button>
+
+    <div id="saidaPanel" class="saida-panel">
+      <div class="card-lbl" style="margin-top:16px">Avarias registradas na entrada</div>
+      <div id="saidaAvarias"></div>
+
+      <div class="card-lbl" style="margin-top:14px">Foto de saída</div>
+      <button class="photo-add main" style="width:100%">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6l1.5-2h5L16 6"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <span>Foto do carro pronto</span>
+      </button>
+
+      <div class="field" style="margin-top:14px">
+        <label>Observação da saída</label>
+        <textarea id="saidaObsInput" placeholder="Ex. cliente pediu atenção especial no retoque do para-choque"></textarea>
+      </div>
+
+      <div class="card-lbl" style="margin-top:14px">Pagamento <span class="edit-hint">pode dividir em várias formas</span></div>
+      <div class="chips" id="formaPagamentoChips"></div>
+      <div class="pag-add">
+        <input type="text" id="pagValorInput" placeholder="Valor R$" inputmode="decimal">
+        <button id="pagAddBtn">Adicionar</button>
+      </div>
+      <button class="btn-outline" id="novaFormaBtn" style="margin-top:8px">+ Cadastrar forma de pagamento</button>
+
+      <div id="pagLancamentos" style="margin-top:10px"></div>
+      <div class="pag-resumo">
+        <div class="pag-resumo-row"><span>Total do serviço</span><b id="pagTotalServico">R$ 0,00</b></div>
+        <div class="pag-resumo-row"><span>Total pago</span><b id="pagTotalPago">R$ 0,00</b></div>
+        <div class="pag-resumo-row destaque"><span id="pagRestanteLbl">Restante</span><b id="pagRestante">R$ 0,00</b></div>
+      </div>
+
+      <button class="entrar-btn" id="confirmarEntregaBtn" style="margin-top:12px">Confirmar entrega</button>
+    </div>
+
+    <div class="card-lbl" style="margin-top:14px">Apontamentos</div>
+    <div class="apont-list" id="patioApontList"></div>
+    <div class="apont-add">
+      <input type="text" id="apontInput" placeholder="Ex. troquei o lavador de box">
+      <button id="apontAdd">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BARRA INFERIOR (celular) ===== -->
+<nav class="tabbar">
+  <button class="tab on" data-view="home">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11l9-7 9 7v9H3z"/></svg><span>Início</span>
+  </button>
+  <button class="tab" data-view="entrada">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 4H4v16h5M15 8l5 4-5 4M9 12h11"/></svg><span>Entrada</span>
+  </button>
+  <button class="tab" data-view="patio">
+    <span class="cnt">1</span>
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 11l2-6h14l2 6M5 11h14v7H5z"/></svg><span>Pátio</span>
+  </button>
+  <button class="tab">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 4h5v16h-5M9 8l-5 4 5 4M4 12h11"/></svg><span>Saída</span>
+  </button>
+  <button class="tab">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span>
+  </button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script>
+document.getElementById('theme').addEventListener('click',function(){
+  var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',t);
+});
+
+/* ---------- navegação entre telas ---------- */
+var topEl=document.querySelector('.top'),backBtn=document.getElementById('back'),
+    scrTitle=document.getElementById('scrTitle'),scrSub=document.getElementById('scrSub'),
+    telas={
+      home:{title:'Início',sub:'T-Jet Estética Automotiva'},
+      entrada:{title:'Entrada',sub:'Novo atendimento'},
+      patio:{title:'Pátio',sub:'Fila de lavagem'},
+      clientes:{title:'Clientes',sub:'Cadastro e CRM'},
+      pagamentos:{title:'Pagamentos',sub:'Formas aceitas'},
+      indicadores:{title:'Indicadores',sub:'Painel do dia'}
+    };
+
+function irPara(id){
+  document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('on',v.id==='view-'+id)});
+  var t=telas[id];
+  scrTitle.textContent=t.title;scrSub.textContent=t.sub;
+  topEl.classList.toggle('alt',id!=='home');
+  backBtn.classList.toggle('show',id!=='home');
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x.dataset.view===id)});
+  document.querySelectorAll('.snav').forEach(function(x){x.classList.toggle('on',x.dataset.view===id)});
+  document.querySelector('main').scrollTop=0;
+  window.scrollTo(0,0);
+  if(id==='indicadores'&&typeof renderIndicadores==='function')renderIndicadores();
+}
+backBtn.addEventListener('click',function(){irPara('home')});
+
+/* módulos da home, abas e menu lateral que já têm tela pronta */
+document.querySelectorAll('[data-nav]').forEach(function(b){
+  b.addEventListener('click',function(){irPara(b.dataset.nav)});
+});
+
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click',function(){
+    if(b.dataset.view){irPara(b.dataset.view);return}
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b)});
+  });
+});
+document.querySelectorAll('.snav').forEach(function(b){
+  b.addEventListener('click',function(){
+    if(b.dataset.view){irPara(b.dataset.view);return}
+    document.querySelectorAll('.snav').forEach(function(x){x.classList.toggle('on',x===b)});
+  });
+});
+
+/* ---------- tela de entrada: interações ---------- */
+document.getElementById('ticketSwitch').addEventListener('click',function(){
+  this.classList.toggle('on');
+});
+
+/* leitura de placa na tela de entrada */
+var plate=document.getElementById('plate'),plateNum=document.getElementById('plateNum'),
+    memo=document.getElementById('memo'),scanBtn=document.getElementById('scanBtn'),
+    alvoPlaca='PBX 4C71',chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',timers=[];
+function lerPlaca(){
+  timers.forEach(clearTimeout);timers=[];
+  memo.classList.remove('show');plate.classList.add('scanning');
+  var k=0,emb=setInterval(function(){
+    plateNum.textContent=alvoPlaca.split('').map(function(c,j){
+      if(c===' ')return ' ';
+      return j<k?c:chars[Math.floor(Math.random()*chars.length)];
+    }).join('');
+  },55);
+  var passo=function(){
+    k++;
+    if(k>alvoPlaca.length){clearInterval(emb);plateNum.textContent=alvoPlaca;plate.classList.remove('scanning');
+      timers.push(setTimeout(function(){
+        var v=VEICULOS.find(function(x){return x.placa===alvoPlaca.replace(/\s/g,'')});
+        if(v){
+          selecionarPlaca(v);
+          var responsavel=clienteAtivo||donoAtual(v),ultima=responsavel.hist&&responsavel.hist[0];
+          memo.innerHTML=
+            '<div class="memo-row"><span>Veículo</span><span>'+v.modelo+' · '+v.cor+'</span></div>'+
+            '<div class="memo-row"><span>Cliente</span><span class="hl">'+responsavel.nome+(responsavel.apelido?' — "'+responsavel.apelido+'"':'')+'</span></div>'+
+            (ultima?'<div class="memo-row"><span>Última vez</span><span>'+ultima.d+' · '+ultima.s+'</span></div>':'')+
+            (responsavel.obs?'<div class="memo-row"><span>Observação</span><span>'+responsavel.obs+'</span></div>':'');
+        }else{
+          memo.innerHTML='<div class="memo-row"><span>Placa</span><span>'+alvoPlaca+'</span></div><div class="memo-row"><span>Cliente</span><span>Não cadastrado — preencha abaixo</span></div>';
+          document.getElementById('placaInput').value=alvoPlaca;
+        }
+        memo.classList.add('show');
+      },200));return}
+    timers.push(setTimeout(passo,100));
+  };
+  timers.push(setTimeout(passo,550));
+}
+scanBtn.addEventListener('click',lerPlaca);
+document.getElementById('digitarPlacaBtn').addEventListener('click',function(){
+  document.getElementById('placaInput').scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(function(){document.getElementById('placaInput').focus()},280);
+});
+
+document.getElementById('entrarBtn').addEventListener('click',function(){
+  confirmarEntrada();
+});
+
+/* ================= DADOS MOCKADOS ================= */
+/* Cliente e veículo são entidades separadas: 1 cliente pode ter vários carros,
+   1 carro pode já ter passado por vários clientes. O sistema nunca trava essa
+   escolha — só avisa quando o carro digitado já foi de outra pessoa. */
+var CLIENTES=[
+  {id:1,nome:"Carlos Eduardo",apelido:"Cadu",tel:"5583999991111",mensalista:true,temWhatsapp:true,
+   obs:"Não gosta de cera no painel",
+   notasInternas:[{d:"22/07/2026",t:"Sempre paga em dia, mensalista tranquilo."}],
+   hist:[{d:"05/08/2026",s:"Lavagem completa + cera",v:70},{d:"22/07/2026",s:"Lavagem simples",v:35},{d:"08/07/2026",s:"Lavagem completa",v:50},{d:"24/06/2026",s:"Higienização de bancos",v:120}]},
+  {id:2,nome:"Marina Souza",apelido:null,tel:"5583988882222",mensalista:false,temWhatsapp:true,
+   obs:"",
+   notasInternas:[],
+   hist:[{d:"14/08/2026",s:"Lavagem completa",v:50},{d:"20/07/2026",s:"Lavagem simples",v:35}]},
+  {id:3,nome:"João Pedro Lima",apelido:"JP",tel:"5583977773333",mensalista:true,temWhatsapp:false,
+   obs:"Sempre pede motor junto",
+   notasInternas:[{d:"19/07/2026",t:"Reclamou do preço do polimento, achou caro."},{d:"05/07/2026",t:"Demorou 3 semanas pra pagar a última lavagem — cobrar à vista da próxima vez."}],
+   hist:[{d:"16/08/2026",s:"Lavagem completa + motor",v:95},{d:"02/08/2026",s:"Lavagem completa + motor",v:95},{d:"19/07/2026",s:"Polimento",v:180},{d:"05/07/2026",s:"Lavagem completa",v:60},{d:"21/06/2026",s:"Lavagem completa + motor",v:95}]},
+  {id:4,nome:"Beatriz Nogueira",apelido:"Bia",tel:"5583966664444",mensalista:false,temWhatsapp:null,
+   obs:"Carro novo, pediu cuidado redobrado",
+   notasInternas:[],
+   hist:[{d:"11/08/2026",s:"Lavagem completa",v:60}]},
+  {id:5,nome:"Ricardo Alves",apelido:null,tel:"5583955556666",mensalista:false,temWhatsapp:true,
+   obs:"",
+   notasInternas:[{d:"10/07/2026",t:"Foi grosseiro com o Rafael no balcão. Atender com cautela — se repetir, avisar o dono."}],
+   hist:[{d:"01/08/2026",s:"Lavagem simples",v:35},{d:"10/07/2026",s:"Lavagem simples",v:35}]}
+];
+var VEICULOS=[
+  {placa:"PBX4C71",modelo:"Civic",cor:"Prata",categoria:"Médio",donos:[1]},
+  {placa:"PBZ3E19",modelo:"Onix",cor:"Vermelho",categoria:"Pequeno",donos:[5,1]}, // carro de família: era do Ricardo, hoje o Cadu também usa
+  {placa:"PBY1A22",modelo:"HB20",cor:"Branco",categoria:"Pequeno",donos:[2]},
+  {placa:"OIN2020",modelo:"Amarok",cor:"Preto",categoria:"Pickup",donos:[3]},
+  {placa:"QZX9988",modelo:"Compass",cor:"Cinza",categoria:"SUV",donos:[4]}
+];
+function veiculosDoCliente(id){return VEICULOS.filter(function(v){return v.donos.indexOf(id)>-1})}
+function donoAtual(v){return CLIENTES.find(function(c){return c.id===v.donos[v.donos.length-1]})}
+function nomesDonos(v,excetoId){
+  return v.donos.filter(function(id){return id!==excetoId}).map(function(id){
+    var c=CLIENTES.find(function(x){return x.id===id});
+    return c?c.nome+(c.apelido?' ("'+c.apelido+'")':''):'?';
+  }).join(', ');
+}
+var SERVICOS=[
+  {nome:"Lavagem simples",preco:35,min:20},
+  {nome:"Lavagem completa",preco:50,min:35},
+  {nome:"Lavagem completa + cera",preco:70,min:45},
+  {nome:"Motor",preco:25,min:15},
+  {nome:"Higienização de bancos",preco:null,min:70},
+  {nome:"Polimento",preco:null,min:120},
+  {nome:"Cristalização de vidros",preco:90,min:40}
+];
+var SLOTS=[
+  {h:"Agora",info:"imediato · sem espera"},
+  {h:"10:30",info:"2º na fila"},
+  {h:"11:00",info:"3º na fila"},
+  {h:"11:30",info:"3º na fila"},
+  {h:"12:00",info:"1 vaga"}
+];
+
+/* ================= AUTOCOMPLETE: NOME ================= */
+var nomeInput=document.getElementById('nomeInput'),nomeSuggest=document.getElementById('nomeSuggest'),
+    telInput=document.getElementById('telInput'),visitsPill=document.getElementById('visitsPill'),
+    visitsCount=document.getElementById('visitsCount'),obsChip=document.getElementById('obsChip'),
+    veicPicker=document.getElementById('veicPicker'),
+    clienteAtivo=null,veiculoAtivo=null;
+
+function formataTel(t){
+  var d=t.replace(/\D/g,'').slice(2); // remove 55
+  if(d.length<10)return t;
+  return '('+d.slice(0,2)+') '+d.slice(2,3)+' '+d.slice(3,7)+'-'+d.slice(7,11);
+}
+
+nomeInput.addEventListener('input',function(){
+  var q=nomeInput.value.trim().toLowerCase();
+  clienteAtivo=null;visitsPill.style.display='none';obsChip.style.display='none';
+  renderCrm();verificarVinculo();
+  if(q.length<3){nomeSuggest.classList.remove('show');return}
+  var achou=CLIENTES.filter(function(c){return c.nome.toLowerCase().indexOf(q)>-1});
+  if(!achou.length){nomeSuggest.classList.remove('show');return}
+  nomeSuggest.innerHTML=achou.map(function(c){
+    var qtd=veiculosDoCliente(c.id).length;
+    return '<div class="sug-item" data-id="'+c.id+'"><b>'+c.nome+(c.apelido?' — "'+c.apelido+'"':'')+'</b><span>'+c.hist.length+'x · '+qtd+' veículo'+(qtd===1?'':'s')+'</span></div>';
+  }).join('');
+  nomeSuggest.classList.add('show');
+});
+nomeSuggest.addEventListener('click',function(e){
+  var it=e.target.closest('.sug-item');if(!it)return;
+  selecionarCliente(CLIENTES.find(function(c){return c.id===+it.dataset.id}));
+  nomeSuggest.classList.remove('show');
+});
+
+function selecionarVeiculoCampos(v){
+  document.getElementById('placaInput').value=v.placa.replace(/(\w{3})(\w+)/,'$1 $2');
+  document.getElementById('modeloInput').value=v.modelo;
+  selecionarChip(document.getElementById('categoriaChips'),v.categoria);
+  selecionarCor(v.cor);
+}
+
+function renderVeicPicker(veics,ativo){
+  if(veics.length<2){veicPicker.style.display='none';veicPicker.innerHTML='';return}
+  veicPicker.style.display='flex';
+  veicPicker.innerHTML='<span style="width:100%;font-size:.72rem;color:var(--fumaca);margin-bottom:2px">'+(ativo?'Veículos deste cliente — o marcado é o de hoje':'Qual veículo hoje?')+'</span>'+veics.map(function(v){
+    return '<span class="chip veic-chip'+(ativo&&ativo.placa===v.placa?' on':'')+'" data-placa="'+v.placa+'">'+v.modelo+' · '+v.placa.replace(/(\w{3})(\w+)/,'$1 $2')+'</span>';
+  }).join('');
+}
+veicPicker.addEventListener('click',function(e){
+  var chip=e.target.closest('.veic-chip');if(!chip)return;
+  var v=VEICULOS.find(function(x){return x.placa===chip.dataset.placa});
+  veiculoAtivo=v;selecionarVeiculoCampos(v);
+  veicPicker.querySelectorAll('.veic-chip').forEach(function(c){c.classList.toggle('on',c===chip)});
+  verificarVinculo();
+});
+
+function selecionarCliente(c,veiculoConhecido){
+  clienteAtivo=c;
+  nomeInput.value=c.nome+(c.apelido?' ("'+c.apelido+'")':'');
+  telInput.value=formataTel(c.tel);
+  visitsCount.textContent=c.hist.length;
+  visitsPill.style.display='inline-flex';
+  if(c.obs){obsChip.textContent=c.obs;obsChip.style.display='inline-block'}else{obsChip.style.display='none'}
+  aplicarWaStatus(c.temWhatsapp);
+  renderCrm();
+
+  var veics=veiculosDoCliente(c.id);
+  if(veiculoConhecido){
+    veiculoAtivo=veiculoConhecido; // já sabíamos qual carro é (veio da placa) — não reabre escolha
+  }else if(veics.length===1){
+    veiculoAtivo=veics[0];selecionarVeiculoCampos(veics[0]);
+  }else if(veics.length>1){
+    veiculoAtivo=null;
+  }
+  renderVeicPicker(veics,veiculoAtivo);
+  verificarVinculo();
+}
+
+/* ---------- vínculo carro × cliente — nunca trava, só avisa ---------- */
+var vinculoBanner=document.getElementById('vinculoBanner'),vinculoTitulo=document.getElementById('vinculoTitulo'),
+    vinculoSub=document.getElementById('vinculoSub'),vinculoBtn=document.getElementById('vinculoBtn');
+function verificarVinculo(){
+  if(!veiculoAtivo){vinculoBanner.classList.remove('show');return}
+  var pertence=clienteAtivo&&veiculoAtivo.donos.indexOf(clienteAtivo.id)>-1;
+  if(clienteAtivo && !pertence){
+    vinculoBanner.classList.add('show');
+    vinculoTitulo.textContent='Esse carro já foi de '+nomesDonos(veiculoAtivo);
+    vinculoSub.textContent='Confirme se é o mesmo veículo — o cadastro não é travado';
+    vinculoBtn.style.display='block';
+    vinculoBtn.textContent='Vincular também a '+clienteAtivo.nome.split(' ')[0];
+  }else{
+    vinculoBanner.classList.remove('show');
+  }
+}
+vinculoBtn.addEventListener('click',function(){
+  if(!clienteAtivo||!veiculoAtivo)return;
+  if(veiculoAtivo.donos.indexOf(clienteAtivo.id)===-1)veiculoAtivo.donos.push(clienteAtivo.id);
+  verificarVinculo();
+  renderVeicPicker(veiculosDoCliente(clienteAtivo.id),veiculoAtivo);
+});
+
+/* ---------- status de whatsapp ---------- */
+var waStatus=document.getElementById('waStatus');
+function aplicarWaStatus(v){
+  if(v===true){waStatus.dataset.s='ok';waStatus.querySelector('span').textContent='WhatsApp confirmado'}
+  else if(v===false){waStatus.dataset.s='no';waStatus.querySelector('span').textContent='Sem WhatsApp — ligar ou SMS'}
+  else{waStatus.dataset.s='unk';waStatus.querySelector('span').textContent='Não verificado — toque para confirmar'}
+}
+waStatus.addEventListener('click',function(){
+  var atual=waStatus.dataset.s,prox=atual==='unk'?true:(atual==='ok'?false:null);
+  if(clienteAtivo)clienteAtivo.temWhatsapp=prox;
+  aplicarWaStatus(prox);
+});
+
+/* ---------- notas internas (CRM) ---------- */
+var crmToggle=document.getElementById('crmToggle'),crmPanel=document.getElementById('crmPanel'),
+    crmCount=document.getElementById('crmCount'),crmList=document.getElementById('crmList'),
+    crmInput=document.getElementById('crmInput');
+
+function renderCrm(){
+  var notas=clienteAtivo?clienteAtivo.notasInternas:[];
+  crmCount.textContent=notas.length;
+  crmList.innerHTML=notas.length
+    ? notas.map(function(n){return '<div class="crm-item"><div class="d">'+n.d+'</div>'+n.t+'</div>'}).join('')
+    : '<div class="crm-empty">'+(clienteAtivo?'Nenhuma nota registrada ainda.':'Selecione um cliente cadastrado para ver e adicionar notas.')+'</div>';
+}
+crmToggle.addEventListener('click',function(){
+  crmPanel.classList.toggle('show');
+  if(crmPanel.classList.contains('show'))renderCrm();
+});
+document.getElementById('crmAdd').addEventListener('click',function(){
+  if(!clienteAtivo || !crmInput.value.trim())return;
+  clienteAtivo.notasInternas.push({d:paraDataHojeMock(),t:crmInput.value.trim()});
+  crmInput.value='';renderCrm();
+});
+function paraDataHojeMock(){return '18/08/2026'}
+
+/* ================= AUTOCOMPLETE: PLACA ================= */
+var placaInput=document.getElementById('placaInput'),placaSuggest=document.getElementById('placaSuggest');
+placaInput.addEventListener('input',function(){
+  var q=placaInput.value.replace(/\s/g,'').toLowerCase();
+  if(q.length<1){placaSuggest.classList.remove('show');return}
+  var achou=VEICULOS.filter(function(v){return v.placa.toLowerCase().indexOf(q)===0});
+  if(!achou.length){placaSuggest.classList.remove('show');return}
+  placaSuggest.innerHTML=achou.map(function(v){
+    var dono=donoAtual(v),tag=v.donos.length>1?(v.donos.length+' clientes já usaram'):dono.nome;
+    return '<div class="sug-item" data-placa="'+v.placa+'"><b>'+v.placa.replace(/(\w{3})(\w+)/,'$1 $2')+'</b><span>'+v.modelo+' · '+tag+'</span></div>';
+  }).join('');
+  placaSuggest.classList.add('show');
+});
+placaSuggest.addEventListener('click',function(e){
+  var it=e.target.closest('.sug-item');if(!it)return;
+  selecionarPlaca(VEICULOS.find(function(v){return v.placa===it.dataset.placa}));
+  placaSuggest.classList.remove('show');
+});
+function selecionarPlaca(v){
+  veiculoAtivo=v;selecionarVeiculoCampos(v);
+  if(!clienteAtivo && nomeInput.value.trim()===''){
+    selecionarCliente(donoAtual(v),v);
+  }else{
+    if(clienteAtivo)renderVeicPicker(veiculosDoCliente(clienteAtivo.id),v);
+    verificarVinculo();
+  }
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#nomeInput'))nomeSuggest.classList.remove('show');
+  if(!e.target.closest('#placaInput'))placaSuggest.classList.remove('show');
+});
+
+function selecionarChip(container,nome){
+  container.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c.textContent.trim()===nome)});
+}
+function selecionarCor(nome){
+  var chips=document.querySelectorAll('#corChips .chip'),outraInput=document.getElementById('corOutraInput'),achou=null;
+  chips.forEach(function(c){
+    var bate=c.dataset.cor===nome;
+    c.classList.toggle('on',bate);
+    if(bate)achou=c;
+  });
+  if(!achou){
+    document.querySelectorAll('#corChips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.cor==='outra')});
+    outraInput.style.display='block';outraInput.value=nome;
+  }else{
+    outraInput.style.display='none';
+  }
+}
+document.getElementById('categoriaChips').querySelectorAll('.chip').forEach(function(c){
+  c.addEventListener('click',function(){selecionarChip(document.getElementById('categoriaChips'),c.textContent.trim())});
+});
+document.getElementById('corChips').addEventListener('click',function(e){
+  var chip=e.target.closest('.chip');if(!chip)return;
+  document.querySelectorAll('#corChips .chip').forEach(function(c){c.classList.remove('on')});
+  chip.classList.add('on');
+  var outraInput=document.getElementById('corOutraInput');
+  if(chip.dataset.cor==='outra'){outraInput.style.display='block';outraInput.focus()}
+  else{outraInput.style.display='none'}
+});
+
+/* ================= MODELO (base FIPE mockada) ================= */
+var MODELOS=[
+  "Volkswagen Gol","Volkswagen Polo","Volkswagen Virtus","Volkswagen T-Cross","Volkswagen Nivus","Volkswagen Saveiro","Volkswagen Voyage","Volkswagen Taos","Volkswagen Amarok",
+  "Chevrolet Onix","Chevrolet Onix Plus","Chevrolet Tracker","Chevrolet Spin","Chevrolet S10","Chevrolet Montana","Chevrolet Equinox",
+  "Fiat Mobi","Fiat Argo","Fiat Cronos","Fiat Strada","Fiat Toro","Fiat Pulse","Fiat Fastback","Fiat Titano",
+  "Hyundai HB20","Hyundai HB20S","Hyundai Creta","Hyundai Tucson","Hyundai i30",
+  "Toyota Corolla","Toyota Corolla Cross","Toyota Hilux","Toyota Yaris","Toyota RAV4","Toyota SW4",
+  "Honda Civic","Honda City","Honda HR-V","Honda CR-V","Honda Fit","Honda WR-V",
+  "Renault Kwid","Renault Sandero","Renault Duster","Renault Logan","Renault Oroch",
+  "Nissan Kicks","Nissan Versa","Nissan Frontier","Nissan Sentra",
+  "Jeep Renegade","Jeep Compass","Jeep Commander",
+  "Ford Ka","Ford EcoSport","Ford Ranger","Ford Territory","Ford Bronco Sport",
+  "Peugeot 208","Peugeot 2008","Peugeot 3008",
+  "Citroën C3","Citroën C4 Cactus","Citroën Basalt",
+  "Kia Sportage","Kia Bongo",
+  "Mitsubishi L200 Triton","Mitsubishi Outlander",
+  "RAM 2500","RAM Rampage",
+  "BYD Dolphin","BYD Song Plus","BYD Yuan Plus",
+  "Chery Tiggo 5x","Chery Tiggo 7","Caoa Chery Tiggo 8"
+];
+var modeloInput=document.getElementById('modeloInput'),modeloSuggest=document.getElementById('modeloSuggest');
+modeloInput.addEventListener('input',function(){
+  var q=modeloInput.value.trim().toLowerCase();
+  if(q.length<2){modeloSuggest.classList.remove('show');return}
+  var achou=MODELOS.filter(function(m){return m.toLowerCase().indexOf(q)>-1}).slice(0,8);
+  if(!achou.length){modeloSuggest.classList.remove('show');return}
+  modeloSuggest.innerHTML=achou.map(function(m){
+    var marca=m.split(' ')[0],resto=m.slice(marca.length+1);
+    return '<div class="sug-item" data-m="'+m+'"><b>'+resto+'</b><span>'+marca+'</span></div>';
+  }).join('');
+  modeloSuggest.classList.add('show');
+});
+modeloSuggest.addEventListener('click',function(e){
+  var it=e.target.closest('.sug-item');if(!it)return;
+  modeloInput.value=it.dataset.m;
+  modeloSuggest.classList.remove('show');
+});
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#modeloInput'))modeloSuggest.classList.remove('show');
+});
+document.getElementById('fipeUpdateBtn').addEventListener('click',function(e){
+  e.preventDefault();
+  var lbl=document.getElementById('fipeUpdateLbl');
+  lbl.textContent='Atualizando…';
+  setTimeout(function(){lbl.textContent=MODELOS.length+' modelos · atualizado agora'},900);
+});
+
+/* ================= MODAL DE HISTÓRICO ================= */
+var histOverlay=document.getElementById('histOverlay');
+visitsPill.addEventListener('click',function(){
+  if(!clienteAtivo)return;
+  document.getElementById('histNome').textContent=clienteAtivo.nome;
+  document.getElementById('histSub').textContent=clienteAtivo.hist.length+' visitas registradas'+(clienteAtivo.mensalista?' · mensalista':'');
+  document.getElementById('histList').innerHTML=clienteAtivo.hist.map(function(h){
+    return '<div class="hist-item"><div><b>'+h.s+'</b><div class="d">'+h.d+'</div></div><span class="v">R$ '+h.v.toFixed(2).replace('.',',')+'</span></div>';
+  }).join('');
+  histOverlay.classList.add('show');
+});
+document.getElementById('histClose').addEventListener('click',function(){histOverlay.classList.remove('show')});
+histOverlay.addEventListener('click',function(e){if(e.target===histOverlay)histOverlay.classList.remove('show')});
+
+/* ================= SERVIÇOS ================= */
+var svcCatalogo=document.getElementById('svcCatalogo'),svcSel=document.getElementById('svcSel'),
+    svcEmpty=document.getElementById('svcEmpty'),svcTotalValor=document.getElementById('svcTotalValor'),
+    selecionados=[];
+
+svcCatalogo.innerHTML=SERVICOS.map(function(s,i){
+  return '<div class="svc-chip" data-i="'+i+'"><b>'+s.nome+'</b><span class="'+(s.preco===null?'aberto':'')+'">'+(s.preco===null?'A combinar':'R$ '+s.preco.toFixed(2).replace('.',','))+'</span></div>';
+}).join('');
+
+function renderServicos(){
+  if(!selecionados.length){svcEmpty.style.display='block';svcSel.classList.remove('show');svcSel.innerHTML='';svcTotalValor.textContent='R$ 0,00';return}
+  svcEmpty.style.display='none';svcSel.classList.add('show');
+  svcSel.innerHTML=selecionados.map(function(it,i){
+    return '<div class="svc-sel-item"><span class="nm">'+it.nome+'</span>'+
+      (it.aberto?'<input type="text" class="pinput" data-i="'+i+'" value="'+(it.preco||0).toFixed(2).replace('.',',')+'" inputmode="decimal">':
+      '<span class="fixo">R$ '+it.preco.toFixed(2).replace('.',',')+'</span>')+
+      '<button class="rm" data-rm="'+i+'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  }).join('');
+  var total=selecionados.reduce(function(a,it){return a+(it.preco||0)},0);
+  svcTotalValor.textContent='R$ '+total.toFixed(2).replace('.',',');
+}
+svcCatalogo.addEventListener('click',function(e){
+  var chip=e.target.closest('.svc-chip');if(!chip)return;
+  var s=SERVICOS[+chip.dataset.i];
+  selecionados.push({nome:s.nome,preco:s.preco===null?0:s.preco,aberto:s.preco===null});
+  renderServicos();
+});
+svcSel.addEventListener('click',function(e){
+  var rm=e.target.closest('[data-rm]');
+  if(rm){selecionados.splice(+rm.dataset.rm,1);renderServicos()}
+});
+svcSel.addEventListener('input',function(e){
+  if(!e.target.classList.contains('pinput'))return;
+  var i=+e.target.dataset.i,v=parseFloat(e.target.value.replace(',','.'))||0;
+  selecionados[i].preco=v;
+  var total=selecionados.reduce(function(a,it){return a+(it.preco||0)},0);
+  svcTotalValor.textContent='R$ '+total.toFixed(2).replace('.',',');
+});
+
+/* ================= HORÁRIO / FILA ================= */
+var horaBtn=document.getElementById('horaBtn'),slotPanel=document.getElementById('slotPanel'),horaLabel=document.getElementById('horaLabel');
+slotPanel.innerHTML=SLOTS.map(function(s,i){
+  return '<div class="slot-opt" data-i="'+i+'"><b>'+s.h+'</b><span>'+s.info+'</span></div>';
+}).join('');
+horaBtn.addEventListener('click',function(){slotPanel.classList.toggle('show')});
+slotPanel.addEventListener('click',function(e){
+  var it=e.target.closest('.slot-opt');if(!it)return;
+  var s=SLOTS[+it.dataset.i];
+  horaLabel.textContent=s.h;horaBtn.classList.add('picked');
+  slotPanel.classList.remove('show');
+});
+
+/* ================= CONFIRMAR + WHATSAPP (wa.me) ================= */
+function confirmarEntrada(){
+  var nome=(clienteAtivo?clienteAtivo.nome:nomeInput.value.trim())||'cliente',
+      tel=(clienteAtivo?clienteAtivo.tel:telInput.value.replace(/\D/g,'')),
+      modelo=document.getElementById('modeloInput').value||'veículo',
+      hora=horaLabel.textContent,
+      lista=selecionados.map(function(s){return s.nome}).join(', ')||'lavagem',
+      total=selecionados.reduce(function(a,it){return a+(it.preco||0)},0);
+
+  if(document.getElementById('sendMsgCheck').checked && tel){
+    var msg='Olá '+nome.split(' ')[0]+'! Seu '+modelo+' entrou no T-Jet 🚗💧\n'+
+      'Serviços: '+lista+'\nTotal: R$ '+total.toFixed(2).replace('.',',')+'\nPrevisão de entrega: '+hora+
+      '\n\nAvisamos por aqui assim que estiver pronto!';
+    var link='https://wa.me/'+tel+'?text='+encodeURIComponent(msg);
+    window.open(link,'_blank');
+  }
+  irPara('home');
+}
+
+/* ================= PÁTIO ================= */
+function paraMin(hm){var p=hm.split(':');return (+p[0])*60+(+p[1])}
+function paraHM(min){min=((min%1440)+1440)%1440;var h=Math.floor(min/60),m=min%60;return (h<10?'0':'')+h+':'+(m<10?'0':'')+m}
+
+var PATIO=[
+  {id:1,cliente:"Carlos Eduardo",apelido:"Cadu",placa:"PBX 4C71",marca:"Honda",modelo:"Civic",cor:"Prata",categoria:"Médio",
+   tel:"5583999991111",temWhatsapp:true,numeroPrisma:"07",obs:"Não gosta de cera no painel",
+   entrada:paraMin("08:00"),previsao:paraMin("12:00"),servicos:[{nome:"Lavagem completa + cera",preco:70}],duracao:45,status:"aguardando",
+   avariasEntrada:["Risco na porta esquerda","Amassado no para-choque dianteiro"],obsSaida:"",pagamentos:[],
+   apontamentos:[{h:"08:00",t:"Veículo recebido"}]},
+  {id:2,cliente:"Marina Souza",apelido:null,placa:"PBY 1A22",marca:"Hyundai",modelo:"HB20",cor:"Branco",categoria:"Pequeno",
+   tel:"5583988882222",temWhatsapp:true,numeroPrisma:"03",obs:"",
+   entrada:paraMin("08:30"),previsao:paraMin("10:00"),servicos:[{nome:"Lavagem completa",preco:50}],duracao:35,status:"lavando",
+   avariasEntrada:[],obsSaida:"",pagamentos:[],
+   apontamentos:[{h:"08:30",t:"Veículo recebido"},{h:"08:42",t:"Iniciou lavagem — Box 1"}]}
+];
+var FORMAS_PAGAMENTO=["Dinheiro","Pix","Cartão de Débito","Cartão de Crédito","Mensalista"];
+
+var relogioMin=paraMin("08:40"),relogioTx=document.getElementById('relogioTx'),
+    filaPatio=document.getElementById('filaPatio'),alertBanner=document.getElementById('alertBanner'),
+    alertTitulo=document.getElementById('alertTitulo'),alertSub=document.getElementById('alertSub'),
+    noPatioTx=document.getElementById('noPatioTx'),modoAuto=true;
+
+function slackDe(c){
+  if(c.status==='pronto')return 9999;
+  return (c.previsao-relogioMin)-c.duracao;
+}
+function statusLbl(s){return {aguardando:'Aguardando',lavando:'Lavando',secando:'Secando',pronto:'Pronto'}[s]}
+
+function renderPatio(){
+  relogioTx.textContent=paraHM(relogioMin);
+  var ativos=PATIO.filter(function(c){return c.status!=='pronto'});
+  noPatioTx.textContent=ativos.length;
+
+  if(modoAuto)PATIO.sort(function(a,b){return slackDe(a)-slackDe(b)});
+  var atrasados=PATIO.filter(function(c){return c.status!=='pronto' && relogioMin>c.previsao});
+  alertBanner.classList.toggle('show',atrasados.length>0);
+  if(atrasados.length){
+    alertTitulo.textContent=atrasados.length+' carro'+(atrasados.length>1?'s':'')+' atrasado'+(atrasados.length>1?'s':'');
+    alertSub.textContent=atrasados.map(function(c){return c.placa}).join(' · ')+' — priorize antes dos demais';
+  }
+
+  document.getElementById('modoAutoSwitch').classList.toggle('on',modoAuto);
+
+  filaPatio.innerHTML=PATIO.map(function(c,i){
+    var slack=slackDe(c),atrasado=c.status!=='pronto'&&relogioMin>c.previsao;
+    var slackTxt,slackCls='';
+    if(c.status==='pronto'){slackTxt='Entregue'}
+    else if(atrasado){slackTxt='Atrasado '+Math.abs(c.previsao-relogioMin)+' min';slackCls='atraso'}
+    else if(slack<=15){slackTxt='Vencendo em '+slack+' min';slackCls='risco'}
+    else{slackTxt='Folga de '+slack+' min'}
+    var waColor=c.temWhatsapp===true?'var(--ok)':c.temWhatsapp===false?'var(--perigo)':'var(--fumaca)';
+    var noPatio=relogioMin-c.entrada;
+    return '<div class="pcarro'+(atrasado?' atrasado':'')+'" data-id="'+c.id+'">'+
+      '<div class="pcarro-top">'+
+        '<span class="drag-handle" title="Arrastar para reordenar">'+
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>'+
+        '</span>'+
+        '<div class="pcarro-ord">'+(i+1)+'</div>'+
+        '<div class="pcarro-nm"><b>'+c.cliente+(c.apelido?' — "'+c.apelido+'"':'')+'</b><span>'+c.placa+' · '+c.modelo+' · '+c.cor+'</span></div>'+
+        '<span class="prisma-chip" data-id="'+c.id+'" title="Toque para trocar o número do prisma">Nº '+c.numeroPrisma+'</span>'+
+        '<span class="st-chip st-'+c.status+'">'+statusLbl(c.status)+'</span>'+
+      '</div>'+
+      '<div class="pcarro-svc">'+(c.servicos.length?c.servicos.map(function(s){return s.nome}).join(' + '):'Nenhum serviço lançado')+'</div>'+
+      '<div class="pcarro-bottom">'+
+        '<span><span class="wa-dot" style="background:'+waColor+'"></span>entrou '+paraHM(c.entrada)+' · há '+noPatio+' min no pátio</span>'+
+        '<span class="pcarro-slack '+slackCls+'">'+slackTxt+'</span>'+
+      '</div></div>';
+  }).join('');
+  if(typeof atualizarTemposDetalhe==='function')atualizarTemposDetalhe();
+}
+renderPatio();
+setInterval(function(){relogioMin++;renderPatio()},1500);
+
+/* ---------- arrastar para reordenar ---------- */
+var sortablePatio=new Sortable(filaPatio,{
+  handle:'.drag-handle',animation:180,ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',
+  onEnd:function(){
+    var novaOrdem=Array.from(filaPatio.children).map(function(el){return +el.dataset.id});
+    PATIO.sort(function(a,b){return novaOrdem.indexOf(a.id)-novaOrdem.indexOf(b.id)});
+    modoAuto=false;
+    renderPatio();
+  }
+});
+document.getElementById('modoAutoBtn').addEventListener('click',function(){
+  modoAuto=!modoAuto;
+  renderPatio();
+});
+filaPatio.addEventListener('click',function(e){
+  var chip=e.target.closest('.prisma-chip');
+  if(chip){
+    var c=PATIO.find(function(x){return x.id===+chip.dataset.id});
+    var v=prompt('Número do prisma para '+c.placa+':',c.numeroPrisma);
+    if(v!==null && v.trim()!==''){c.numeroPrisma=v.trim();renderPatio()}
+    return;
+  }
+  if(e.target.closest('.drag-handle'))return;
+  var el=e.target.closest('.pcarro');if(!el)return;
+  patioAtivo=PATIO.find(function(c){return c.id===+el.dataset.id});
+  abrirDetalheCarro();
+});
+
+/* ---------- modal de detalhe do carro ---------- */
+var patioOverlay=document.getElementById('patioOverlay'),patioAtivo=null;
+function abrirDetalheCarro(){
+  var c=patioAtivo;
+  document.getElementById('patioNome').textContent=c.cliente+(c.apelido?' — "'+c.apelido+'"':'');
+  document.getElementById('dfPlaca').textContent=c.placa;
+  document.getElementById('dfMarca').textContent=c.marca;
+  document.getElementById('dfModelo').textContent=c.modelo;
+  document.getElementById('dfCor').textContent=c.cor;
+  document.getElementById('dfCliente').textContent=c.cliente+(c.apelido?' ("'+c.apelido+'")':'');
+  document.getElementById('dfTel').textContent=formataTel(c.tel);
+  var obsEl=document.getElementById('dfObs');
+  obsEl.textContent=c.obs||'Toque para adicionar';
+  obsEl.classList.toggle('vazio',!c.obs);
+  document.getElementById('dfEntrada').textContent=paraHM(c.entrada);
+  document.getElementById('dfPrevisao').textContent=paraHM(c.previsao);
+  atualizarTemposDetalhe();
+  document.getElementById('patioStatusBtns').innerHTML=['aguardando','lavando','secando','pronto'].map(function(s){
+    return '<button class="stbtn'+(c.status===s?' on':'')+'" data-st="'+s+'">'+statusLbl(s)+'</button>';
+  }).join('');
+  document.getElementById('patioSvcCatalogo').innerHTML=SERVICOS.map(function(s,i){
+    return '<div class="svc-chip" data-i="'+i+'"><b>'+s.nome+'</b><span class="'+(s.preco===null?'aberto':'')+'">'+(s.preco===null?'A combinar':'R$ '+s.preco.toFixed(2).replace('.',','))+'</span></div>';
+  }).join('');
+  document.getElementById('saidaObsInput').value=c.obsSaida||'';
+  renderPatioServicos();
+  renderSaidaAvarias();
+  renderFormasPagamento();
+  renderPagLancamentos();
+  renderApontamentos();
+  document.getElementById('saidaPanel').classList.remove('show');
+  patioOverlay.classList.add('show');
+}
+function atualizarTemposDetalhe(){
+  if(!patioAtivo)return;
+  var c=patioAtivo,noPatio=relogioMin-c.entrada,rest=c.previsao-relogioMin;
+  document.getElementById('dfNoPatio').textContent=noPatio+' min';
+  var restEl=document.getElementById('dfRestante');
+  if(c.status==='pronto'){restEl.textContent='Entregue';restEl.style.color='var(--ok)'}
+  else if(rest<0){restEl.textContent='Atrasado '+Math.abs(rest)+' min';restEl.style.color='var(--perigo)'}
+  else{restEl.textContent=rest+' min';restEl.style.color=rest<=15?'var(--alerta)':'var(--texto)'}
+}
+function renderPatioServicos(){
+  var c=patioAtivo,lista=document.getElementById('patioSvcList');
+  lista.innerHTML=c.servicos.length?c.servicos.map(function(s,i){
+    return '<div class="svc-sel-item"><span class="nm">'+s.nome+'</span><span class="fixo">R$ '+s.preco.toFixed(2).replace('.',',')+'</span><button class="rm" data-i="'+i+'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  }).join(''):'<div class="crm-empty">Nenhum serviço lançado.</div>';
+  document.getElementById('patioTotalValor').textContent='R$ '+totalServicoPatio().toFixed(2).replace('.',',');
+  renderPagResumo();
+}
+function totalServicoPatio(){return patioAtivo?patioAtivo.servicos.reduce(function(a,s){return a+s.preco},0):0}
+document.getElementById('patioSvcCatalogo').addEventListener('click',function(e){
+  var chip=e.target.closest('.svc-chip');if(!chip||!patioAtivo)return;
+  var s=SERVICOS[+chip.dataset.i];
+  var preco=s.preco;
+  if(preco===null){var v=prompt('Preço para "'+s.nome+'":','');preco=parseFloat((v||'0').replace(',','.'))||0}
+  patioAtivo.servicos.push({nome:s.nome,preco:preco});
+  renderPatioServicos();renderPatio();
+});
+document.getElementById('patioSvcList').addEventListener('click',function(e){
+  var b=e.target.closest('.rm');if(!b||!patioAtivo)return;
+  patioAtivo.servicos.splice(+b.dataset.i,1);
+  renderPatioServicos();renderPatio();
+});
+
+/* ---------- entregar veículo: painel de saída ---------- */
+document.getElementById('entregarVeiculoBtn').addEventListener('click',function(){
+  var painel=document.getElementById('saidaPanel');
+  painel.classList.toggle('show');
+  if(painel.classList.contains('show'))painel.scrollIntoView({behavior:'smooth',block:'start'});
+});
+function renderSaidaAvarias(){
+  var c=patioAtivo,box=document.getElementById('saidaAvarias');
+  box.innerHTML=(c.avariasEntrada&&c.avariasEntrada.length)
+    ? c.avariasEntrada.map(function(a){return '<div class="avaria-entrada-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>'+a+'</div>'}).join('')
+    : '<div class="crm-empty">Nenhuma avaria registrada na entrada.</div>';
+}
+document.getElementById('saidaObsInput').addEventListener('input',function(){
+  if(patioAtivo)patioAtivo.obsSaida=this.value;
+});
+
+/* ---------- pagamento dividido ---------- */
+function renderFormasPagamento(){
+  document.getElementById('formaPagamentoChips').innerHTML=FORMAS_PAGAMENTO.map(function(f,i){
+    return '<span class="chip forma-chip'+(i===0?' on':'')+'" data-f="'+f+'">'+f+'</span>';
+  }).join('');
+}
+document.getElementById('formaPagamentoChips').addEventListener('click',function(e){
+  var chip=e.target.closest('.forma-chip');if(!chip)return;
+  document.querySelectorAll('.forma-chip').forEach(function(c){c.classList.toggle('on',c===chip)});
+});
+document.getElementById('novaFormaBtn').addEventListener('click',function(){
+  var nome=prompt('Nome da nova forma de pagamento:','');
+  if(nome&&nome.trim()){FORMAS_PAGAMENTO.push(nome.trim());renderFormasPagamento()}
+});
+document.getElementById('pagAddBtn').addEventListener('click',function(){
+  if(!patioAtivo)return;
+  var forma=document.querySelector('.forma-chip.on'),valInput=document.getElementById('pagValorInput'),
+      valor=parseFloat(valInput.value.replace(',','.'));
+  if(!forma||!valor||valor<=0)return;
+  patioAtivo.pagamentos.push({forma:forma.dataset.f,valor:valor});
+  valInput.value='';
+  renderPagLancamentos();
+});
+function renderPagLancamentos(){
+  var c=patioAtivo,box=document.getElementById('pagLancamentos');
+  box.innerHTML=c.pagamentos.length?c.pagamentos.map(function(p,i){
+    return '<div class="pag-linha"><b>'+p.forma+'</b><span>R$ '+p.valor.toFixed(2).replace('.',',')+'</span><button class="rm-avaria" data-i="'+i+'">×</button></div>';
+  }).join(''):'';
+  box.querySelectorAll('.rm-avaria').forEach(function(b){
+    b.addEventListener('click',function(){c.pagamentos.splice(+b.dataset.i,1);renderPagLancamentos()});
+  });
+  renderPagResumo();
+}
+function renderPagResumo(){
+  if(!patioAtivo)return;
+  var total=totalServicoPatio(),pago=patioAtivo.pagamentos.reduce(function(a,p){return a+p.valor},0),rest=total-pago;
+  document.getElementById('pagTotalServico').textContent='R$ '+total.toFixed(2).replace('.',',');
+  document.getElementById('pagTotalPago').textContent='R$ '+pago.toFixed(2).replace('.',',');
+  var restEl=document.getElementById('pagRestante'),lblEl=document.getElementById('pagRestanteLbl');
+  if(rest>0.004){lblEl.textContent='Restante';restEl.textContent='R$ '+rest.toFixed(2).replace('.',',');restEl.style.color='var(--perigo)'}
+  else if(rest<-0.004){lblEl.textContent='Troco';restEl.textContent='R$ '+Math.abs(rest).toFixed(2).replace('.',',');restEl.style.color='var(--alerta)'}
+  else{lblEl.textContent='Pago';restEl.textContent='R$ '+total.toFixed(2).replace('.',',');restEl.style.color='var(--ok)'}
+}
+document.getElementById('confirmarEntregaBtn').addEventListener('click',function(){
+  if(!patioAtivo)return;
+  var c=patioAtivo,total=totalServicoPatio(),pago=c.pagamentos.reduce(function(a,p){return a+p.valor},0);
+  if(pago<total-0.004){
+    if(!confirm('Ainda falta R$ '+(total-pago).toFixed(2).replace('.',',')+'. Confirmar a entrega mesmo assim?'))return;
+  }
+  c.status='pronto';
+  var resumoPag=c.pagamentos.length?c.pagamentos.map(function(p){return p.forma+' R$ '+p.valor.toFixed(2).replace('.',',')}).join(', '):'sem pagamento lançado';
+  c.apontamentos.push({h:paraHM(relogioMin),t:'Veículo entregue — '+resumoPag});
+  if(c.temWhatsapp!==false){
+    var msg='Olá '+c.cliente.split(' ')[0]+'! Seu '+c.modelo+' está pronto e já foi entregue. Obrigado pela confiança! 🚗✨';
+    window.open('https://wa.me/'+c.tel+'?text='+encodeURIComponent(msg),'_blank');
+  }
+  patioOverlay.classList.remove('show');
+  renderPatio();
+});
+
+/* edição inline dos campos do veículo/cliente/horários */
+document.querySelectorAll('.det-f[data-campo]').forEach(function(el){
+  el.addEventListener('click',function(){
+    if(!patioAtivo)return;
+    var campo=el.dataset.campo,c=patioAtivo,atual,novo;
+    if(campo==='entrada'||campo==='previsao'){
+      atual=paraHM(c[campo]);
+      novo=prompt('Novo horário de '+(campo==='entrada'?'entrada':'previsão')+' (HH:MM):',atual);
+      if(novo&&/^\d{1,2}:\d{2}$/.test(novo.trim())){c[campo]=paraMin(novo.trim());}
+    }else{
+      atual=c[campo]||'';
+      novo=prompt('Editar '+campo+':',atual);
+      if(novo!==null)c[campo]=novo.trim();
+    }
+    abrirDetalheCarro();renderPatio();
+  });
+});
+document.getElementById('patioClose').addEventListener('click',function(){patioOverlay.classList.remove('show')});
+function renderApontamentos(){
+  document.getElementById('patioApontList').innerHTML=patioAtivo.apontamentos.map(function(a){
+    return '<div class="apont-item"><span class="h">'+a.h+'</span><span>'+a.t+'</span></div>';
+  }).join('');
+}
+patioOverlay.addEventListener('click',function(e){if(e.target===patioOverlay)patioOverlay.classList.remove('show')});
+document.getElementById('patioStatusBtns').addEventListener('click',function(e){
+  var b=e.target.closest('.stbtn');if(!b||!patioAtivo)return;
+  patioAtivo.status=b.dataset.st;
+  patioAtivo.apontamentos.push({h:paraHM(relogioMin),t:'Status alterado para "'+statusLbl(b.dataset.st)+'"'});
+  abrirDetalheCarro();renderPatio();
+});
+document.getElementById('apontAdd').addEventListener('click',function(){
+  var inp=document.getElementById('apontInput');
+  if(!inp.value.trim()||!patioAtivo)return;
+  patioAtivo.apontamentos.push({h:paraHM(relogioMin),t:inp.value.trim()});
+  inp.value='';renderApontamentos();
+});
+
+/* ================= VISTORIA DE AVARIAS ================= */
+var LAT_CARRO='<path d="M15,85 C15,70 25,60 40,58 L55,40 C65,30 85,24 105,24 L150,24 C168,24 178,32 188,42 L215,58 C232,60 245,68 245,85 L245,92 L15,92 Z" fill="none" stroke="var(--fumaca)" stroke-width="3" stroke-linejoin="round"/>'+
+  '<path d="M60,58 L72,40 C78,33 90,28 103,28 L103,58 Z" fill="var(--vidro)" stroke="var(--fumaca)" stroke-width="1.6"/>'+
+  '<path d="M108,58 L108,28 L148,28 C160,28 168,33 178,42 L188,58 Z" fill="var(--vidro)" stroke="var(--fumaca)" stroke-width="1.6"/>'+
+  '<line x1="106" y1="28" x2="106" y2="58" stroke="var(--fumaca)" stroke-width="1.6"/>'+
+  '<line x1="15" y1="85" x2="245" y2="85" stroke="var(--fumaca)" stroke-width="1.4" opacity=".45"/>'+
+  '<line x1="130" y1="85" x2="130" y2="60" stroke="var(--fumaca)" stroke-width="1.4" opacity=".45"/>'+
+  '<circle cx="65" cy="92" r="17" fill="none" stroke="var(--fumaca)" stroke-width="3"/><circle cx="65" cy="92" r="7" fill="var(--fumaca)" opacity=".4"/>'+
+  '<circle cx="195" cy="92" r="17" fill="none" stroke="var(--fumaca)" stroke-width="3"/><circle cx="195" cy="92" r="7" fill="var(--fumaca)" opacity=".4"/>'+
+  '<ellipse cx="58" cy="48" rx="7" ry="4" fill="none" stroke="var(--fumaca)" stroke-width="2"/>';
+
+var VIEWS={
+  frente:{label:'Frente',viewBox:'0 0 240 165',svg:
+    '<path d="M40,155 C40,105 55,72 70,62 L170,62 C185,72 200,105 200,155 Z" fill="none" stroke="var(--fumaca)" stroke-width="3"/>'+
+    '<path d="M75,62 L165,62 L155,92 L85,92 Z" fill="var(--vidro)" stroke="var(--fumaca)" stroke-width="1.8"/>'+
+    '<rect x="95" y="120" width="50" height="14" rx="6" fill="var(--fumaca)" opacity=".3"/>'+
+    '<ellipse cx="60" cy="120" rx="14" ry="9" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<ellipse cx="180" cy="120" rx="14" ry="9" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<ellipse cx="35" cy="97" rx="9" ry="6" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<ellipse cx="205" cy="97" rx="9" ry="6" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<rect x="33" y="144" width="32" height="16" rx="6" fill="var(--fumaca)" opacity=".45"/>'+
+    '<rect x="175" y="144" width="32" height="16" rx="6" fill="var(--fumaca)" opacity=".45"/>'+
+    '<line x1="120" y1="92" x2="120" y2="120" stroke="var(--fumaca)" stroke-width="1.4" opacity=".4"/>'},
+  tras:{label:'Traseira',viewBox:'0 0 240 165',svg:
+    '<path d="M40,155 C40,105 55,72 70,62 L170,62 C185,72 200,105 200,155 Z" fill="none" stroke="var(--fumaca)" stroke-width="3"/>'+
+    '<path d="M78,62 L162,62 L150,90 L90,90 Z" fill="var(--vidro)" stroke="var(--fumaca)" stroke-width="1.8"/>'+
+    '<rect x="100" y="124" width="40" height="16" rx="3" fill="none" stroke="var(--fumaca)" stroke-width="2"/>'+
+    '<rect x="46" y="110" width="24" height="11" rx="4" fill="var(--fumaca)" opacity=".4"/>'+
+    '<rect x="170" y="110" width="24" height="11" rx="4" fill="var(--fumaca)" opacity=".4"/>'+
+    '<ellipse cx="35" cy="94" rx="9" ry="6" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<ellipse cx="205" cy="94" rx="9" ry="6" fill="none" stroke="var(--fumaca)" stroke-width="2.5"/>'+
+    '<rect x="33" y="144" width="32" height="16" rx="6" fill="var(--fumaca)" opacity=".45"/>'+
+    '<rect x="175" y="144" width="32" height="16" rx="6" fill="var(--fumaca)" opacity=".45"/>'},
+  lat_d:{label:'Lat. direita',viewBox:'0 0 260 100',svg:LAT_CARRO},
+  lat_e:{label:'Lat. esquerda',viewBox:'0 0 260 100',svg:'<g transform="translate(260,0) scale(-1,1)">'+LAT_CARRO+'</g>'},
+  teto:{label:'Teto',viewBox:'0 0 260 140',svg:
+    '<rect x="30" y="15" width="200" height="110" rx="42" fill="none" stroke="var(--fumaca)" stroke-width="3"/>'+
+    '<rect x="80" y="30" width="100" height="80" rx="16" fill="var(--vidro)" stroke="var(--fumaca)" stroke-width="1.8"/>'+
+    '<line x1="130" y1="30" x2="130" y2="110" stroke="var(--fumaca)" stroke-width="1.4" opacity=".45"/>'+
+    '<line x1="80" y1="70" x2="180" y2="70" stroke="var(--fumaca)" stroke-width="1.4" opacity=".4"/>'+
+    '<ellipse cx="22" cy="45" rx="8" ry="5" fill="none" stroke="var(--fumaca)" stroke-width="2"/>'+
+    '<ellipse cx="238" cy="45" rx="8" ry="5" fill="none" stroke="var(--fumaca)" stroke-width="2"/>'}
+};
+var ORDEM_VISTAS=['frente','lat_d','tras','lat_e','teto'];
+var avariasAtual=[],semDefeito=false,vistaAtiva='frente',
+    avariaOverlay=document.getElementById('avariaOverlay'),avariaSvg=document.getElementById('avariaSvg'),
+    avariaList=document.getElementById('avariaList'),viewTabs=document.getElementById('viewTabs');
+
+viewTabs.innerHTML=ORDEM_VISTAS.map(function(k){
+  return '<button class="view-tab'+(k===vistaAtiva?' on':'')+'" data-v="'+k+'">'+VIEWS[k].label+'</button>';
+}).join('');
+viewTabs.addEventListener('click',function(e){
+  var b=e.target.closest('.view-tab');if(!b)return;
+  vistaAtiva=b.dataset.v;
+  viewTabs.querySelectorAll('.view-tab').forEach(function(x){x.classList.toggle('on',x===b)});
+  renderAvariaModal();
+});
+
+function renderAvariaModal(){
+  var v=VIEWS[vistaAtiva];
+  avariaSvg.setAttribute('viewBox',v.viewBox);
+  var pins=avariasAtual.map(function(a,i){
+    if(a.x==null||a.view!==vistaAtiva)return '';
+    return '<circle cx="'+a.x+'" cy="'+a.y+'" r="7" fill="var(--perigo)" stroke="var(--painel)" stroke-width="1.5"/>'+
+      '<text x="'+a.x+'" y="'+(a.y+2.6)+'" font-size="8" fill="#fff" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700">'+(i+1)+'</text>';
+  }).join('');
+  avariaSvg.innerHTML=v.svg+pins;
+  avariaList.innerHTML=avariasAtual.length
+    ? avariasAtual.map(function(a,i){return '<div class="apont-item"><span class="avaria-tag">'+VIEWS[a.view].label+'</span><span style="flex:1">'+a.desc+'</span><button class="rm-avaria" data-i="'+i+'">×</button></div>'}).join('')
+    : '<div class="crm-empty">'+(semDefeito?'Vistoriado — sem avarias encontradas.':'Nenhuma avaria registrada ainda.')+'</div>';
+}
+function atualizarResumoAvarias(){
+  var n=avariasAtual.length;
+  document.getElementById('avariaResumoTitulo').textContent=
+    n?(n+' avaria'+(n>1?'s':'')+' registrada'+(n>1?'s':'')):(semDefeito?'Sem avarias — vistoriado':'Nenhuma avaria registrada');
+  document.getElementById('avariaResumoSub').textContent=n||semDefeito?'Toque para revisar':'Toque para marcar riscos e amassados no mapa';
+  document.getElementById('avariaBtn').textContent=n||semDefeito?'Ver / editar vistoria':'Registrar avarias';
+}
+function abrirAvarias(){renderAvariaModal();avariaOverlay.classList.add('show')}
+document.getElementById('avariaBtn').addEventListener('click',abrirAvarias);
+document.getElementById('avariaResumoCard').addEventListener('click',abrirAvarias);
+document.getElementById('avariaClose').addEventListener('click',function(){avariaOverlay.classList.remove('show');atualizarResumoAvarias()});
+avariaOverlay.addEventListener('click',function(e){if(e.target===avariaOverlay){avariaOverlay.classList.remove('show');atualizarResumoAvarias()}});
+
+avariaSvg.addEventListener('click',function(e){
+  var pt=avariaSvg.createSVGPoint();
+  pt.x=e.clientX;pt.y=e.clientY;
+  var loc=pt.matrixTransform(avariaSvg.getScreenCTM().inverse());
+  var desc=prompt('Descreva a avaria neste ponto (ex: risco, amassado):','');
+  if(desc&&desc.trim()){
+    semDefeito=false;
+    avariasAtual.push({view:vistaAtiva,x:Math.round(loc.x),y:Math.round(loc.y),desc:desc.trim()});
+    renderAvariaModal();
+  }
+});
+document.getElementById('avariaAddSemPonto').addEventListener('click',function(){
+  var desc=prompt('Descreva a avaria ('+VIEWS[vistaAtiva].label+'):','');
+  if(desc&&desc.trim()){semDefeito=false;avariasAtual.push({view:vistaAtiva,x:null,y:null,desc:desc.trim()});renderAvariaModal()}
+});
+document.getElementById('avariaUndo').addEventListener('click',function(){
+  if(!avariasAtual.length)return;
+  avariasAtual.pop();renderAvariaModal();
+});
+document.getElementById('avariaLimpar').addEventListener('click',function(){
+  avariasAtual=avariasAtual.filter(function(a){return a.view!==vistaAtiva});
+  renderAvariaModal();
+});
+document.getElementById('avariaSemDefeito').addEventListener('click',function(){
+  avariasAtual=[];semDefeito=true;renderAvariaModal();
+});
+avariaList.addEventListener('click',function(e){
+  var b=e.target.closest('.rm-avaria');if(!b)return;
+  avariasAtual.splice(+b.dataset.i,1);
+  renderAvariaModal();
+});
+
+/* ================= CLIENTES ================= */
+function iniciais(nome){return nome.split(' ').map(function(p){return p[0]}).slice(0,2).join('').toUpperCase()}
+function renderClientesLista(filtro){
+  var q=(filtro||'').trim().toLowerCase();
+  var lista=CLIENTES.filter(function(c){
+    if(!q)return true;
+    var veics=veiculosDoCliente(c.id).map(function(v){return v.placa.toLowerCase()}).join(' ');
+    return c.nome.toLowerCase().indexOf(q)>-1||veics.indexOf(q.replace(/\s/g,''))>-1;
+  });
+  document.getElementById('clientesLista').innerHTML=lista.map(function(c){
+    var veics=veiculosDoCliente(c.id),total=c.hist.reduce(function(a,h){return a+h.v},0);
+    return '<div class="cl-card" data-id="'+c.id+'">'+
+      '<div class="cl-av">'+iniciais(c.nome)+'</div>'+
+      '<div class="cl-info"><b>'+c.nome+(c.apelido?' — "'+c.apelido+'"':'')+'</b><span>'+veics.length+' veículo'+(veics.length===1?'':'s')+' · '+c.hist.length+' visitas · R$ '+total.toFixed(0)+' gastos</span></div>'+
+      '<div class="cl-badges">'+(c.mensalista?'<span class="cl-badge mensal">Mensalista</span>':'')+(c.notasInternas.length?'<span class="cl-badge">CRM '+c.notasInternas.length+'</span>':'')+'</div>'+
+    '</div>';
+  }).join('')||'<div class="crm-empty">Nenhum cliente encontrado.</div>';
+}
+document.getElementById('clienteBuscaInput').addEventListener('input',function(){renderClientesLista(this.value)});
+document.getElementById('clientesLista').addEventListener('click',function(e){
+  var card=e.target.closest('.cl-card');if(!card)return;
+  abrirClienteDetalhe(CLIENTES.find(function(c){return c.id===+card.dataset.id}));
+});
+document.getElementById('novoClienteBtn').addEventListener('click',function(){
+  var nome=prompt('Nome do novo cliente:','');if(!nome||!nome.trim())return;
+  var tel=prompt('Telefone (WhatsApp, com DDD):','');
+  var novo={id:Math.max.apply(null,CLIENTES.map(function(c){return c.id}))+1,nome:nome.trim(),apelido:null,
+    tel:'55'+(tel||'').replace(/\D/g,''),mensalista:false,temWhatsapp:null,obs:'',notasInternas:[],hist:[]};
+  CLIENTES.push(novo);renderClientesLista(document.getElementById('clienteBuscaInput').value);
+  abrirClienteDetalhe(novo);
+});
+
+var clienteDetalheAtivo=null,clienteOverlay=document.getElementById('clienteOverlay');
+function abrirClienteDetalhe(c){
+  clienteDetalheAtivo=c;
+  document.getElementById('clDetNome').textContent=c.nome+(c.apelido?' — "'+c.apelido+'"':'');
+  document.getElementById('clfNome').textContent=c.nome;
+  var apEl=document.getElementById('clfApelido');apEl.textContent=c.apelido||'Toque para adicionar';apEl.classList.toggle('vazio',!c.apelido);
+  document.getElementById('clfTel').textContent=formataTel(c.tel);
+  document.getElementById('clfMensalista').textContent=c.mensalista?'Sim':'Não';
+  var obsEl=document.getElementById('clfObs');obsEl.textContent=c.obs||'Toque para adicionar';obsEl.classList.toggle('vazio',!c.obs);
+
+  var veics=veiculosDoCliente(c.id);
+  document.getElementById('clVeiculos').innerHTML=veics.length?veics.map(function(v){
+    return '<div class="veic-mini"><b>'+v.modelo+' · '+v.cor+'</b><span>'+v.placa.replace(/(\w{3})(\w+)/,'$1 $2')+(v.donos.length>1?' · compartilhado':'')+'</span></div>';
+  }).join(''):'<div class="crm-empty">Nenhum veículo cadastrado ainda.</div>';
+
+  document.getElementById('clHistorico').innerHTML=c.hist.length?c.hist.map(function(h){
+    return '<div class="hist-item"><div><b>'+h.s+'</b><div class="d">'+h.d+'</div></div><span class="v">R$ '+h.v.toFixed(2).replace('.',',')+'</span></div>';
+  }).join(''):'<div class="crm-empty">Sem visitas registradas.</div>';
+
+  document.getElementById('clCrmPanel').classList.remove('show');
+  renderClCrm();
+  clienteOverlay.classList.add('show');
+}
+document.getElementById('clDetClose').addEventListener('click',function(){clienteOverlay.classList.remove('show');renderClientesLista(document.getElementById('clienteBuscaInput').value)});
+clienteOverlay.addEventListener('click',function(e){if(e.target===clienteOverlay){clienteOverlay.classList.remove('show');renderClientesLista(document.getElementById('clienteBuscaInput').value)}});
+
+document.querySelectorAll('#clienteOverlay .det-f[data-cf]').forEach(function(el){
+  el.addEventListener('click',function(){
+    if(!clienteDetalheAtivo)return;
+    var campo=el.dataset.cf,c=clienteDetalheAtivo,novo=prompt('Editar '+campo+':',c[campo]||'');
+    if(novo!==null)c[campo]=novo.trim();
+    abrirClienteDetalhe(c);
+  });
+});
+function renderClCrm(){
+  var c=clienteDetalheAtivo,notas=c?c.notasInternas:[];
+  document.getElementById('clCrmCount').textContent=notas.length;
+  document.getElementById('clCrmList').innerHTML=notas.length
+    ?notas.map(function(n){return '<div class="crm-item"><div class="d">'+n.d+'</div>'+n.t+'</div>'}).join('')
+    :'<div class="crm-empty">Nenhuma nota registrada ainda.</div>';
+}
+document.getElementById('clCrmToggle').addEventListener('click',function(){
+  document.getElementById('clCrmPanel').classList.toggle('show');
+  renderClCrm();
+});
+document.getElementById('clCrmAdd').addEventListener('click',function(){
+  var inp=document.getElementById('clCrmInput');
+  if(!clienteDetalheAtivo||!inp.value.trim())return;
+  clienteDetalheAtivo.notasInternas.push({d:paraDataHojeMock(),t:inp.value.trim()});
+  inp.value='';renderClCrm();
+});
+renderClientesLista('');
+
+/* ================= PAGAMENTOS (cadastro) ================= */
+function renderPagamentosLista(){
+  document.getElementById('pagamentosLista').innerHTML=FORMAS_PAGAMENTO.map(function(f,i){
+    return '<div class="pgto-row"><b>'+f+'</b><button data-i="'+i+'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  }).join('');
+}
+document.getElementById('pagamentosLista').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-i]');if(!b)return;
+  if(FORMAS_PAGAMENTO.length<=1){alert('Precisa ter ao menos uma forma de pagamento cadastrada.');return}
+  FORMAS_PAGAMENTO.splice(+b.dataset.i,1);renderPagamentosLista();
+});
+document.getElementById('novaFormaAddBtn').addEventListener('click',function(){
+  var inp=document.getElementById('novaFormaInput');
+  if(!inp.value.trim())return;
+  FORMAS_PAGAMENTO.push(inp.value.trim());inp.value='';renderPagamentosLista();
+});
+renderPagamentosLista();
+
+/* ================= INDICADORES ================= */
+function renderIndicadores(){
+  var carrosEntregues=PATIO.filter(function(c){return c.status==='pronto'});
+  var faturadoHoje=carrosEntregues.reduce(function(a,c){return a+c.servicos.reduce(function(b,s){return b+s.preco},0)},0)+612;
+  document.getElementById('indFaturado').textContent='R$ '+faturadoHoje.toFixed(0);
+  document.getElementById('indCarros').textContent=(PATIO.length+14);
+  var todasVisitas=CLIENTES.reduce(function(a,c){return a.concat(c.hist)},[]);
+  var ticket=todasVisitas.length?todasVisitas.reduce(function(a,h){return a+h.v},0)/todasVisitas.length:0;
+  document.getElementById('indTicket').textContent='R$ '+ticket.toFixed(0);
+  document.getElementById('indAtrasados').textContent=PATIO.filter(function(c){return c.status!=='pronto'&&relogioMin>c.previsao}).length;
+
+  /* ranking de clientes por valor gasto */
+  var rankCli=CLIENTES.map(function(c){return {nome:c.nome+(c.apelido?' ("'+c.apelido+'")':''),total:c.hist.reduce(function(a,h){return a+h.v},0),qtd:c.hist.length}})
+    .sort(function(a,b){return b.total-a.total}).slice(0,5);
+  document.getElementById('rankClientes').innerHTML=rankCli.map(function(r,i){
+    return '<div class="rank-row"><div class="rank-pos">'+(i+1)+'</div><div class="rank-nm"><b>'+r.nome+'</b><span>'+r.qtd+' visitas</span></div><div class="rank-val">R$ '+r.total.toFixed(0)+'</div></div>';
+  }).join('');
+
+  /* ranking de serviços mais pedidos */
+  var contagem={};
+  todasVisitas.forEach(function(h){contagem[h.s]=(contagem[h.s]||0)+1});
+  var rankSvc=Object.keys(contagem).map(function(k){return {nome:k,qtd:contagem[k]}}).sort(function(a,b){return b.qtd-a.qtd}).slice(0,5);
+  document.getElementById('rankServicos').innerHTML=rankSvc.map(function(r,i){
+    return '<div class="rank-row"><div class="rank-pos">'+(i+1)+'</div><div class="rank-nm"><b>'+r.nome+'</b><span>pedido '+r.qtd+' vez'+(r.qtd>1?'es':'')+'</span></div></div>';
+  }).join('');
+
+  /* insights "o que fazer hoje" */
+  var insights=[];
+  CLIENTES.forEach(function(c){
+    if(c.hist.length<2)return;
+    var datas=c.hist.map(function(h){var p=h.d.split('/');return new Date(2026,+p[1]-1,+p[0])});
+    var gaps=[];for(var i=0;i<datas.length-1;i++)gaps.push(Math.abs(datas[i]-datas[i+1])/864e5);
+    var media=gaps.reduce(function(a,b){return a+b},0)/gaps.length;
+    var desdeUltima=(new Date(2026,7,18)-datas[0])/864e5;
+    if(desdeUltima>media*1.6){
+      insights.push({cor:'var(--alerta)',titulo:c.nome+' pode estar sumindo',texto:'Costuma voltar a cada '+Math.round(media)+' dias — já se passaram '+Math.round(desdeUltima)+'.'});
+    }
+  });
+  if(PATIO.filter(function(c){return c.status!=='pronto'&&relogioMin>c.previsao}).length){
+    insights.push({cor:'var(--perigo)',titulo:'Tem carro atrasado no pátio agora',texto:'Confira a fila — priorize antes dos demais.'});
+  }
+  insights.push({cor:'var(--teal)',titulo:'Ticket médio pode subir com upsell',texto:'Clientes de lavagem simples que nunca fizeram cristalização são bons candidatos.'});
+  document.getElementById('insightResumo').textContent=insights.length+' recomendaç'+(insights.length===1?'ão':'ões')+' pra hoje';
+  document.getElementById('insightsList').innerHTML=insights.map(function(ins){
+    return '<div class="insight-item"><span class="im" style="background:'+ins.cor+'"></span><div><h4>'+ins.titulo+'</h4><p>'+ins.texto+'</p></div></div>';
+  }).join('');
+}
+</script>
+</body>
+</html>
