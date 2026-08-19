@@ -1,9 +1,9 @@
 /* T-Jet Sistema — service worker
    O index.html NUNCA sai do cache quando há rede: cache velho servindo
    versão antiga foi a causa de "a função nova não aparece". */
-var VERSAO = '3.0.1';
+var VERSAO = '3.2.0';
 var CACHE  = 'tjet-' + VERSAO;
-var LOCAIS = ['./', './index.html', './manifest.json', './favicon.ico', './favicon.svg',
+var LOCAIS = ['./', './index.html', './config.js', './manifest.json', './favicon.ico', './favicon.svg',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'];
 
 self.addEventListener('install', function (e) {
@@ -42,7 +42,8 @@ self.addEventListener('fetch', function (e) {
   var req = e.request;
   if (req.method !== 'GET') return;
 
-  var externo = new URL(req.url).origin !== location.origin;
+  var url = new URL(req.url);
+  var externo = url.origin !== location.origin;
 
   /* CDN (Sortable, Tesseract): cache primeiro, para funcionar offline */
   if (externo) {
@@ -61,17 +62,18 @@ self.addEventListener('fetch', function (e) {
   }
 
   /* HTML: sempre a rede primeiro, sem negociar. Cache só quando falta sinal. */
-  if (ehDocumento(req)) {
+  /* o config.js carrega as credenciais da instalação: nunca pode vir velho do cache */
+  if (/config\.js(\?|$)/.test(url.pathname || req.url) || ehDocumento(req)) {
     e.respondWith(
       fetch(req, { cache: 'no-store' })
         .then(function (res) {
           var copia = res.clone();
-          caches.open(CACHE).then(function (c) { c.put('./index.html', copia); });
+          caches.open(CACHE).then(function (c) { c.put(req, copia); });
           return res;
         })
         .catch(function () {
-          return caches.match('./index.html').then(function (hit) {
-            return hit || caches.match(req);
+          return caches.match(req).then(function (hit) {
+            return hit || caches.match('./index.html');
           });
         })
     );

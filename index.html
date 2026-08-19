@@ -1437,7 +1437,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.0.1</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.2.0</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1538,7 +1538,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1735,7 +1735,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1770,7 +1770,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1785,7 +1785,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1799,7 +1799,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2222,6 +2222,11 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <div class="card-lbl">Backup e vários aparelhos</div>
           <p class="mini-note">Enquanto isso estiver desligado, perder o celular é perder tudo. Ligando, os dados ficam salvos no Supabase e o atendente pode usar outro aparelho vendo o mesmo pátio.</p>
           <div id="nuvemStatus"></div>
+          <div class="dx dx-ok" id="nuvemDoArquivo" style="display:none;margin-top:12px">
+            <b>Configurado pelo arquivo config.js</b>
+            <span>Este aparelho já veio pronto — não há nada para preencher aqui.</span>
+            <span>Para trocar de projeto, edite o config.js e suba de novo. Todos os aparelhos mudam juntos.</span>
+          </div>
           <div class="toggleline" style="margin-top:14px">
             <div class="tx"><b>Sincronizar com a nuvem</b><span>O app continua funcionando offline</span></div>
             <button class="switch" id="nvAtiva" aria-label="Nuvem ativa"></button>
@@ -2232,7 +2237,11 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           </div>
           <div class="fld"><label>Project URL</label><input type="text" id="nvUrl" placeholder="https://xxxxx.supabase.co" autocomplete="off"></div>
           <div class="fld" style="margin-top:10px"><label>Chave anon public</label><input type="text" id="nvChave" placeholder="eyJhbGciOi..." autocomplete="off"></div>
-          <div class="fld" style="margin-top:10px"><label>Identificação da loja</label><input type="text" id="nvLoja" placeholder="principal" autocomplete="off">
+          <div class="toggleline" style="margin:14px 0">
+            <div class="tx"><b>Enviar também as fotos</b><span>Fotos são pesadas e enchem o plano gratuito rápido — deixe desligado se não precisar delas em outro aparelho</span></div>
+            <button class="switch" id="nvFotos" aria-label="Enviar fotos"></button>
+          </div>
+          <div class="fld"><label>Identificação da loja</label><input type="text" id="nvLoja" placeholder="principal" autocomplete="off">
             <div class="hint">Use nomes diferentes se um dia tiver mais de uma unidade no mesmo projeto.</div></div>
           <div class="btn-row" style="margin-top:14px">
             <button class="btn-ghost" id="sqlNuvemBtn">Ver SQL</button>
@@ -2546,6 +2555,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
   </button>
 </nav>
 
+<script src="config.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <script>
 document.getElementById('theme').addEventListener('click',function(){
@@ -2613,7 +2623,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.0.1';
+var TJET_VERSAO='3.2.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2974,6 +2984,34 @@ function carregarDB(){
   }catch(e){console.warn('Base local corrompida, recomeçando.',e);return baseVazia()}
 }
 var DB=carregarDB();
+aplicarConfigDoArquivo();
+
+/* O config.js é a fonte da verdade da instalação: editado uma vez e subido junto
+   com o app, todo aparelho que abrir já vem pronto. Sem isso, cada celular
+   precisaria ser configurado à mão — e bastaria um errar para as bases divergirem. */
+function aplicarConfigDoArquivo(){
+  if(typeof TJET_CONFIG==='undefined'||!TJET_CONFIG)return;
+  var c=DB.config,a=TJET_CONFIG;
+
+  if(a.lavajato){
+    if(a.lavajato.nome)c.nome=a.lavajato.nome;
+    if(a.lavajato.tel)c.tel=a.lavajato.tel;
+  }
+  if(a.nuvem&&(a.nuvem.url||'').trim()){
+    if(!c.nuvem)c.nuvem={ultimoSync:''};
+    c.nuvem.url=String(a.nuvem.url).trim().replace(/\/+$/,'');
+    c.nuvem.chave=String(a.nuvem.chave||'').trim();
+    c.nuvem.loja=String(a.nuvem.loja||'principal').trim();
+    c.nuvem.ativa=a.nuvem.ativa!==false;
+    c.nuvem.auto=a.nuvem.auto!==false;
+    c.nuvem.enviarFotos=a.nuvem.enviarFotos===true;
+    c.nuvem.doArquivo=true;
+  }
+  if(a.ocr&&a.ocr.provedor&&a.ocr.provedor!=='local'){
+    c.ocr={provedor:a.ocr.provedor,token:String(a.ocr.token||'').trim(),
+      endpoint:String(a.ocr.endpoint||'').trim(),doArquivo:true};
+  }
+}
 var salvarTimer=null;
 function salvar(){
   if(typeof agendarSync==='function')agendarSync();
@@ -7659,13 +7697,23 @@ function chaveSync(colecao,item){
   return String(item.id!==undefined?item.id:(item.numero||''));
 }
 
+/* Uma foto vira ~100 KB em base64. Quinze carros por dia com duas fotos enchem
+   os 500 MB do plano gratuito em uns seis meses. Por isso as fotos ficam no
+   aparelho por padrão — as assinaturas, que têm valor de prova, sempre vão. */
+function semFotos(it){
+  if(!it||!it.fotos||!it.fotos.length)return it;
+  var copia={},k;
+  for(k in it)if(k!=='fotos')copia[k]=it[k];
+  copia.fotosNoAparelho=it.fotos.length;
+  return copia;
+}
 function enviarColecao(colecao){
   var itens=(DB[colecao]||[]).map(carimbar);
   if(!itens.length)return Promise.resolve(0);
-  var n=cfgNuvem();
+  var n=cfgNuvem(),cortar=n.enviarFotos!==true;
   var linhas=itens.map(function(it){
     return {loja:n.loja||'principal',colecao:colecao,chave:chaveSync(colecao,it),
-      dados:it,atualizado_em:it.atualizadoISO||isoAgora()};
+      dados:cortar?semFotos(it):it,atualizado_em:it.atualizadoISO||isoAgora()};
   });
   var lotes=[],i;
   for(i=0;i<linhas.length;i+=150)lotes.push(linhas.slice(i,i+150));
@@ -7702,7 +7750,9 @@ function fundir(colecao,remotos){
     var tLocal=atual.atualizadoISO||atual.criadoISO||'';
     var tRemoto=remoto.atualizadoISO||linha.atualizado_em||'';
     if(tRemoto>tLocal){
+      var fotosLocais=atual.fotos;
       Object.keys(remoto).forEach(function(k){atual[k]=remoto[k]});
+      if(fotosLocais&&fotosLocais.length&&!(remoto.fotos&&remoto.fotos.length))atual.fotos=fotosLocais;
       atualizados++;
     }
   });
@@ -7789,7 +7839,22 @@ function atualizarPainelNuvem(){
   var box=document.getElementById('nuvemStatus');if(!box)return;
   var n=cfgNuvem();
   var total=COLECOES_SYNC.reduce(function(a,c){return a+((DB[c]||[]).length)},0);
+  var bytes=0,bytesFotos=0;
+  try{
+    COLECOES_SYNC.forEach(function(c){
+      (DB[c]||[]).forEach(function(it){
+        var inteiro=JSON.stringify(it).length;
+        bytes+=inteiro;
+        if(it.fotos&&it.fotos.length)bytesFotos+=inteiro-JSON.stringify(semFotos(it)).length;
+      });
+    });
+  }catch(e){}
+  var enviado=(n.enviarFotos===true?bytes:bytes-bytesFotos)/1048576;
   box.innerHTML='<div class="rsum" style="margin:0">'+
+    '<div class="rsum-row"><span>Vai para a nuvem</span><b>'+enviado.toFixed(1)+' MB de 500 MB</b></div>'+
+    (bytesFotos&&n.enviarFotos!==true
+      ? '<div class="rsum-row"><span>Fotos guardadas só aqui</span><b>'+(bytesFotos/1048576).toFixed(1)+' MB</b></div>'
+      : '')+
     '<div class="rsum-row"><span>Situação</span><b style="color:'+(nuvemPronta()?'var(--ok)':'var(--alerta)')+'">'+
       (nuvemPronta()?'ligada':'desligada — dados só neste aparelho')+'</b></div>'+
     '<div class="rsum-row"><span>Última sincronização</span><b>'+
@@ -7798,16 +7863,25 @@ function atualizarPainelNuvem(){
     '<div class="rsum-row tot"><span>Registros no aparelho</span><b>'+total+'</b></div></div>';
 }
 function carregarFormNuvem(){
-  var n=cfgNuvem();
+  var n=cfgNuvem(),travado=!!n.doArquivo;
+  ['nvUrl','nvChave','nvLoja'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.readOnly=travado;el.style.opacity=travado?'.6':'1'}
+  });
+  var aviso=document.getElementById('nuvemDoArquivo');
+  if(aviso)aviso.style.display=travado?'block':'none';
+  var bt=document.getElementById('salvarNuvemBtn');
+  if(bt)bt.style.display=travado?'none':'';
   document.getElementById('nvAtiva').classList.toggle('on',!!n.ativa);
   document.getElementById('nvAuto').classList.toggle('on',n.auto!==false);
   document.getElementById('nvUrl').value=n.url||'';
   document.getElementById('nvChave').value=n.chave||'';
   document.getElementById('nvLoja').value=n.loja||'principal';
+  document.getElementById('nvFotos').classList.toggle('on',n.enviarFotos===true);
   atualizarPainelNuvem();
   marcarSync(nuvemPronta()?'ok':'off');
 }
-['nvAtiva','nvAuto'].forEach(function(id){
+['nvAtiva','nvAuto','nvFotos'].forEach(function(id){
   var el=document.getElementById(id);
   if(el)el.addEventListener('click',function(){this.classList.toggle('on')});
 });
@@ -7818,6 +7892,7 @@ document.getElementById('salvarNuvemBtn').addEventListener('click',function(){
   n.url=document.getElementById('nvUrl').value.trim().replace(/\/+$/,'');
   n.chave=document.getElementById('nvChave').value.trim();
   n.loja=document.getElementById('nvLoja').value.trim()||'principal';
+  n.enviarFotos=document.getElementById('nvFotos').classList.contains('on');
   sb=null;sbCarregando=null;
   salvar();atualizarPainelNuvem();marcarSync(nuvemPronta()?'ok':'off');
   toast('Nuvem salva',nuvemPronta()?'Toque em Sincronizar agora para a primeira carga.':'Guardado — ainda desligada.','ok');

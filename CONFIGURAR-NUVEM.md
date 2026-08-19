@@ -1,81 +1,195 @@
-# Ligar a nuvem (Supabase)
+# Colocar o T-Jet na nuvem
 
-Enquanto isso estiver desligado, **perder o celular é perder tudo**. Ligando, os
-dados ficam salvos no Supabase e outro aparelho enxerga o mesmo pátio.
+**Você faz isso uma vez só, no computador.** Depois todo celular que abrir o app
+já vem conectado — igual ao Escala da Liturgia.
 
-## 1. Criar o projeto
-
-Em [supabase.com](https://supabase.com) crie um projeto. Escolha a região mais
-próxima — para o Nordeste, `sa-east-1` (São Paulo) é a melhor.
-
-## 2. Criar a tabela
-
-No app: **Admin → Nuvem → Ver SQL**, copie e cole no **SQL Editor** do Supabase.
-Execute uma vez. Ele cria a tabela `tjet_registros`, o índice e a política de acesso.
-
-## 3. Colar as credenciais
-
-No Supabase, em **Settings → API**, copie:
-
-| Campo no T-Jet | Onde achar |
-|---|---|
-| Project URL | *Project URL* |
-| Chave anon public | *Project API keys → `anon` `public`* |
-| Identificação da loja | você escolhe (ex.: `principal`) |
-
-Ligue **Sincronizar com a nuvem**, salve e toque em **Sincronizar agora**.
-
-## 4. Segundo aparelho
-
-Repita os passos 3 e 4 no outro celular com **a mesma URL, a mesma chave e a mesma
-identificação de loja**. Os dois passam a enxergar os mesmos clientes e o mesmo pátio.
-
-## Como funciona por baixo
-
-O app é **local-first**: tudo grava no aparelho primeiro e a tela nunca espera a
-rede. A sincronização acontece uns segundos depois, em segundo plano.
-
-- **Sem internet**, o T-Jet funciona igual. Sincroniza quando a rede voltar.
-- **Conflito** (o mesmo registro alterado em dois aparelhos) é resolvido por
-  *quem alterou por último vence*. Simples e previsível no balcão.
-- O selo ao lado da versão na tela inicial mostra o estado: *na nuvem*,
-  *sincronizando*, *falhou* ou *só neste aparelho*.
-
-## Sobre segurança — leia antes de decidir
-
-A política SQL que eu entrego libera leitura e escrita para a chave `anon`. Isso é
-simples de configurar e adequado se **o endereço do seu app não é público**.
-
-Se o link do GitHub Pages circular, qualquer pessoa com ele pode ler seus dados.
-Para fechar isso, o caminho é login por e-mail e senha (como você já fez no Escala
-da Liturgia): troque `to anon` por `to authenticated` na policy e adicione a tela
-de login. Me peça quando quiser dar esse passo.
+Tempo: cerca de 10 minutos. Custo: R$ 0.
 
 ---
 
-# Leitura de placa por API (opcional)
+## Parte 1 — No Supabase (uma vez na vida)
 
-O leitor embarcado funciona offline e acerta em condição boa. Uma API dedicada
-acerta em placa suja, contraluz e ângulo torto.
+### 1. Criar a conta
 
-## Plate Recognizer
+**https://supabase.com/dashboard/sign-up**
 
-1. Crie conta em [app.platerecognizer.com](https://app.platerecognizer.com) —
-   o plano gratuito cobre 2.500 leituras por mês.
-2. Copie o token.
-3. No app: **Admin → Configurações → Leitura de placa**, escolha *Plate Recognizer*
-   e cole o token.
-4. Toque em **Testar leitura da API** para confirmar.
+GitHub ou e-mail e senha, tanto faz.
+
+### 2. Criar a organização
+
+| Campo | O que colocar |
+|---|---|
+| Name | `T-Jet` |
+| Type | Personal |
+| Plan | **Free** |
+
+### 3. Criar o projeto
+
+Botão **New project**.
+
+| Campo | O que colocar |
+|---|---|
+| Name | `tjet` |
+| Database Password | Gere e guarde num lugar seguro |
+| Region | **South America (São Paulo)** |
+
+Leva 1 a 2 minutos para subir.
+
+### 4. Criar a tabela
+
+Menu lateral **SQL Editor → New query**. Cole o SQL abaixo e clique em **Run**.
+Deve aparecer *Success. No rows returned*.
+
+```sql
+create table if not exists tjet_registros (
+  loja           text        not null,
+  colecao        text        not null,
+  chave          text        not null,
+  dados          jsonb       not null,
+  atualizado_em  timestamptz not null default now(),
+  primary key (loja, colecao, chave)
+);
+
+create index if not exists tjet_registros_busca
+  on tjet_registros (loja, colecao, atualizado_em desc);
+
+alter table tjet_registros enable row level security;
+
+drop policy if exists tjet_acesso on tjet_registros;
+create policy tjet_acesso on tjet_registros
+  for all to anon using (true) with check (true);
+```
+
+(O mesmo SQL está no app em **Admin → Nuvem → Ver SQL**, com botão de copiar.)
+
+### 5. Copiar as credenciais
+
+Engrenagem **Project Settings → API**. Você precisa de dois valores:
+
+- **Project URL** — algo como `https://abcdefgh.supabase.co`
+- **Project API keys → `anon` `public`** — chave longa começando com `eyJ`
+
+> ⚠️ Use a **`anon`**. A `service_role` dá acesso total e nunca deve sair do servidor.
+
+---
+
+## Parte 2 — No arquivo config.js (uma vez também)
+
+Abra o `config.js` num editor de texto e preencha:
+
+```js
+var TJET_CONFIG = {
+
+  lavajato: {
+    nome: 'T-Jet Estética Automotiva',
+    tel:  '5583999990000'
+  },
+
+  nuvem: {
+    ativa:       true,
+    url:         'https://abcdefgh.supabase.co',
+    chave:       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    loja:        'principal',
+    enviarFotos: false,
+    auto:        true
+  },
+
+  ocr: {
+    provedor: 'local',
+    token:    '',
+    endpoint: ''
+  }
+
+};
+```
+
+Suba o `config.js` junto com os outros arquivos no GitHub Pages.
+
+**Pronto. Acabou.**
+
+---
+
+## Nos celulares: nada
+
+Abra o endereço do app em qualquer aparelho. Ele já vem conectado — o selo ao lado
+da versão, na tela inicial, mostra **na nuvem**.
+
+Nenhuma URL para digitar, nenhuma chave para colar, nenhum passo a repetir.
+
+Em **Admin → Nuvem** os campos aparecem travados com o aviso *"Configurado pelo
+arquivo config.js"*. Isso é proposital: assim nenhum aparelho fica apontando para
+um lugar diferente por engano.
+
+**Para trocar de projeto depois:** edite o `config.js`, suba de novo, e todos os
+aparelhos mudam juntos na próxima abertura.
+
+---
+
+## Leitura de placa por API (opcional)
+
+Mesmo arquivo, seção `ocr`. Crie conta em
+[app.platerecognizer.com](https://app.platerecognizer.com) — 2.500 leituras
+gratuitas por mês — e preencha:
+
+```js
+  ocr: {
+    provedor: 'platerecognizer',
+    token:    'seu_token_aqui',
+    endpoint: ''
+  }
+```
 
 Quando a API está ligada, ela é consultada primeiro. **Se falhar por qualquer
 motivo — sem rede, cota estourada, token errado — o leitor local assume na hora.**
 O atendimento não para.
 
-## Se o navegador bloquear (CORS)
+---
 
-Alguns serviços não liberam chamada direta do navegador. Nesse caso use
-**Endpoint próprio (proxy)**: uma Edge Function no Supabase que recebe a foto,
-chama a API com o token guardado no servidor e devolve a resposta.
+## O que saber do plano gratuito
 
-Vantagem extra: o token deixa de ficar no aparelho. Me peça o código da função
-quando chegar nesse ponto.
+| | Free |
+|---|---|
+| Banco de dados | 500 MB |
+| Requisições | ilimitadas |
+| Backup automático | **não tem** |
+| Pausa por inatividade | **após 1 semana sem uso** |
+| Projetos ativos | 2 |
+
+**Pausa após 7 dias.** Um lava jato que abre todo dia nunca chega perto. Mas se
+você configurar hoje e só voltar em duas semanas, o projeto pausa e precisa ser
+religado à mão no painel. Os dados não se perdem.
+
+**Não existe backup automático.** A nuvem protege contra perder o celular, não
+contra apagar algo por engano. **Continue exportando o JSON** em Admin → Dados uma
+vez por semana.
+
+**Fotos.** Uma foto vira ~100 KB codificada. Quinze carros por dia com duas fotos
+dão 78 MB por mês: os 500 MB acabam em seis meses. Por isso `enviarFotos` vem
+como `false` — as fotos ficam no aparelho e todo o resto sincroniza. As
+**assinaturas sempre sobem**, porque são pequenas e é o que tem valor de prova.
+
+---
+
+## Segurança
+
+A policy acima libera leitura e escrita para a chave `anon`, e a chave fica visível
+no `config.js` — que é público no GitHub Pages. Adequado **se o endereço do app não
+circular**, mas quem tiver o link consegue ler os dados.
+
+Para fechar, é login por e-mail e senha: trocar `to anon` por `to authenticated` na
+policy e adicionar a tela de login. Exatamente o que você já fez no Escala da
+Liturgia. Me peça quando quiser — não é grande.
+
+---
+
+## Se algo não funcionar
+
+| Mensagem no app | O que fazer |
+|---|---|
+| *Chave recusada* | Confira a chave — provavelmente veio a `service_role` |
+| *A tabela tjet_registros não existe* | O SQL do passo 4 não rodou |
+| *Bloqueado pela política de acesso (RLS)* | A parte final do SQL (a policy) não rodou |
+| *Sem internet ou biblioteca bloqueada* | Rede. Os dados seguem salvos no aparelho |
+
+**Mesmo com a nuvem fora do ar, o T-Jet funciona igual.** Grava no aparelho
+primeiro e sincroniza quando a rede voltar.
