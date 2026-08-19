@@ -283,7 +283,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.9.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v3.0.1 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -322,7 +322,7 @@ colunas, para o valor em reais não espremer.
 
 ## Confirmar a versão
 
-Na tela inicial, ao lado da data, tem um selo pequeno: **v2.9.0**. É a forma mais
+Na tela inicial, ao lado da data, tem um selo pequeno: **v3.0.1**. É a forma mais
 rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
 na versão antiga.
 
@@ -363,7 +363,7 @@ e é lá que você olha relatório. A troca de ordem e os tamanhos valem só aba
 700px de largura.
 
 
-## Tela de entrada (v2.9.0)
+## Tela de entrada (v3.0.1)
 
 - **Placa** sobe sempre em maiúsculo, mesmo digitando em minúsculo.
 - **Modelo**: digite duas letras e escolha na lista. Marca, modelo e porte entram
@@ -382,7 +382,7 @@ só o primeiro nome — mais informal —, use `{primeiro}`. Os dois funcionam, 
 edita os textos em **Admin → Configurações → Mensagens**.
 
 
-## Pátio (v2.9.0)
+## Pátio (v3.0.1)
 
 O card ficou com o essencial:
 
@@ -421,3 +421,23 @@ Depois disso o botão vira **Entregar veículo** e leva direto ao fechamento.
 
 Os estágios *Lavando* e *Secando* continuam disponíveis dentro da OS, para quem
 quiser acompanhar tempo de execução por etapa — mas não travam mais o caminho.
+
+
+## Custos fixos e ponto de equilíbrio (v3.0.1)
+
+**Admin → Custos.** Cadastre aluguel, água, energia, folha, contabilidade. O valor
+é mensal e o sistema rateia por dia conforme o período que você estiver olhando.
+
+Isso muda o DRE de verdade. Antes o resultado só descontava insumos, comissão e
+despesas do caixa — a margem parecia melhor do que era. Agora aparece a linha
+**Custos fixos (rateio)** e, abaixo, o **ponto de equilíbrio**: quantos carros por
+mês você precisa fazer, no seu ticket e na sua margem atuais, só para empatar.
+
+## Planos de mensalidade
+
+**Admin → Planos.** Crie planos com valor mensal e franquia de lavagens
+(`0` = ilimitado). Vincule ao cliente e o sistema controla o consumo por ciclo
+mensal, mostrando quantas lavagens restam.
+
+Com a franquia esgotada o cliente continua sendo atendido normalmente — o sistema
+cobra e avisa você. A receita recorrente aparece nos indicadores financeiros.

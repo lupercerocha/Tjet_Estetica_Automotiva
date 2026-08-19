@@ -1149,10 +1149,19 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
   background:var(--perigo);color:#fff;border:0;cursor:pointer;font:inherit;text-align:center}
 .barra-erro b{font:800 13px/1.2 var(--f-display)}
 .barra-erro span{font:500 11px/1.2 var(--f-body);opacity:.9}
+.sync-pill{display:none;align-items:center;gap:5px;flex:none;border-radius:99px;padding:4px 9px;
+  font:600 .55rem/1 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--linha);color:var(--fumaca);background:transparent}
+.sync-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.sync-pill.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,var(--linha))}
+.sync-pill.erro{color:var(--perigo);border-color:color-mix(in srgb,var(--perigo) 40%,var(--linha))}
+.sync-pill.sincronizando{color:var(--azul);border-color:color-mix(in srgb,var(--azul) 40%,var(--linha))}
+.sync-pill.sincronizando::before{animation:cepspin 1s linear infinite}
+.sync-pill.off{opacity:.5}
 
 /* ===== CELULAR: operação em primeiro, indicadores como faixa ===== */
 @media (max-width:699px){
-  #view-home{display:flex;flex-direction:column}
+  #view-home.on{display:flex;flex-direction:column}
   #view-home .hello{order:1;margin-bottom:15px}
   #view-home .hello h2{font-size:1.28rem}
   #view-home .hello p{font-size:.82rem}
@@ -1428,7 +1437,8 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.9.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.0.1</button>
+          <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
 
@@ -1528,7 +1538,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1725,7 +1735,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1760,7 +1770,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1775,7 +1785,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1789,7 +1799,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.0.1</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2089,7 +2099,10 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="subtabs" id="adminTabs">
         <button class="subtab on" data-sub="adm-servicos">Serviços</button>
         <button class="subtab" data-sub="adm-equipe">Equipe</button>
+        <button class="subtab" data-sub="adm-custos">Custos</button>
+        <button class="subtab" data-sub="adm-planos">Planos</button>
         <button class="subtab" data-sub="adm-config">Configurações</button>
+        <button class="subtab" data-sub="adm-nuvem">Nuvem</button>
         <button class="subtab" data-sub="adm-dados">Dados</button>
       </div>
 
@@ -2103,6 +2116,36 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <div class="field"><input type="text" id="admEqBusca" placeholder="Buscar por nome, função ou comissão"></div>
         <button class="btn-outline" id="novoColaboradorBtn" style="margin-bottom:14px">+ Novo colaborador</button>
         <div id="admEqLista"></div>
+      </div>
+
+      <div class="subview" id="sub-adm-custos">
+        <div class="kpi-grid" id="custoKpis"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-lbl">Custos fixos mensais</div>
+            <button class="btn-mini solid" id="novoCustoBtn">Novo custo</button>
+          </div>
+          <p class="mini-note">Aluguel, água, luz, folha, contabilidade. Sem isso o resultado nos indicadores fica maior do que a realidade.</p>
+          <input type="text" id="custoBusca" class="busca" placeholder="Buscar por descrição, categoria ou valor" autocomplete="off">
+          <div id="custoLista"></div>
+        </div>
+      </div>
+
+      <div class="subview" id="sub-adm-planos">
+        <div class="kpi-grid" id="planoKpis"></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-lbl">Planos de mensalidade</div>
+            <button class="btn-mini solid" id="novoPlanoBtn">Novo plano</button>
+          </div>
+          <p class="mini-note">Receita que entra chova ou faça sol, e o cliente volta sem você precisar chamar.</p>
+          <input type="text" id="planoBusca" class="busca" placeholder="Buscar por nome, valor ou franquia" autocomplete="off">
+          <div id="planoLista"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Assinantes ativos</div>
+          <div id="assinanteLista"></div>
+        </div>
       </div>
 
       <div class="subview" id="sub-adm-config">
@@ -2126,6 +2169,23 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
             <div class="tx"><b>Abrir a câmera ao entrar na tela</b><span>A leitura da placa começa sozinha, sem um toque a mais</span></div>
             <button class="switch" id="cfgCamAuto" aria-label="Câmera automática"></button>
           </div>
+
+          <div class="card-lbl">Leitura de placa</div>
+          <div class="form-grid c2">
+            <div class="fld"><label>Como ler a placa</label><select id="cfgOcrProv">
+              <option value="local">Somente leitor local (offline)</option>
+              <option value="platerecognizer">Plate Recognizer (API)</option>
+              <option value="proxy">Endpoint próprio (proxy)</option>
+            </select></div>
+            <div class="fld"><label>Token da API</label><input type="text" id="cfgOcrToken" placeholder="cole o token aqui" autocomplete="off"></div>
+          </div>
+          <div class="fld" id="cfgOcrEndpointBox" style="display:none;margin-top:10px">
+            <label>URL do endpoint</label>
+            <input type="text" id="cfgOcrEndpoint" placeholder="https://seuprojeto.supabase.co/functions/v1/placa" autocomplete="off">
+            <div class="hint">Recebe um POST multipart com o campo "upload" e responde no formato do Plate Recognizer.</div>
+          </div>
+          <p class="mini-note" id="cfgOcrNota"></p>
+          <button class="btn-ghost" id="testarOcrBtn" style="width:100%;margin-bottom:16px">Testar leitura da API</button>
 
           <div class="card-lbl">Programa de fidelidade</div>
           <div class="toggleline" style="margin-bottom:12px">
@@ -2155,6 +2215,31 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <div class="fld"><label>Chamada de retorno</label><textarea id="cfgMsgRetorno"></textarea></div>
         </div>
         <button class="entrar-btn" id="salvarConfigBtn">Salvar configurações</button>
+      </div>
+
+      <div class="subview" id="sub-adm-nuvem">
+        <div class="card">
+          <div class="card-lbl">Backup e vários aparelhos</div>
+          <p class="mini-note">Enquanto isso estiver desligado, perder o celular é perder tudo. Ligando, os dados ficam salvos no Supabase e o atendente pode usar outro aparelho vendo o mesmo pátio.</p>
+          <div id="nuvemStatus"></div>
+          <div class="toggleline" style="margin-top:14px">
+            <div class="tx"><b>Sincronizar com a nuvem</b><span>O app continua funcionando offline</span></div>
+            <button class="switch" id="nvAtiva" aria-label="Nuvem ativa"></button>
+          </div>
+          <div class="toggleline" style="margin-bottom:14px">
+            <div class="tx"><b>Enviar sozinho</b><span>Sincroniza alguns segundos após cada alteração</span></div>
+            <button class="switch" id="nvAuto" aria-label="Sincronização automática"></button>
+          </div>
+          <div class="fld"><label>Project URL</label><input type="text" id="nvUrl" placeholder="https://xxxxx.supabase.co" autocomplete="off"></div>
+          <div class="fld" style="margin-top:10px"><label>Chave anon public</label><input type="text" id="nvChave" placeholder="eyJhbGciOi..." autocomplete="off"></div>
+          <div class="fld" style="margin-top:10px"><label>Identificação da loja</label><input type="text" id="nvLoja" placeholder="principal" autocomplete="off">
+            <div class="hint">Use nomes diferentes se um dia tiver mais de uma unidade no mesmo projeto.</div></div>
+          <div class="btn-row" style="margin-top:14px">
+            <button class="btn-ghost" id="sqlNuvemBtn">Ver SQL</button>
+            <button class="entrar-btn" id="salvarNuvemBtn" style="margin:0">Salvar</button>
+          </div>
+          <button class="btn-ghost" id="sincronizarBtn" style="width:100%;margin-top:10px">Sincronizar agora</button>
+        </div>
       </div>
 
       <div class="subview" id="sub-adm-dados">
@@ -2528,7 +2613,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='2.9.0';
+var TJET_VERSAO='3.0.1';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2848,7 +2933,8 @@ var CATALOGO_PADRAO=[
 var CFG_PADRAO={
   nome:'T-Jet Estética Automotiva',tel:'',
   metaMes:20000,metaCarros:18,
-  camAuto:true,fidelidade:{ativo:true,aCada:10,premio:'Lavagem simples grátis'},
+  camAuto:true,ocr:{provedor:'local',token:'',endpoint:''},
+  fidelidade:{ativo:true,aCada:10,premio:'Lavagem simples grátis'},
   abre:'08:00',fecha:'18:00',boxes:3,toleranciaMin:10,
   msg:{
     entrada:'Olá {cliente}! Seu {veiculo} ({placa}) entrou no {lavajato} 🚗💧\nServiços: {servicos}\nTotal: {total}\nPrevisão de entrega: {hora}\n\nAvisamos por aqui assim que estiver pronto!',
@@ -2861,7 +2947,7 @@ var CFG_PADRAO={
 };
 
 function baseVazia(){
-  return {
+  return {custosFixos:[],planos:[],assinaturas:[],
     versao:2,
     clientes:[],veiculos:[],patio:[],os:[],agendamentos:[],orcamentos:[],
     servicos:JSON.parse(JSON.stringify(CATALOGO_PADRAO)),
@@ -2869,7 +2955,7 @@ function baseVazia(){
     equipe:[],insumos:[],estoqueMovs:[],
     caixaAtual:null,caixas:[],
     config:JSON.parse(JSON.stringify(CFG_PADRAO)),
-    seq:{os:1,cliente:1,veiculo:1,agenda:1,orc:1,insumo:1,colab:1,servico:15,caixa:1}
+    seq:{custo:1,plano:1,assinatura:1,os:1,cliente:1,veiculo:1,agenda:1,orc:1,insumo:1,colab:1,servico:15,caixa:1}
   };
 }
 
@@ -2881,6 +2967,7 @@ function carregarDB(){
     Object.keys(vazia).forEach(function(k){if(d[k]===undefined)d[k]=vazia[k]});
     Object.keys(vazia.config).forEach(function(k){if(d.config[k]===undefined)d.config[k]=vazia.config[k]});
     if(typeof d.config.camAuto!=='boolean')d.config.camAuto=true;
+    if(!d.config.ocr)d.config.ocr={provedor:'local',token:'',endpoint:''};
     Object.keys(vazia.config.msg).forEach(function(k){if(!d.config.msg[k])d.config.msg[k]=vazia.config.msg[k]});
     Object.keys(vazia.seq).forEach(function(k){if(d.seq[k]===undefined)d.seq[k]=vazia.seq[k]});
     return d;
@@ -2889,6 +2976,7 @@ function carregarDB(){
 var DB=carregarDB();
 var salvarTimer=null;
 function salvar(){
+  if(typeof agendarSync==='function')agendarSync();
   clearTimeout(salvarTimer);
   salvarTimer=setTimeout(function(){
     try{localStorage.setItem(DB_KEY,JSON.stringify(DB))}
@@ -5103,12 +5191,32 @@ document.getElementById('camShot').addEventListener('click',function(){
   completa.getContext('2d').drawImage(camVideo,0,0,completa.width,completa.height);
   var fotoPlaca=completa.toDataURL('image/jpeg',.68);
 
-  camStatus.textContent='Lendo a placa…';
   /* o ganho real vem de isolar a linha de caracteres antes do OCR:
      com a placa inteira o Tesseract se perde na faixa "BRASIL" e nas bordas */
   var linha=isolarCaracteres(recorte);
   ultimoRecorte=(linha||recorte).toDataURL('image/jpeg',.7);
   var base=linha||recorte;
+
+  if(apiPlacaAtiva()){
+    camStatus.textContent='Consultando a API…';
+    lerPlacaPorApi(recorte).then(function(r){
+      camOcupada=false;camOverlay.classList.remove('lendo');
+      tentativasOCR=0;
+      ultimaLeituraBruta='api: '+r.placa+' ('+Math.round((r.confianca||0)*100)+'% de confiança)';
+      fecharCamera();
+      confirmarPlacaLida(r.placa,fotoPlaca);
+    }).catch(function(e){
+      var motivo=motivoApi(e);
+      if(motivo)registrarErro('API de placa: '+motivo+' ['+((e&&e.message)||'')+']','api');
+      camStatus.textContent='API falhou · usando leitor local…';
+      lerComTesseract();
+    });
+    return;
+  }
+  lerComTesseract();
+
+  function lerComTesseract(){
+  camStatus.textContent='Lendo a placa…';
   /* combinação escolhida por teste sobre fotos reais de placa:
      psm 11 sobre a linha isolada foi o que devolveu a placa mais limpa */
   var variantes=[
@@ -5158,6 +5266,7 @@ document.getElementById('camShot').addEventListener('click',function(){
     camOcupada=false;camOverlay.classList.remove('lendo');camStatus.textContent='';
     toast('Leitor indisponível','Sem internet para carregar o reconhecimento. Digite a placa por enquanto.','err');
   });
+  }
 });
 
 /* ---------- confirmação e cadastro ---------- */
@@ -5383,6 +5492,95 @@ function mostrarFalhaLeitura(leuAlgo,foto){
       {txt:'Digitar a placa',classe:'entrar-btn',acao:function(){fecharModal();digitarPlacaManual()}}
     ]
   });
+}
+
+
+/* ================= LEITURA DE PLACA POR API ================= */
+/* O leitor local (Tesseract) acerta em condição boa. Uma API dedicada acerta em
+   placa suja, contraluz e ângulo torto. Quando configurada, ela vem primeiro e o
+   leitor local fica como reserva — se a rede cair, o atendimento não para. */
+
+var PROVEDORES={
+  local:{nome:'Somente leitor local',precisa:false},
+  platerecognizer:{nome:'Plate Recognizer',precisa:true,
+    url:'https://api.platerecognizer.com/v1/plate-reader/',
+    doc:'https://app.platerecognizer.com/accounts/signup/'},
+  proxy:{nome:'Endpoint próprio (proxy)',precisa:false}
+};
+
+function cfgPlaca(){
+  var c=DB.config;
+  if(!c.ocr)c.ocr={provedor:'local',token:'',endpoint:''};
+  return c.ocr;
+}
+function apiPlacaAtiva(){
+  var o=cfgPlaca();
+  if(o.provedor==='platerecognizer')return !!String(o.token||'').trim();
+  if(o.provedor==='proxy')return !!String(o.endpoint||'').trim();
+  return false;
+}
+
+function canvasParaBlob(cv){
+  return new Promise(function(ok,erro){
+    if(cv.toBlob)cv.toBlob(function(b){b?ok(b):erro(new Error('blob'))},'image/jpeg',0.92);
+    else{
+      try{
+        var b64=cv.toDataURL('image/jpeg',0.92).split(',')[1];
+        var bin=atob(b64),arr=new Uint8Array(bin.length);
+        for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+        ok(new Blob([arr],{type:'image/jpeg'}));
+      }catch(e){erro(e)}
+    }
+  });
+}
+
+function lerPlacaPorApi(cv){
+  var o=cfgPlaca();
+  if(!apiPlacaAtiva())return Promise.reject(new Error('nao_configurado'));
+
+  return canvasParaBlob(cv).then(function(blob){
+    var fd=new FormData();
+    fd.append('upload',blob,'placa.jpg');
+    fd.append('regions','br');
+
+    var url,cabecalhos={};
+    if(o.provedor==='platerecognizer'){
+      url=PROVEDORES.platerecognizer.url;
+      cabecalhos.Authorization='Token '+String(o.token).trim();
+    }else{
+      url=String(o.endpoint).trim();
+      if(String(o.token||'').trim())cabecalhos.Authorization='Token '+String(o.token).trim();
+    }
+
+    var controle=new AbortController();
+    var expirou=setTimeout(function(){controle.abort()},9000);
+    return fetch(url,{method:'POST',headers:cabecalhos,body:fd,signal:controle.signal})
+      .then(function(r){
+        clearTimeout(expirou);
+        if(r.status===401||r.status===403)throw new Error('token');
+        if(r.status===429)throw new Error('cota');
+        if(!r.ok)throw new Error('http_'+r.status);
+        return r.json();
+      });
+  }).then(function(d){
+    var res=(d&&d.results)||[];
+    if(!res.length)throw new Error('sem_placa');
+    /* a API já devolve ordenado por confiança */
+    var melhor=res[0];
+    var placa=soLetrasNum(String(melhor.plate||'').toUpperCase());
+    if(placa.length!==7)throw new Error('formato');
+    return {placa:placa,confianca:melhor.score||0,fonte:'api'};
+  });
+}
+
+function motivoApi(e){
+  var m=(e&&e.message)||'';
+  if(m==='token')return 'Token recusado — confira em Admin › Configurações › Leitura de placa.';
+  if(m==='cota')return 'Cota da API esgotada neste mês.';
+  if(m==='sem_placa'||m==='formato')return 'A API não encontrou placa nesta foto.';
+  if(m==='nao_configurado')return '';
+  if(/^http_/.test(m))return 'A API respondeu com erro ('+m.replace('http_','')+').';
+  return 'Sem resposta da API (rede ou bloqueio do navegador).';
 }
 
 
@@ -7160,6 +7358,502 @@ document.getElementById('retornoBusca').addEventListener('input',renderRetornos)
 });
 
 
+/* ================= CUSTOS FIXOS ================= */
+/* Sem aluguel, água, luz e folha o resultado parece melhor do que é.
+   O valor é mensal e o DRE rateia por dia conforme o período analisado. */
+var CAT_CUSTO=['Aluguel','Água','Energia','Internet/telefone','Folha e encargos',
+  'Contabilidade','Impostos fixos','Software','Segurança','Manutenção','Marketing','Outros'];
+
+function custosAtivos(){return (DB.custosFixos||[]).filter(function(x){return x.ativo!==false})}
+function custoFixoMensal(){return custosAtivos().reduce(function(a,x){return a+(+x.valor||0)},0)}
+function custoFixoNoPeriodo(p){
+  var dias=Math.max(1,diffDias(new Date(p.fim+'T12:00:00'),new Date(p.ini+'T12:00:00'))+1);
+  return custoFixoMensal()/30*dias;
+}
+function pontoEquilibrio(ticketMedio,margemPc){
+  if(!ticketMedio||!margemPc)return 0;
+  return Math.ceil(custoFixoMensal()/(ticketMedio*margemPc));
+}
+
+function renderCustos(){
+  var q=(document.getElementById('custoBusca').value||'').trim().toLowerCase();
+  var lista=(DB.custosFixos||[]).filter(function(x){
+    if(!q)return true;
+    return q.split(' ').every(function(t){
+      return [x.nome,x.categoria,fmtBRL(x.valor),x.diaVenc?'dia '+x.diaVenc:'',x.ativo===false?'inativo':'ativo']
+        .join(' ').toLowerCase().indexOf(t)>-1;
+    });
+  });
+  var total=custoFixoMensal();
+  document.getElementById('custoKpis').innerHTML=
+    kpi('Custo fixo','var(--perigo)',fmtBRL(total),'por mês')+
+    kpi('Por dia','var(--alerta)',fmtBRL(total/30),'rateio diário')+
+    kpi('Lançamentos','var(--azul)',String(custosAtivos().length),'ativos')+
+    kpi('Ponto de equilíbrio','var(--ok)',String(calcularEquilibrio()),'carros por mês');
+
+  document.getElementById('custoLista').innerHTML=lista.length?lista.map(function(x){
+    return '<div class="sv-row'+(x.ativo===false?' off':'')+'" data-custo="'+x.id+'">'+
+      '<div class="sv-tx"><b>'+esc(x.nome)+'</b><span>'+esc(x.categoria||'Outros')+
+        (x.diaVenc?' · vence dia '+x.diaVenc:'')+(x.ativo===false?' · inativo':'')+'</span></div>'+
+      '<div class="lrow-val">'+fmtBRL(x.valor)+'<small>por mês</small></div></div>';
+  }).join(''):'<div class="empty"><b>Nenhum custo fixo cadastrado</b><p>Sem aluguel, água, luz e folha, a margem nos indicadores fica maior do que a realidade.</p></div>';
+}
+function calcularEquilibrio(){
+  var p=periodoDe('30d'),oss=osNoPeriodo(p.ini,p.fim);
+  if(!oss.length)return 0;
+  var receita=oss.reduce(function(a,o){return a+totalOS(o)},0);
+  var custo=oss.reduce(function(a,o){return a+(o.custoInsumos!==undefined?o.custoInsumos:custoDaOS(o))},0);
+  var com=oss.reduce(function(a,o){return a+(o.comissao!==undefined?o.comissao:comissaoDaOS(o))},0);
+  var ticket=receita/oss.length,margemPc=receita?(receita-custo-com)/receita:0;
+  return pontoEquilibrio(ticket,margemPc);
+}
+document.getElementById('custoBusca').addEventListener('input',renderCustos);
+document.getElementById('novoCustoBtn').addEventListener('click',function(){formCusto()});
+document.getElementById('custoLista').addEventListener('click',function(e){
+  var r=e.target.closest('[data-custo]');if(!r)return;
+  formCusto((DB.custosFixos||[]).filter(function(x){return x.id===+r.dataset.custo})[0]);
+});
+function formCusto(c){
+  var novo=!c;
+  c=c||{nome:'',categoria:'Aluguel',valor:0,diaVenc:'',ativo:true,obs:''};
+  abrirModal({
+    titulo:novo?'Novo custo fixo':'Editar custo fixo',
+    sub:'Valor mensal — o sistema rateia por dia nos relatórios',
+    html:'<div class="form-grid c2">'+
+        '<div class="fld"><label>Descrição</label><input type="text" id="cfNome" value="'+esc(c.nome)+'" placeholder="Ex. Aluguel do galpão"></div>'+
+        '<div class="fld"><label>Categoria</label><select id="cfCat">'+CAT_CUSTO.map(function(k){
+          return '<option'+(c.categoria===k?' selected':'')+'>'+k+'</option>';
+        }).join('')+'</select></div>'+
+        '<div class="fld"><label>Valor mensal</label><input type="text" id="cfValor" inputmode="decimal" value="'+String(c.valor||'').replace('.',',')+'" placeholder="0,00"></div>'+
+        '<div class="fld"><label>Dia do vencimento</label><input type="text" id="cfDia" inputmode="numeric" value="'+esc(c.diaVenc||'')+'" placeholder="10"></div>'+
+        '<div class="fld"><label>Situação</label><select id="cfAtivo"><option value="1"'+(c.ativo!==false?' selected':'')+'>Ativo</option><option value="0"'+(c.ativo===false?' selected':'')+'>Inativo</option></select></div>'+
+      '</div>',
+    botoes:[
+      novo?{txt:'Cancelar',classe:'btn-ghost',acao:fecharModal}:{txt:'Excluir',classe:'btn-danger',acao:function(){
+        DB.custosFixos=(DB.custosFixos||[]).filter(function(x){return x.id!==c.id});
+        salvar();fecharModal();renderCustos();toast('Custo removido','','warn');
+      }},
+      {txt:novo?'Cadastrar':'Salvar',classe:'entrar-btn',acao:function(){
+        var nome=document.getElementById('cfNome').value.trim();
+        if(!nome){toast('Falta a descrição','','warn');return}
+        var dados={nome:nome,categoria:document.getElementById('cfCat').value,
+          valor:parseValor(document.getElementById('cfValor').value),
+          diaVenc:document.getElementById('cfDia').value.trim(),
+          ativo:document.getElementById('cfAtivo').value==='1'};
+        if(novo){
+          DB.custosFixos=DB.custosFixos||[];
+          DB.custosFixos.push(Object.assign({id:proximo('custo')},dados));
+        }else Object.assign(c,dados);
+        salvar();fecharModal();renderCustos();
+        toast(novo?'Custo cadastrado':'Custo atualizado',nome,'ok');
+      }}
+    ]
+  });
+}
+
+/* ================= PLANOS DE MENSALIDADE ================= */
+/* Receita previsível é o que segura um lava jato em mês de chuva. */
+function planosAtivos(){return (DB.planos||[]).filter(function(p){return p.ativo!==false})}
+function planoPorId(id){return (DB.planos||[]).filter(function(p){return p.id===id})[0]||null}
+function assinaturaDoCliente(clienteId){
+  return (DB.assinaturas||[]).filter(function(a){return a.clienteId===clienteId&&a.status==='ativa'})[0]||null;
+}
+function cicloAtual(){
+  var h=new Date();
+  return h.getFullYear()+'-'+pad2(h.getMonth()+1);
+}
+function usoNoCiclo(assinatura){
+  var ciclo=cicloAtual();
+  return (assinatura.usos||[]).filter(function(u){return u.ciclo===ciclo}).length;
+}
+function saldoDaAssinatura(assinatura){
+  var pl=planoPorId(assinatura.planoId);
+  if(!pl)return null;
+  if(!pl.franquia)return {ilimitado:true,plano:pl,usados:usoNoCiclo(assinatura)};
+  var usados=usoNoCiclo(assinatura);
+  return {ilimitado:false,plano:pl,usados:usados,restam:Math.max(0,pl.franquia-usados),franquia:pl.franquia};
+}
+function consumirAssinatura(assinatura,os){
+  assinatura.usos=assinatura.usos||[];
+  assinatura.usos.push({ciclo:cicloAtual(),osId:os.id,data:isoDia(),valor:totalServicos(os)});
+}
+
+function renderPlanos(){
+  var q=(document.getElementById('planoBusca').value||'').trim().toLowerCase();
+  var assinantes=(DB.assinaturas||[]).filter(function(a){return a.status==='ativa'});
+  var mrr=assinantes.reduce(function(a,x){var p=planoPorId(x.planoId);return a+((p&&p.valor)||0)},0);
+  document.getElementById('planoKpis').innerHTML=
+    kpi('Receita recorrente','var(--ok)',fmtBRL(mrr),'por mês')+
+    kpi('Assinantes','var(--teal)',String(assinantes.length),'ativos')+
+    kpi('Planos','var(--azul)',String(planosAtivos().length),'disponíveis')+
+    kpi('Ticket do plano','var(--alerta)',fmtBRL(assinantes.length?mrr/assinantes.length:0),'média');
+
+  var lista=(DB.planos||[]).filter(function(p){
+    if(!q)return true;
+    return q.split(' ').every(function(t){
+      return [p.nome,fmtBRL(p.valor),p.franquia?p.franquia+' lavagens':'ilimitado',p.ativo===false?'inativo':'ativo']
+        .join(' ').toLowerCase().indexOf(t)>-1;
+    });
+  });
+  document.getElementById('planoLista').innerHTML=lista.length?lista.map(function(p){
+    var n=assinantes.filter(function(a){return a.planoId===p.id}).length;
+    return '<div class="sv-row'+(p.ativo===false?' off':'')+'" data-plano="'+p.id+'">'+
+      '<div class="sv-tx"><b>'+esc(p.nome)+'</b><span>'+
+        (p.franquia?p.franquia+' lavagens por mês':'lavagens ilimitadas')+
+        ' · '+n+' assinante'+(n===1?'':'s')+'</span></div>'+
+      '<div class="lrow-val">'+fmtBRL(p.valor)+'<small>por mês</small></div></div>';
+  }).join(''):'<div class="empty"><b>Nenhum plano cadastrado</b><p>Um plano mensal com franquia de lavagens estabiliza o faturamento e traz o cliente de volta sem você precisar chamar.</p></div>';
+
+  document.getElementById('assinanteLista').innerHTML=assinantes.length?assinantes.map(function(a){
+    var c=clientePorId(a.clienteId),pl=planoPorId(a.planoId),s=saldoDaAssinatura(a);
+    if(!c||!pl)return '';
+    return '<div class="lrow" data-assin="'+a.id+'" style="--c:var(--teal);cursor:pointer" data-busca="'+esc((c.nome+' '+pl.nome).toLowerCase())+'">'+
+      '<div class="lrow-ic">'+iniciais(c.nome)+'</div>'+
+      '<div class="lrow-tx"><b>'+esc(c.nome)+'</b><span>'+esc(pl.nome)+' · '+
+        (s.ilimitado?s.usados+' lavagens este mês':s.restam+' de '+s.franquia+' restantes')+'</span></div>'+
+      '<div class="lrow-val">'+fmtBRL(pl.valor)+'<small>mensal</small></div></div>';
+  }).join(''):'<div class="crm-empty">Nenhum assinante ativo. Cadastre um plano e vincule na ficha do cliente.</div>';
+}
+document.getElementById('planoBusca').addEventListener('input',renderPlanos);
+document.getElementById('novoPlanoBtn').addEventListener('click',function(){formPlano()});
+document.getElementById('planoLista').addEventListener('click',function(e){
+  var r=e.target.closest('[data-plano]');if(!r)return;
+  formPlano(planoPorId(+r.dataset.plano));
+});
+document.getElementById('assinanteLista').addEventListener('click',function(e){
+  var r=e.target.closest('[data-assin]');if(!r)return;
+  var a=(DB.assinaturas||[]).filter(function(x){return x.id===+r.dataset.assin})[0];
+  if(a)abrirAssinatura2(a);
+});
+function formPlano(p){
+  var novo=!p;
+  p=p||{nome:'',valor:0,franquia:4,servicoId:null,ativo:true,obs:''};
+  var svcs=SERVICOS.filter(function(s){return s.ativo!==false});
+  abrirModal({
+    titulo:novo?'Novo plano':'Editar plano',
+    sub:'Cobrança mensal com franquia de lavagens',
+    html:'<div class="form-grid c2">'+
+        '<div class="fld"><label>Nome do plano</label><input type="text" id="plNome" value="'+esc(p.nome)+'" placeholder="Ex. Brilho Mensal"></div>'+
+        '<div class="fld"><label>Valor mensal</label><input type="text" id="plValor" inputmode="decimal" value="'+String(p.valor||'').replace('.',',')+'"></div>'+
+        '<div class="fld"><label>Lavagens por mês</label><input type="text" id="plFranquia" inputmode="numeric" value="'+(p.franquia||'')+'" placeholder="0 = ilimitado"></div>'+
+        '<div class="fld"><label>Serviço incluso</label><select id="plServico"><option value="">Qualquer serviço</option>'+
+          svcs.map(function(s){return '<option value="'+s.id+'"'+(p.servicoId===s.id?' selected':'')+'>'+esc(s.nome)+'</option>'}).join('')+
+        '</select></div>'+
+        '<div class="fld"><label>Situação</label><select id="plAtivo"><option value="1"'+(p.ativo!==false?' selected':'')+'>Ativo</option><option value="0"'+(p.ativo===false?' selected':'')+'>Inativo</option></select></div>'+
+      '</div>'+
+      '<p class="mini-note">Com franquia esgotada o cliente continua sendo atendido — o sistema cobra normal e avisa você na hora da entrada.</p>',
+    botoes:[
+      novo?{txt:'Cancelar',classe:'btn-ghost',acao:fecharModal}:{txt:'Excluir',classe:'btn-danger',acao:function(){
+        var usados=(DB.assinaturas||[]).filter(function(a){return a.planoId===p.id&&a.status==='ativa'}).length;
+        if(usados){toast('Plano em uso',usados+' cliente(s) assinam este plano. Cancele as assinaturas antes.','warn');return}
+        DB.planos=(DB.planos||[]).filter(function(x){return x.id!==p.id});
+        salvar();fecharModal();renderPlanos();toast('Plano removido','','warn');
+      }},
+      {txt:novo?'Cadastrar':'Salvar',classe:'entrar-btn',acao:function(){
+        var nome=document.getElementById('plNome').value.trim();
+        if(!nome){toast('Falta o nome do plano','','warn');return}
+        var sid=document.getElementById('plServico').value;
+        var dados={nome:nome,valor:parseValor(document.getElementById('plValor').value),
+          franquia:+document.getElementById('plFranquia').value||0,
+          servicoId:sid?+sid:null,
+          ativo:document.getElementById('plAtivo').value==='1'};
+        if(novo){DB.planos=DB.planos||[];DB.planos.push(Object.assign({id:proximo('plano')},dados))}
+        else Object.assign(p,dados);
+        salvar();fecharModal();renderPlanos();
+        toast(novo?'Plano cadastrado':'Plano atualizado',nome,'ok');
+      }}
+    ]
+  });
+}
+function abrirAssinatura2(a){
+  var c=clientePorId(a.clienteId),pl=planoPorId(a.planoId),s=saldoDaAssinatura(a);
+  if(!c||!pl)return;
+  abrirModal({
+    titulo:c.nome,
+    sub:pl.nome+' · '+fmtBRL(pl.valor)+' por mês',
+    html:'<div class="rsum" style="margin:0">'+
+        '<div class="rsum-row"><span>Início</span><b>'+dataBR(a.criadoISO)+'</b></div>'+
+        '<div class="rsum-row"><span>Uso neste mês</span><b>'+s.usados+(s.ilimitado?' lavagens':' de '+s.franquia)+'</b></div>'+
+        (s.ilimitado?'':'<div class="rsum-row"><span>Restam</span><b style="color:'+(s.restam?'var(--ok)':'var(--alerta)')+'">'+s.restam+'</b></div>')+
+        '<div class="rsum-row tot"><span>Total já usado</span><b>'+(a.usos||[]).length+' lavagens</b></div>'+
+      '</div>',
+    botoes:[
+      {txt:'Cancelar assinatura',classe:'btn-danger',acao:function(){
+        confirmar({titulo:'Cancelar assinatura',texto:c.nome+' deixa de ter franquia mensal. O histórico é mantido.',
+          botoes:[{txt:'Voltar',classe:'btn-ghost',acao:fecharConfirm},
+            {txt:'Cancelar assinatura',classe:'btn-danger',acao:function(){
+              a.status='cancelada';a.canceladoISO=isoAgora();
+              salvar();fecharConfirm();fecharModal();renderPlanos();
+              toast('Assinatura cancelada',c.nome,'warn');
+            }}]});
+      }},
+      {txt:'Fechar',classe:'entrar-btn',acao:fecharModal}
+    ]
+  });
+}
+function vincularPlano(cliente){
+  var disp=planosAtivos();
+  if(!disp.length){toast('Nenhum plano cadastrado','Crie um plano em Admin › Planos.','warn');return}
+  var ja=assinaturaDoCliente(cliente.id);
+  if(ja){abrirAssinatura2(ja);return}
+  abrirModal({
+    titulo:'Vincular plano',
+    sub:cliente.nome,
+    html:'<div class="fld"><label>Plano</label><select id="vpPlano">'+
+      disp.map(function(p){
+        return '<option value="'+p.id+'">'+esc(p.nome)+' — '+fmtBRL(p.valor)+'/mês'+
+          (p.franquia?' · '+p.franquia+' lavagens':' · ilimitado')+'</option>';
+      }).join('')+'</select></div>',
+    botoes:[
+      {txt:'Cancelar',classe:'btn-ghost',acao:fecharModal},
+      {txt:'Vincular',classe:'entrar-btn',acao:function(){
+        var pid=+document.getElementById('vpPlano').value;
+        DB.assinaturas=DB.assinaturas||[];
+        DB.assinaturas.push({id:proximo('assinatura'),clienteId:cliente.id,planoId:pid,
+          status:'ativa',usos:[],criadoISO:isoAgora()});
+        cliente.mensalista=true;
+        salvar();fecharModal();renderPlanos();
+        toast('Plano vinculado',cliente.nome+' · '+planoPorId(pid).nome,'ok');
+      }}
+    ]
+  });
+}
+
+
+/* ================= NUVEM (SUPABASE) =================
+   O app continua local-first: tudo grava no aparelho primeiro e a tela nunca
+   espera a rede. A nuvem entra como cópia de segurança e ponte entre aparelhos.
+   Sem internet o T-Jet funciona igual — sincroniza quando a rede voltar. */
+
+var SB_CDN='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+var sb=null,sbCarregando=null,sincronizando=false;
+var COLECOES_SYNC=['clientes','veiculos','os','patio','agendamentos','orcamentos',
+  'servicos','equipe','insumos','estoqueMovs','caixas','custosFixos','planos','assinaturas'];
+
+function cfgNuvem(){
+  var c=DB.config;
+  if(!c.nuvem)c.nuvem={ativa:false,url:'',chave:'',loja:'principal',ultimoSync:'',auto:true};
+  return c.nuvem;
+}
+function nuvemPronta(){
+  var n=cfgNuvem();
+  return !!(n.ativa&&String(n.url).trim()&&String(n.chave).trim());
+}
+function carregarSupabase(){
+  if(sb)return Promise.resolve(sb);
+  if(sbCarregando)return sbCarregando;
+  var n=cfgNuvem();
+  sbCarregando=import(SB_CDN).then(function(mod){
+    sb=mod.createClient(String(n.url).trim(),String(n.chave).trim(),{auth:{persistSession:false}});
+    return sb;
+  }).catch(function(e){sbCarregando=null;throw e});
+  return sbCarregando;
+}
+
+function carimbar(item){
+  if(item&&typeof item==='object'&&!item.atualizadoISO)item.atualizadoISO=isoAgora();
+  return item;
+}
+function chaveSync(colecao,item){
+  if(colecao==='veiculos')return String(item.placa||'');
+  return String(item.id!==undefined?item.id:(item.numero||''));
+}
+
+function enviarColecao(colecao){
+  var itens=(DB[colecao]||[]).map(carimbar);
+  if(!itens.length)return Promise.resolve(0);
+  var n=cfgNuvem();
+  var linhas=itens.map(function(it){
+    return {loja:n.loja||'principal',colecao:colecao,chave:chaveSync(colecao,it),
+      dados:it,atualizado_em:it.atualizadoISO||isoAgora()};
+  });
+  var lotes=[],i;
+  for(i=0;i<linhas.length;i+=150)lotes.push(linhas.slice(i,i+150));
+  return lotes.reduce(function(p,lote){
+    return p.then(function(soma){
+      return sb.from('tjet_registros').upsert(lote,{onConflict:'loja,colecao,chave'})
+        .then(function(r){
+          if(r.error)throw new Error(r.error.message);
+          return soma+lote.length;
+        });
+    });
+  },Promise.resolve(0));
+}
+function baixarColecao(colecao,desde){
+  var n=cfgNuvem();
+  var q=sb.from('tjet_registros').select('chave,dados,atualizado_em')
+    .eq('loja',n.loja||'principal').eq('colecao',colecao);
+  if(desde)q=q.gt('atualizado_em',desde);
+  return q.then(function(r){
+    if(r.error)throw new Error(r.error.message);
+    return r.data||[];
+  });
+}
+function fundir(colecao,remotos){
+  if(!DB[colecao])DB[colecao]=[];
+  var locais=DB[colecao],porChave={},novos=0,atualizados=0;
+  locais.forEach(function(it){porChave[chaveSync(colecao,it)]=it});
+  remotos.forEach(function(linha){
+    var remoto=linha.dados;
+    if(!remoto||typeof remoto!=='object')return;
+    var atual=porChave[linha.chave];
+    if(!atual){locais.push(remoto);porChave[linha.chave]=remoto;novos++;return}
+    /* quem alterou por último vence: simples e previsível no balcão */
+    var tLocal=atual.atualizadoISO||atual.criadoISO||'';
+    var tRemoto=remoto.atualizadoISO||linha.atualizado_em||'';
+    if(tRemoto>tLocal){
+      Object.keys(remoto).forEach(function(k){atual[k]=remoto[k]});
+      atualizados++;
+    }
+  });
+  return {novos:novos,atualizados:atualizados};
+}
+
+function sincronizar(silencioso){
+  if(!nuvemPronta()){
+    if(!silencioso)toast('Nuvem desligada','Configure em Admin › Nuvem.','warn');
+    return Promise.resolve(null);
+  }
+  if(sincronizando)return Promise.resolve(null);
+  sincronizando=true;marcarSync('sincronizando');
+  var n=cfgNuvem(),resumo={enviados:0,novos:0,atualizados:0};
+
+  return carregarSupabase().then(function(){
+    return COLECOES_SYNC.reduce(function(p,col){
+      return p.then(function(){
+        return baixarColecao(col,n.ultimoSync).then(function(remotos){
+          if(remotos.length){
+            var r=fundir(col,remotos);
+            resumo.novos+=r.novos;resumo.atualizados+=r.atualizados;
+          }
+          return enviarColecao(col).then(function(q){resumo.enviados+=q});
+        });
+      });
+    },Promise.resolve());
+  }).then(function(){
+    n.ultimoSync=isoAgora();
+    religarPonteiros();salvar();marcarSync('ok');
+    if(!silencioso)toast('Sincronizado',
+      resumo.enviados+' enviados · '+resumo.novos+' novos · '+resumo.atualizados+' atualizados','ok');
+    atualizarPainelNuvem();
+    if(resumo.novos||resumo.atualizados)recarregarTelas();
+    return resumo;
+  }).catch(function(e){
+    marcarSync('erro');
+    registrarErro('Sync: '+((e&&e.message)||e),'nuvem');
+    if(!silencioso)toast('Não sincronizou',explicarErroNuvem(e),'err');
+    return null;
+  }).then(function(r){sincronizando=false;return r});
+}
+/* os ponteiros globais precisam continuar apontando para os arrays do DB */
+function religarPonteiros(){
+  [['clientes',CLIENTES],['veiculos',VEICULOS],['patio',PATIO],['servicos',SERVICOS]].forEach(function(par){
+    var col=par[0],ref=par[1];
+    if(DB[col]!==ref){
+      ref.length=0;
+      DB[col].forEach(function(x){ref.push(x)});
+      DB[col]=ref;
+    }
+  });
+}
+function explicarErroNuvem(e){
+  var m=String((e&&e.message)||e);
+  if(/Failed to fetch|NetworkError|Load failed|import/i.test(m))return 'Sem internet ou biblioteca bloqueada. Os dados seguem salvos no aparelho.';
+  if(/JWT|apikey|Invalid API key/i.test(m))return 'Chave recusada. Confira a URL e a chave anon.';
+  if(/does not exist|tjet_registros/i.test(m))return 'A tabela tjet_registros não existe. Rode o SQL de instalação.';
+  if(/row-level security|permission denied/i.test(m))return 'Bloqueado pela política de acesso (RLS) do Supabase.';
+  return m.slice(0,130);
+}
+function recarregarTelas(){
+  seguro('sync-render',function(){
+    renderPatio();renderHome();atualizarContadores();
+  });
+}
+function marcarSync(estado){
+  var el=document.getElementById('syncPill');
+  if(!el)return;
+  el.className='sync-pill '+estado;
+  el.textContent={sincronizando:'sincronizando',ok:'na nuvem',erro:'falhou',off:'só neste aparelho'}[estado]||'';
+  el.style.display='inline-flex';
+}
+var syncTimer=null;
+function agendarSync(){
+  if(!nuvemPronta()||cfgNuvem().auto===false)return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(function(){sincronizar(true)},5000);
+}
+window.addEventListener('online',function(){if(nuvemPronta())sincronizar(true)});
+
+/* ---------- painel em Admin ---------- */
+function atualizarPainelNuvem(){
+  var box=document.getElementById('nuvemStatus');if(!box)return;
+  var n=cfgNuvem();
+  var total=COLECOES_SYNC.reduce(function(a,c){return a+((DB[c]||[]).length)},0);
+  box.innerHTML='<div class="rsum" style="margin:0">'+
+    '<div class="rsum-row"><span>Situação</span><b style="color:'+(nuvemPronta()?'var(--ok)':'var(--alerta)')+'">'+
+      (nuvemPronta()?'ligada':'desligada — dados só neste aparelho')+'</b></div>'+
+    '<div class="rsum-row"><span>Última sincronização</span><b>'+
+      (n.ultimoSync?dataBR(n.ultimoSync)+' às '+horaDe(n.ultimoSync):'nunca')+'</b></div>'+
+    '<div class="rsum-row"><span>Loja</span><b>'+esc(n.loja||'principal')+'</b></div>'+
+    '<div class="rsum-row tot"><span>Registros no aparelho</span><b>'+total+'</b></div></div>';
+}
+function carregarFormNuvem(){
+  var n=cfgNuvem();
+  document.getElementById('nvAtiva').classList.toggle('on',!!n.ativa);
+  document.getElementById('nvAuto').classList.toggle('on',n.auto!==false);
+  document.getElementById('nvUrl').value=n.url||'';
+  document.getElementById('nvChave').value=n.chave||'';
+  document.getElementById('nvLoja').value=n.loja||'principal';
+  atualizarPainelNuvem();
+  marcarSync(nuvemPronta()?'ok':'off');
+}
+['nvAtiva','nvAuto'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el)el.addEventListener('click',function(){this.classList.toggle('on')});
+});
+document.getElementById('salvarNuvemBtn').addEventListener('click',function(){
+  var n=cfgNuvem();
+  n.ativa=document.getElementById('nvAtiva').classList.contains('on');
+  n.auto=document.getElementById('nvAuto').classList.contains('on');
+  n.url=document.getElementById('nvUrl').value.trim().replace(/\/+$/,'');
+  n.chave=document.getElementById('nvChave').value.trim();
+  n.loja=document.getElementById('nvLoja').value.trim()||'principal';
+  sb=null;sbCarregando=null;
+  salvar();atualizarPainelNuvem();marcarSync(nuvemPronta()?'ok':'off');
+  toast('Nuvem salva',nuvemPronta()?'Toque em Sincronizar agora para a primeira carga.':'Guardado — ainda desligada.','ok');
+});
+document.getElementById('sincronizarBtn').addEventListener('click',function(){
+  var bt=this;bt.textContent='Sincronizando…';bt.disabled=true;
+  sincronizar(false).then(function(){bt.textContent='Sincronizar agora';bt.disabled=false});
+});
+document.getElementById('sqlNuvemBtn').addEventListener('click',function(){
+  var sql=[
+"-- T-Jet · rode uma vez no SQL Editor do Supabase",
+"create table if not exists tjet_registros (",
+"  loja           text        not null,",
+"  colecao        text        not null,",
+"  chave          text        not null,",
+"  dados          jsonb       not null,",
+"  atualizado_em  timestamptz not null default now(),",
+"  primary key (loja, colecao, chave)",
+");","",
+"create index if not exists tjet_registros_busca",
+"  on tjet_registros (loja, colecao, atualizado_em desc);","",
+"alter table tjet_registros enable row level security;","",
+"drop policy if exists tjet_acesso on tjet_registros;",
+"create policy tjet_acesso on tjet_registros",
+"  for all to anon using (true) with check (true);"].join('\n');
+  abrirModal({titulo:'SQL de instalação',sub:'Cole no SQL Editor do seu projeto e execute',
+    html:'<textarea readonly style="width:100%;min-height:280px;font:500 11px/1.5 var(--f-mono)">'+esc(sql)+'</textarea>'+
+      '<p class="mini-note">Depois copie a <b>Project URL</b> e a chave <b>anon public</b> em Settings › API.</p>',
+    botoes:[
+      {txt:'Copiar',classe:'btn-ghost',acao:function(){
+        if(navigator.clipboard)navigator.clipboard.writeText(sql).then(function(){toast('SQL copiado','','ok')});
+      }},
+      {txt:'Fechar',classe:'entrar-btn',acao:fecharModal}]});
+});
+
+
 /* ================= ADMIN · SERVIÇOS ================= */
 function renderAdmServicos(){
   var q=(document.getElementById('admSvcBusca').value||'').trim().toLowerCase();
@@ -7297,6 +7991,11 @@ function carregarConfigForm(){
   document.getElementById('cfgMetaMes').value=String(c.metaMes||0).replace('.',',');
   document.getElementById('cfgMetaCarros').value=c.metaCarros||0;
   document.getElementById('cfgCamAuto').classList.toggle('on',c.camAuto!==false);
+  var o=cfgPlaca();
+  document.getElementById('cfgOcrProv').value=o.provedor||'local';
+  document.getElementById('cfgOcrToken').value=o.token||'';
+  document.getElementById('cfgOcrEndpoint').value=o.endpoint||'';
+  atualizarNotaOcr();
   document.getElementById('cfgFidSwitch').classList.toggle('on',!!c.fidelidade.ativo);
   document.getElementById('cfgFidAcada').value=c.fidelidade.aCada;
   document.getElementById('cfgFidPremio').value=c.fidelidade.premio;
@@ -7319,6 +8018,10 @@ document.getElementById('salvarConfigBtn').addEventListener('click',function(){
   c.metaMes=parseValor(document.getElementById('cfgMetaMes').value);
   c.metaCarros=+document.getElementById('cfgMetaCarros').value||0;
   c.camAuto=document.getElementById('cfgCamAuto').classList.contains('on');
+  var o=cfgPlaca();
+  o.provedor=document.getElementById('cfgOcrProv').value;
+  o.token=document.getElementById('cfgOcrToken').value.trim();
+  o.endpoint=document.getElementById('cfgOcrEndpoint').value.trim();
   c.fidelidade.ativo=document.getElementById('cfgFidSwitch').classList.contains('on');
   c.fidelidade.aCada=+document.getElementById('cfgFidAcada').value||10;
   c.fidelidade.premio=document.getElementById('cfgFidPremio').value.trim();
@@ -7473,6 +8176,41 @@ document.getElementById('limparDadosBtn').addEventListener('click',function(){
         location.reload();
       }}
     ]});
+});
+
+
+/* ---------- leitura de placa por API ---------- */
+function atualizarNotaOcr(){
+  var prov=document.getElementById('cfgOcrProv').value;
+  document.getElementById('cfgOcrEndpointBox').style.display=prov==='proxy'?'block':'none';
+  var nota=document.getElementById('cfgOcrNota');
+  if(prov==='local')nota.innerHTML='O leitor embarcado funciona offline e acerta em condição boa: placa limpa, de frente e com luz. Em placa suja, contraluz ou ângulo torto, erra às vezes.';
+  else if(prov==='platerecognizer')nota.innerHTML='Reconhecimento dedicado, bem mais preciso. Crie a conta em <b>app.platerecognizer.com</b> e cole o token acima. Se o navegador bloquear a chamada por CORS, use a opção de endpoint próprio.';
+  else nota.innerHTML='Aponte para o seu proxy — uma Edge Function no Supabase, por exemplo. Assim o token não fica exposto no aparelho e o CORS deixa de ser problema.';
+}
+document.getElementById('cfgOcrProv').addEventListener('change',atualizarNotaOcr);
+document.getElementById('testarOcrBtn').addEventListener('click',function(){
+  var o=cfgPlaca();
+  o.provedor=document.getElementById('cfgOcrProv').value;
+  o.token=document.getElementById('cfgOcrToken').value.trim();
+  o.endpoint=document.getElementById('cfgOcrEndpoint').value.trim();
+  if(!apiPlacaAtiva()){
+    toast('Nada para testar','Escolha um provedor e informe o token ou a URL.','warn');
+    return;
+  }
+  var bt=this;bt.textContent='Testando…';bt.disabled=true;
+  /* imagem sintética de placa só para validar credencial e rota */
+  var cv=document.createElement('canvas');cv.width=440;cv.height=140;
+  var x=cv.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,440,140);
+  x.fillStyle='#000';x.font='bold 82px monospace';x.fillText('TES1T23',28,105);
+  lerPlacaPorApi(cv).then(function(r){
+    toast('API respondeu','Leitura de teste: '+r.placa+'. Credencial válida.','ok');
+  }).catch(function(e){
+    var m=(e&&e.message)||'';
+    if(m==='sem_placa'||m==='formato')toast('API respondeu','A rota e o token funcionam — a imagem de teste é sintética, por isso não houve placa reconhecida.','ok');
+    else toast('Não deu certo',motivoApi(e),'err');
+  }).then(function(){bt.textContent='Testar leitura da API';bt.disabled=false});
 });
 
 
@@ -8102,13 +8840,16 @@ function renderIndFinanceiro(d){
     kpi('Recebido','var(--ok)',fmtBRL(recebido),'no período')+
     kpi('Custo de insumos','var(--perigo)',fmtBRL(d.custo),d.receita?Math.round(d.custo/d.receita*100)+'% da receita':'—')+
     kpi('Comissões','var(--alerta)',fmtBRL(d.comissao),d.receita?Math.round(d.comissao/d.receita*100)+'% da receita':'—')+
-    kpi('A receber','var(--azul)',fmtBRL(fiadoTotal.reduce(function(a,o){return a+o.fiado},0)),fiadoTotal.length+' OS em aberto');
+    kpi('A receber','var(--azul)',fmtBRL(fiadoTotal.reduce(function(a,o){return a+o.fiado},0)),fiadoTotal.length+' OS em aberto')+
+    kpi('Custo fixo','var(--perigo)',fmtBRL(custoFixoNoPeriodo(d.p)),fmtBRL(custoFixoMensal())+' por mês')+
+    kpi('Receita recorrente','var(--ok)',fmtBRL((DB.assinaturas||[]).filter(function(a){return a.status==='ativa'}).reduce(function(a,x){var pl=planoPorId(x.planoId);return a+((pl&&pl.valor)||0)},0)),(DB.assinaturas||[]).filter(function(a){return a.status==='ativa'}).length+' assinantes');
 
   var caixasPer=DB.caixas.filter(function(c){return c.dataDia>=d.p.ini&&c.dataDia<=d.p.fim});
   var movs=[];caixasPer.forEach(function(c){movs=movs.concat(c.movimentos)});
   if(DB.caixaAtual)movs=movs.concat(DB.caixaAtual.movimentos);
   var despesas=movs.filter(function(m){return m.tipo==='despesa'}).reduce(function(a,m){return a+(+m.valor||0)},0);
-  var resultado=d.receita-d.custo-d.comissao-despesas;
+  var fixos=custoFixoNoPeriodo(d.p);
+  var resultado=d.receita-d.custo-d.comissao-despesas-fixos;
   document.getElementById('dreBox').innerHTML=
     '<div class="rsum" style="margin:0;background:none;border:0;padding:0">'+
       '<div class="rsum-row"><span>Serviços vendidos</span><b>'+fmtBRL(d.receita+descontos)+'</b></div>'+
@@ -8117,9 +8858,13 @@ function renderIndFinanceiro(d){
       '<div class="rsum-row"><span>Insumos consumidos</span><b style="color:var(--perigo)">- '+fmtBRL(d.custo)+'</b></div>'+
       '<div class="rsum-row"><span>Comissões da equipe</span><b style="color:var(--perigo)">- '+fmtBRL(d.comissao)+'</b></div>'+
       '<div class="rsum-row"><span>Despesas pelo caixa</span><b style="color:var(--perigo)">- '+fmtBRL(despesas)+'</b></div>'+
+      '<div class="rsum-row"><span>Custos fixos (rateio)</span><b style="color:var(--perigo)">- '+fmtBRL(fixos)+'</b></div>'+
       '<div class="rsum-row tot"><span>Resultado do período</span><b style="color:'+(resultado>=0?'var(--ok)':'var(--perigo)')+'">'+fmtBRL(resultado)+'</b></div>'+
     '</div>'+
-    '<p class="mini-note">Insumos saem da ficha técnica de cada serviço e comissões do percentual do catálogo. Quanto mais completo o Admin, mais fiel esse número.</p>';
+    (custoFixoMensal()
+      ? '<p class="mini-note">Custo fixo de '+fmtBRL(custoFixoMensal())+' por mês rateado pelos dias do período. '+
+        'Ponto de equilíbrio: <b>'+calcularEquilibrio()+' carros por mês</b> no ticket e na margem atuais.</p>'
+      : '<p class="mini-note">Nenhum custo fixo cadastrado — aluguel, água, luz e folha ainda não entram nesta conta. Cadastre em Admin › Custos para o resultado ficar real.</p>');
 
   document.getElementById('rankMargem').innerHTML=rankHtml(margemPorServico(d.oss).slice(0,12).map(function(x){
     return {nome:x.nome,valor:x.margem,sub:x.qtd+'x · '+Math.round(x.margemPc)+'% de margem · receita '+fmtBRLcurto(x.receita)};
@@ -8205,7 +8950,7 @@ function aoTrocarTela(id){
   if(id==='orcamento')renderOrcamentos();
   if(id==='estoque'){renderEstoque();renderEstoqueMovs();renderFichas()}
   if(id==='retorno')renderRetornos();
-  if(id==='admin'){renderAdmServicos();renderAdmEquipe();carregarConfigForm();renderDadosStats();seguro('diag',renderDiagnostico)}
+  if(id==='admin'){renderAdmServicos();renderAdmEquipe();carregarConfigForm();renderDadosStats();seguro('diag',renderDiagnostico);seguro('custos',renderCustos);seguro('planos',renderPlanos);seguro('nuvem',carregarFormNuvem)}
   if(id==='clientes')renderClientesLista(document.getElementById('clienteBuscaInput').value);
   if(id==='patio')renderPatio();
   if(id==='home')renderHome();
