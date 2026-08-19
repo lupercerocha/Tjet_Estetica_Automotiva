@@ -283,7 +283,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.6.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v2.7.0 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -322,7 +322,7 @@ colunas, para o valor em reais não espremer.
 
 ## Confirmar a versão
 
-Na tela inicial, ao lado da data, tem um selo pequeno: **v2.6.0**. É a forma mais
+Na tela inicial, ao lado da data, tem um selo pequeno: **v2.7.0**. É a forma mais
 rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
 na versão antiga.
 
@@ -361,3 +361,22 @@ atenção com a operação.
 **No computador nada mudou** — a tela larga comporta os indicadores em destaque
 e é lá que você olha relatório. A troca de ordem e os tamanhos valem só abaixo de
 700px de largura.
+
+
+## Tela de entrada (v2.7.0)
+
+- **Placa** sobe sempre em maiúsculo, mesmo digitando em minúsculo.
+- **Modelo**: digite duas letras e escolha na lista. Marca, modelo e porte entram
+  juntos, e os preços já lançados são recalculados.
+- **Cor**: grade de quadrados coloridos, sem texto. O nome da cor escolhida
+  aparece abaixo. O quadrado **+** abre um campo livre para cores fora da lista.
+- **Fotos**: um espaço só. O próximo aparece quando você usar o primeiro.
+- **Serviços**: o catálogo saiu da tela e virou o botão **Escolher serviços**.
+  Abre um modal com busca, agrupado por tipo, mostrando preço e tempo de cada um.
+  O botão mostra quantos você escolheu e o total.
+
+## Mensagens do WhatsApp
+
+`{cliente}` agora traz **nome e sobrenome**. Se em alguma mensagem você preferir
+só o primeiro nome — mais informal —, use `{primeiro}`. Os dois funcionam, e você
+edita os textos em **Admin → Configurações → Mensagens**.

@@ -1142,6 +1142,11 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .diag-erros div{font:400 10.5px/1.5 var(--f-mono);color:var(--texto2);word-break:break-word;margin-bottom:6px}
 .diag-erros b{color:var(--perigo)}
 .slot-opt.on{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}
+.barra-erro{position:fixed;left:0;right:0;top:0;z-index:300;display:flex;flex-direction:column;
+  gap:1px;align-items:center;justify-content:center;padding:9px 14px calc(9px + env(safe-area-inset-top));
+  background:var(--perigo);color:#fff;border:0;cursor:pointer;font:inherit;text-align:center}
+.barra-erro b{font:800 13px/1.2 var(--f-display)}
+.barra-erro span{font:500 11px/1.2 var(--f-body);opacity:.9}
 
 /* ===== CELULAR: operação em primeiro, indicadores como faixa ===== */
 @media (max-width:699px){
@@ -1209,6 +1214,73 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .versao-pill:active{transform:scale(.94)}
 /* fica levemente mais visível quando há erro registrado */
 .versao-pill.alerta{opacity:1;border-color:var(--alerta);color:var(--alerta)}
+
+/* ===== GRADE DE CORES ===== */
+.cor-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:7px;
+  padding:9px;background:var(--vidro);border:1px solid var(--linha);border-radius:12px}
+.cor-quad{
+  aspect-ratio:1;border-radius:9px;background:var(--cq,#333);cursor:pointer;
+  border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
+  transition:transform .13s,border-color .13s;position:relative;
+}
+.cor-quad:active{transform:scale(.9)}
+.cor-quad.on{border-color:var(--teal);transform:scale(1.06)}
+.cor-quad.on::after{
+  content:'';position:absolute;inset:0;margin:auto;width:11px;height:6px;
+  border-left:2.4px solid #fff;border-bottom:2.4px solid #fff;transform:rotate(-45deg) translate(1px,-2px);
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));
+}
+.cor-quad.outra{
+  background:var(--painel);border:1.5px dashed var(--linha);color:var(--fumaca);
+  display:flex;align-items:center;justify-content:center;font:700 17px/1 var(--f-body);box-shadow:none;
+}
+.cor-quad.outra.on{border-color:var(--teal);color:var(--teal)}
+.cor-quad.outra.on::after{display:none}
+.cor-nome{margin-top:7px;font:600 11px/1 var(--f-mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--fumaca)}
+
+/* uma foto por vez: as próximas aparecem conforme forem tiradas */
+.photos.so-uma{grid-template-columns:1fr}
+
+/* ===== BOTÃO QUE ABRE O CATÁLOGO ===== */
+.btn-escolher{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;font:inherit;color:inherit;
+  background:var(--vidro);border:1.5px dashed var(--linha);border-radius:14px;padding:14px 15px;transition:.16s;
+}
+.btn-escolher:hover{border-color:var(--teal)}
+.btn-escolher:active{transform:scale(.985)}
+.btn-escolher.tem{border-style:solid;border-color:color-mix(in srgb,var(--teal) 45%,var(--linha));
+  background:color-mix(in srgb,var(--teal) 8%,var(--painel))}
+.be-ic{width:36px;height:36px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--teal) 18%,transparent);color:var(--teal)}
+.be-tx{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.be-tx b{font-family:'Archivo',sans-serif;font-weight:800;font-size:.92rem;color:var(--texto)}
+.be-tx span{font-size:.76rem;color:var(--fumaca)}
+.be-arw{color:var(--fumaca);flex:none}
+.btn-escolher.tem .be-arw{color:var(--teal)}
+
+/* lista de serviços dentro do modal */
+.svc-grupos{max-height:52vh;overflow-y:auto;margin:0 -4px;padding:0 4px}
+.svc-grupo-lbl{font:700 9.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto3);margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--linha)}
+.svc-grupo-lbl:first-child{margin-top:2px}
+.svc-lin{display:flex;align-items:center;gap:11px;padding:11px 10px;border-radius:11px;cursor:pointer;
+  border:1px solid transparent;transition:.13s}
+.svc-lin:active{transform:scale(.99)}
+.svc-lin.on{background:color-mix(in srgb,var(--teal) 11%,transparent);
+  border-color:color-mix(in srgb,var(--teal) 38%,var(--linha))}
+.svc-check{width:19px;height:19px;border-radius:6px;border:1.8px solid var(--linha);flex:none;position:relative;transition:.13s}
+.svc-lin.on .svc-check{background:var(--teal);border-color:var(--teal)}
+.svc-lin.on .svc-check::after{content:'';position:absolute;inset:0;margin:auto;width:9px;height:5px;
+  border-left:2.2px solid #041018;border-bottom:2.2px solid #041018;transform:rotate(-45deg) translate(1px,-1.5px)}
+.svc-lin-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.svc-lin-tx b{font-weight:700;font-size:.86rem;color:var(--texto)}
+.svc-lin-tx span{font-size:.7rem;color:var(--fumaca)}
+.svc-lin-vl{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.8rem;color:var(--teal);flex:none}
+.svc-rodape{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;
+  padding-top:12px;border-top:1px solid var(--linha)}
+.svc-rodape span{font-size:.78rem;color:var(--fumaca)}
+.svc-rodape b{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.2rem;color:var(--teal)}
 
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
@@ -1344,7 +1416,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.6.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.7.0</button>
         </div>
       </div>
 
@@ -1444,7 +1516,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1513,7 +1585,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="card">
         <div class="field">
           <label>Placa</label>
-          <input type="text" id="placaInput" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
+          <input type="text" id="placaInput" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
           <div class="suggest" id="placaSuggest"></div>
           <div class="chips" id="veicPicker" style="display:none;margin-top:10px"></div>
           <div class="vinculo-banner" id="vinculoBanner">
@@ -1549,19 +1621,22 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           </div>
           <div class="field" style="margin-bottom:0">
             <label>Cor</label>
-            <div class="chips" id="corChips">
-              <span class="chip cor-chip on" data-cor="Preto"><i class="cdot" style="background:#101317"></i>Preto</span>
-              <span class="chip cor-chip" data-cor="Cinza"><i class="cdot" style="background:#7A7F85"></i>Cinza</span>
-              <span class="chip cor-chip" data-cor="Branco"><i class="cdot" style="background:#E4E7EA"></i>Branco</span>
-              <span class="chip cor-chip" data-cor="Azul"><i class="cdot" style="background:#2B4D8C"></i>Azul</span>
-              <span class="chip cor-chip" data-cor="Prata"><i class="cdot" style="background:#C7CDD3"></i>Prata</span>
-              <span class="chip cor-chip" data-cor="Vermelho"><i class="cdot" style="background:#B5342E"></i>Vermelho</span>
-              <span class="chip cor-chip" data-cor="Verde"><i class="cdot" style="background:#2F7D4F"></i>Verde</span>
-              <span class="chip cor-chip" data-cor="Laranja"><i class="cdot" style="background:#D9772E"></i>Laranja</span>
-              <span class="chip cor-chip" data-cor="Amarelo"><i class="cdot" style="background:#E4C13C"></i>Amarelo</span>
-              <span class="chip cor-chip" data-cor="Bege"><i class="cdot" style="background:#D8C6A8"></i>Bege</span>
-              <span class="chip cor-chip" data-cor="outra">Outra cor</span>
+            <div class="cor-grade" id="corChips">
+              <span class="cor-quad on" data-cor="Preto" title="Preto" style="--cq:#101317"></span>
+              <span class="cor-quad" data-cor="Cinza" title="Cinza" style="--cq:#7A7F85"></span>
+              <span class="cor-quad" data-cor="Branco" title="Branco" style="--cq:#E4E7EA"></span>
+              <span class="cor-quad" data-cor="Prata" title="Prata" style="--cq:#C7CDD3"></span>
+              <span class="cor-quad" data-cor="Azul" title="Azul" style="--cq:#2B4D8C"></span>
+              <span class="cor-quad" data-cor="Vermelho" title="Vermelho" style="--cq:#B5342E"></span>
+              <span class="cor-quad" data-cor="Verde" title="Verde" style="--cq:#2F7D4F"></span>
+              <span class="cor-quad" data-cor="Laranja" title="Laranja" style="--cq:#D9772E"></span>
+              <span class="cor-quad" data-cor="Amarelo" title="Amarelo" style="--cq:#E4C13C"></span>
+              <span class="cor-quad" data-cor="Marrom" title="Marrom" style="--cq:#6B4A32"></span>
+              <span class="cor-quad" data-cor="Bege" title="Bege" style="--cq:#D8C6A8"></span>
+              <span class="cor-quad" data-cor="Vinho" title="Vinho" style="--cq:#6E1F2E"></span>
+              <span class="cor-quad outra" data-cor="outra" title="Outra cor">+</span>
             </div>
+            <div class="cor-nome" id="corNomeAtual">Preto</div>
             <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
           </div>
         </div>
@@ -1596,8 +1671,13 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <div class="card">
-        <div class="card-lbl">Serviços cadastrados — toque para adicionar</div>
-        <div class="svc-catalogo" id="svcCatalogo"></div>
+        <div class="card-lbl">Serviços</div>
+        <button class="btn-escolher" id="abrirServicosBtn">
+          <span class="be-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="be-tx"><b>Escolher serviços</b><span id="abrirServicosSub">nenhum selecionado</span></span>
+          <svg class="be-arw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <div class="svc-catalogo" id="svcCatalogo" style="display:none"></div>
 
         <div class="svc-empty" id="svcEmpty">Nenhum serviço selecionado</div>
         <div class="svc-sel" id="svcSel"></div>
@@ -1633,7 +1713,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1668,7 +1748,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1683,7 +1763,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1697,7 +1777,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2435,7 +2515,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='2.6.0';
+var TJET_VERSAO='2.7.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2455,6 +2535,7 @@ function registrarErro(msg,onde){
     if(b){b.style.display='inline-flex';b.textContent=errosApp.length}
     var p=document.getElementById('homeVersao');
     if(p)p.classList.add('alerta');
+    if(!bootOk)mostrarBarraErro();
   }catch(x){}
 }
 /* Executa um trecho isolado: se quebrar, registra e segue a vida. */
@@ -2474,6 +2555,23 @@ function carregarScript(url,timeout){
     s.onerror=function(){if(pronto)return;pronto=true;clearTimeout(t);erro(new Error('rede'))};
     document.head.appendChild(s);
   });
+}
+
+/* Erro antes do app terminar de carregar significa que parte do sistema não subiu.
+   Nesse caso nada de aviso discreto: barra no topo, impossível de não ver. */
+var bootOk=false;
+function mostrarBarraErro(){
+  if(document.getElementById('barraErro'))return;
+  try{
+    var b=document.createElement('button');
+    b.id='barraErro';b.className='barra-erro';
+    b.innerHTML='<b>Parte do sistema não carregou</b><span>Toque para ver o diagnóstico</span>';
+    b.addEventListener('click',function(){
+      if(typeof abrirDiagnostico==='function')abrirDiagnostico();
+      else alert(errosApp.map(function(e){return e.msg}).join('\n\n'));
+    });
+    document.body.appendChild(b);
+  }catch(x){}
 }
 
 
@@ -2543,12 +2641,13 @@ function abrirModal(o){
     });
     foot.appendChild(row);
   }
-  if(o.aoAbrir){
-    setTimeout(function(){try{o.aoAbrir()}catch(e){}},60);
-  }
   appModal.classList.add('show');
   appModal.querySelector('.modal').scrollTop=0;
-  if(o.aoAbrir)o.aoAbrir();
+  /* uma vez só: rodar duas vezes registrava os listeners em dobro e o clique
+     adicionava e removia o item no mesmo toque */
+  if(o.aoAbrir)setTimeout(function(){
+    try{o.aoAbrir()}catch(e){registrarErro('[modal.aoAbrir] '+(e.stack||e.message),'modal')}
+  },30);
 }
 function fecharModal(){appModal.classList.remove('show')}
 document.getElementById('amClose').addEventListener('click',fecharModal);
@@ -2604,7 +2703,8 @@ function montarMsg(tpl,os,extra){
   extra=extra||{};
   var servicos=(os.servicos||[]).map(function(s){return '• '+s.nome+' — '+fmtBRL(s.preco)}).join('\n')||'lavagem';
   return String(tpl||'')
-    .replace(/{cliente}/g,(os.apelido||String(os.cliente||'cliente').split(' ')[0]))
+    .replace(/{primeiro}/g,(os.apelido||String(os.cliente||'cliente').split(' ')[0]))
+    .replace(/{cliente}/g,(os.cliente||os.apelido||'cliente'))
     .replace(/{veiculo}/g,[os.marca,os.modelo].filter(Boolean).join(' ')||'veículo')
     .replace(/{placa}/g,os.placa||'')
     .replace(/{servicos}/g,servicos)
@@ -2990,29 +3090,43 @@ function selecionarChip(container,nome){
   container.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c.textContent.trim()===nome)});
 }
 function selecionarCor(nome){
-  var chips=document.querySelectorAll('#corChips .chip'),outraInput=document.getElementById('corOutraInput'),achou=null;
-  chips.forEach(function(c){
+  var quads=document.querySelectorAll('#corChips .cor-quad'),
+      outraInput=document.getElementById('corOutraInput'),
+      rotulo=document.getElementById('corNomeAtual'),achou=null;
+  quads.forEach(function(c){
     var bate=c.dataset.cor===nome;
     c.classList.toggle('on',bate);
     if(bate)achou=c;
   });
   if(!achou){
-    document.querySelectorAll('#corChips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.cor==='outra')});
+    quads.forEach(function(c){c.classList.toggle('on',c.dataset.cor==='outra')});
     outraInput.style.display='block';outraInput.value=nome;
+    if(rotulo)rotulo.textContent=nome||'Outra cor';
   }else{
     outraInput.style.display='none';
+    if(rotulo)rotulo.textContent=nome;
   }
 }
 document.getElementById('categoriaChips').querySelectorAll('.chip').forEach(function(c){
   c.addEventListener('click',function(){selecionarChip(document.getElementById('categoriaChips'),c.textContent.trim())});
 });
 document.getElementById('corChips').addEventListener('click',function(e){
-  var chip=e.target.closest('.chip');if(!chip)return;
-  document.querySelectorAll('#corChips .chip').forEach(function(c){c.classList.remove('on')});
-  chip.classList.add('on');
-  var outraInput=document.getElementById('corOutraInput');
-  if(chip.dataset.cor==='outra'){outraInput.style.display='block';outraInput.focus()}
-  else{outraInput.style.display='none'}
+  var quad=e.target.closest('.cor-quad');if(!quad)return;
+  document.querySelectorAll('#corChips .cor-quad').forEach(function(c){c.classList.remove('on')});
+  quad.classList.add('on');
+  var outraInput=document.getElementById('corOutraInput'),
+      rotulo=document.getElementById('corNomeAtual');
+  if(quad.dataset.cor==='outra'){
+    outraInput.style.display='block';outraInput.value='';outraInput.focus();
+    if(rotulo)rotulo.textContent='Outra cor';
+  }else{
+    outraInput.style.display='none';
+    if(rotulo)rotulo.textContent=quad.dataset.cor;
+  }
+});
+document.getElementById('corOutraInput').addEventListener('input',function(){
+  var rotulo=document.getElementById('corNomeAtual');
+  if(rotulo)rotulo.textContent=this.value.trim()||'Outra cor';
 });
 
 /* ================= MODELO (base FIPE mockada) ================= */
@@ -3142,6 +3256,7 @@ function renderServicos(){
   }).join('');
   var total=selecionados.reduce(function(a,it){return a+(it.preco||0)},0);
   svcTotalValor.textContent='R$ '+total.toFixed(2).replace('.',',');
+  if(typeof atualizarBotaoServicos==='function')atualizarBotaoServicos();
 }
 /* seleção de serviços: ver adicionarServico() no bloco de entrada */
 svcSel.addEventListener('click',function(e){
@@ -4179,14 +4294,15 @@ function renderFotosEntrada(){
   var extras=fotosEntrada.slice(1).map(function(src,i){
     return '<button class="photo-add" data-foto-ver="'+(i+1)+'" style="background-image:url('+src+');background-size:cover;background-position:center"></button>';
   }).join('');
-  var vazias='';
-  for(var i=fotosEntrada.length;i<6;i++){
-    vazias+='<button class="photo-add" data-foto-add="1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>';
-  }
+  /* um só espaço vazio: o próximo aparece quando este for usado */
+  var vazias=(fotosEntrada.length&&fotosEntrada.length<6)
+    ? '<button class="photo-add" data-foto-add="1" title="Adicionar foto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button>'
+    : '';
   var principal=fotosEntrada.length
     ? '<button class="photo-add main" data-foto-ver="0" style="background-image:url('+fotosEntrada[0]+');background-size:cover;background-position:center"><span style="background:rgba(4,12,24,.6);padding:2px 8px;border-radius:8px">Principal</span></button>'
     : '<button class="photo-add main" data-foto-add="1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6l1.5-2h5L16 6"/><circle cx="12" cy="13" r="3.5"/></svg><span>Foto principal</span></button>';
   box.innerHTML=principal+extras+vazias;
+  box.classList.toggle('so-uma',!fotosEntrada.length);
 }
 document.addEventListener('click',function(e){
   if(e.target.closest('#view-entrada [data-foto-add]')){
@@ -4285,7 +4401,7 @@ function reprecificarSelecionados(){
 }
 
 /* conflito: serviços do mesmo grupo */
-function adicionarServico(s,cat){
+function adicionarServico(s,cat,depois){
   var grupo=grupoDe(s),conflito=selecionados.filter(function(it){
     var sv=servicoPorNome(it.nome);
     return grupoDe(sv||it.nome)===grupo&&it.nome!==s.nome;
@@ -4297,7 +4413,7 @@ function adicionarServico(s,cat){
       texto:'"'+s.nome+'" já está na lista. Quer lançar uma segunda vez (ex.: dois carros do mesmo cliente ou serviço em dobro)?',
       botoes:[
         {txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm},
-        {txt:'Lançar de novo',classe:'entrar-btn',acao:function(){fecharConfirm();inserirServico(s,cat)}}
+        {txt:'Lançar de novo',classe:'entrar-btn',acao:function(){fecharConfirm();inserirServico(s,cat,depois)}}
       ]
     });
     return;
@@ -4310,21 +4426,23 @@ function adicionarServico(s,cat){
       botoes:[
         {txt:'Substituir por "'+s.nome+'"',classe:'entrar-btn',acao:function(){
           selecionados=selecionados.filter(function(it){return it.nome!==atual.nome});
-          fecharConfirm();inserirServico(s,cat);
+          fecharConfirm();inserirServico(s,cat,depois);
         }},
-        {txt:'Manter os dois',classe:'btn-ghost',acao:function(){fecharConfirm();inserirServico(s,cat)}},
+        {txt:'Manter os dois',classe:'btn-ghost',acao:function(){fecharConfirm();inserirServico(s,cat,depois)}},
         {txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm}
       ]
     });
     return;
   }
-  inserirServico(s,cat);
+  inserirServico(s,cat,depois);
 }
-function inserirServico(s,cat){
+function inserirServico(s,cat,depois){
   var p=precoDe(s,cat);
   selecionados.push({nome:s.nome,preco:p,aberto:p===0,min:s.min||20});
-  renderServicos();renderSvcCatalogo();renderSlots();
+  renderServicos();renderSvcCatalogo();renderSlots();atualizarBotaoServicos();
+  if(depois)depois();
 }
+
 svcCatalogo.addEventListener('click',function(e){
   var chip=e.target.closest('.svc-chip');if(!chip)return;
   var s=SERVICOS.find(function(x){return x.id===+chip.dataset.sid});if(!s)return;
@@ -4375,7 +4493,7 @@ function confirmarEntrada(){
   }
 
   /* veículo */
-  var cor=document.querySelector('#corChips .chip.on'),
+  var cor=document.querySelector('#corChips .cor-quad.on'),
       corNome=cor&&cor.dataset.cor!=='outra'?cor.dataset.cor:(document.getElementById('corOutraInput').value.trim()||'Não informada');
   var veic=veiculoPorPlaca(placa);
   var marca=marcaSelecionada||modeloTxt.split(' ')[0]||'',
@@ -4453,6 +4571,90 @@ function imprimirTicket(os){
   w.document.close();
   setTimeout(function(){w.print()},350);
 }
+
+/* ================= SELETOR DE SERVIÇOS EM MODAL ================= */
+function atualizarBotaoServicos(){
+  var sub=document.getElementById('abrirServicosSub');
+  if(!sub)return;
+  var n=selecionados.length;
+  sub.textContent=n
+    ? n+' serviço'+(n>1?'s':'')+' · '+fmtBRL(selecionados.reduce(function(a,s){return a+(+s.preco||0)},0))
+    : 'nenhum selecionado';
+  document.getElementById('abrirServicosBtn').classList.toggle('tem',!!n);
+}
+function abrirSeletorServicos(){
+  var cat=categoriaSelecionada();
+  abrirModal({
+    titulo:'Escolher serviços',
+    sub:'Preços do porte '+cat+' · toque para adicionar ou remover',
+    html:'<div class="fld"><input type="text" id="svcBusca" placeholder="Buscar por nome, grupo ou preço" autocomplete="off"></div>'+
+      '<div class="svc-grupos" id="svcModalLista"></div>'+
+      '<div class="svc-rodape" id="svcModalTotal"></div>',
+    botoes:[{txt:'Pronto',classe:'entrar-btn',acao:fecharModal}],
+    aoAbrir:function(){
+      renderSeletorModal();
+      document.getElementById('svcBusca').addEventListener('input',renderSeletorModal);
+      document.getElementById('svcModalLista').addEventListener('click',function(e){
+        var it=e.target.closest('[data-sid]');if(!it)return;
+        var sv=SERVICOS.filter(function(x){return x.id===+it.dataset.sid})[0];if(!sv)return;
+        var ja=selecionados.filter(function(x){return x.nome===sv.nome})[0];
+        if(ja){
+          selecionados.splice(selecionados.indexOf(ja),1);
+          renderServicos();renderSlots();renderSeletorModal();atualizarBotaoServicos();
+          return;
+        }
+        adicionarServico(sv,categoriaSelecionada(),function(){renderSeletorModal();atualizarBotaoServicos()});
+      });
+    }
+  });
+}
+function renderSeletorModal(){
+  var cat=categoriaSelecionada(),lista=document.getElementById('svcModalLista');
+  if(!lista)return;
+  var q=(document.getElementById('svcBusca')||{}).value||'';
+  q=q.trim().toLowerCase();
+  var ativos=SERVICOS.filter(function(s){
+    if(s.ativo===false)return false;
+    if(!q)return true;
+    var alvo=[s.nome,s.grupo,s.min+' min',fmtBRL(precoDe(s,cat)),(s.comissao||0)+'%'].join(' ').toLowerCase();
+    return q.split(' ').every(function(t){return alvo.indexOf(t)>-1});
+  });
+  if(!ativos.length){
+    lista.innerHTML='<div class="crm-empty">'+(q?'Nenhum serviço encontrado para "'+esc(q)+'".':'Nenhum serviço cadastrado. Vá em Admin › Serviços.')+'</div>';
+    atualizarTotalModal();return;
+  }
+  var grupos={};
+  ativos.forEach(function(s){(grupos[s.grupo||'Outros']=grupos[s.grupo||'Outros']||[]).push(s)});
+  lista.innerHTML=Object.keys(grupos).sort().map(function(g){
+    return '<div class="svc-grupo-lbl">'+esc(g)+'</div>'+
+      grupos[g].map(function(s){
+        var p=precoDe(s,cat),on=selecionados.some(function(x){return x.nome===s.nome});
+        return '<div class="svc-lin'+(on?' on':'')+'" data-sid="'+s.id+'">'+
+          '<span class="svc-check"></span>'+
+          '<div class="svc-lin-tx"><b>'+esc(s.nome)+'</b><span>'+s.min+' min</span></div>'+
+          '<span class="svc-lin-vl">'+(p?fmtBRL(p):'a combinar')+'</span></div>';
+      }).join('');
+  }).join('');
+  atualizarTotalModal();
+}
+function atualizarTotalModal(){
+  var el=document.getElementById('svcModalTotal');
+  if(!el)return;
+  var n=selecionados.length,t=selecionados.reduce(function(a,s){return a+(+s.preco||0)},0);
+  el.innerHTML=n
+    ? '<span>'+n+' selecionado'+(n>1?'s':'')+'</span><b>'+fmtBRL(t)+'</b>'
+    : '<span>Nenhum serviço selecionado ainda</span><b>—</b>';
+}
+
+
+document.getElementById('abrirServicosBtn').addEventListener('click',abrirSeletorServicos);
+atualizarBotaoServicos();
+
+/* o uppercase do CSS não muda o valor: a placa precisa subir em maiúsculo de verdade */
+document.getElementById('placaInput').addEventListener('input',function(){
+  var pos=this.selectionStart,v=this.value.toUpperCase();
+  if(v!==this.value){this.value=v;try{this.setSelectionRange(pos,pos)}catch(e){}}
+});
 
 
 /* ================= ENDEREÇO POR CEP ================= */
@@ -4573,6 +4775,7 @@ function lerEndereco(pref){
 /* ================= LEITURA REAL DE PLACA (câmera + OCR) ================= */
 var TESS_CDN='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 var camStream=null,camModo='environment',camAberta=false,camOcupada=false,tessCarregando=null,tentativasOCR=0;
+var ultimaLeituraBruta='';   /* aparece no diagnóstico: distingue "não leu nada" de "leu errado" */
 var RX_ANTIGA=/^[A-Z]{3}[0-9]{4}$/,RX_MERCOSUL=/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
 var LETRA_DE={'0':'O','1':'I','2':'Z','4':'A','5':'S','6':'G','7':'T','8':'B','9':'G'};
 var DIGITO_DE={'O':'0','Q':'0','D':'0','U':'0','I':'1','L':'1','J':'1','Z':'2','A':'4','S':'5','G':'6','T':'7','B':'8','R':'8','E':'8'};
@@ -4785,6 +4988,9 @@ document.getElementById('camShot').addEventListener('click',function(){
       return t;
     });
   })).then(function(textos){
+    ultimaLeituraBruta=textos.map(function(t,i){
+      return 'v'+(i+1)+': "'+String(t).replace(/\s+/g,' ').trim().slice(0,40)+'"';
+    }).join(' | ');
     var votos={},melhor=null;
     textos.forEach(function(t){
       var r=melhorLeitura(t);
@@ -4802,9 +5008,14 @@ document.getElementById('camShot').addEventListener('click',function(){
         setTimeout(digitarPlacaManual,300);
         return;
       }
-      camDica.textContent='Não consegui LER a placa. Aproxime até a placa preencher a moldura e evite reflexo.';
+      var leuAlgo=textos.some(function(t){return String(t).replace(/[^A-Za-z0-9]/g,'').length>=4});
+      camDica.textContent=leuAlgo
+        ? 'Li caracteres mas não formaram uma placa válida. Aproxime e mantenha reta.'
+        : 'Não enxerguei texto nenhum. Aproxime até a placa preencher a moldura e melhore a luz.';
+      registrarErro('OCR sem placa válida — '+ultimaLeituraBruta,'ocr');
       toast('Não consegui ler a placa',
-        'Isso é a leitura da foto, não o cadastro. Aproxime mais, evite reflexo e mantenha a placa reta.','warn');
+        leuAlgo?'Li algo, mas não bateu com o formato de placa. Tente de novo mais perto.'
+               :'Nenhum texto foi detectado na foto. Aproxime mais e melhore a luz.','warn');
       return;
     }
     tentativasOCR=0;
@@ -6989,6 +7200,7 @@ function htmlDiagnostico(){
         ? 'disponível (HTTPS ok)' : 'bloqueada — a câmera exige HTTPS, abra pelo endereço publicado')+
     linha('Leitor de placa (OCR)',!!window.Tesseract,
       window.Tesseract?'carregado e pronto':'baixa na primeira leitura (precisa de internet uma vez)')+
+    (ultimaLeituraBruta?linha('Última leitura da câmera',false,ultimaLeituraBruta):'')+
     linha('Reordenar o pátio',DEPS.sortable,
       DEPS.sortable?'ativo':'indisponível — a fila continua funcionando na ordem automática')+
     linha('Base de veículos',FIPE&&FIPE.length>0,(FIPE?FIPE.length:0)+' modelos carregados')+
@@ -8109,6 +8321,7 @@ renderHome();
 atualizarContadores();
 renderPagamentosLista();
 setInterval(function(){if(document.getElementById('view-home').classList.contains('on'))renderHome()},30000);
+bootOk=true;   /* daqui pra frente, erro é pontual e não derruba a inicialização */
 
 </script>
 </body>
