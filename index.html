@@ -1018,6 +1018,12 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 .cam-recorte{width:100%;border-radius:12px;border:2px solid var(--teal);display:block;
   background:#000;image-rendering:crisp-edges}
 
+.cam-cancelar{display:none;border:0;background:none;color:rgba(255,255,255,.75);
+  font:600 12.5px/1 var(--f-body);text-decoration:underline;text-underline-offset:4px;
+  cursor:pointer;padding:8px}
+.camwrap.lendo .cam-cancelar{display:block}
+.camwrap.lendo .cam-manual{display:none}
+
 /* ===== FILTROS DE INDICADORES ===== */
 .filtros-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:8px}
 .filtros-bar .fld{margin:0}
@@ -1437,7 +1443,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.3.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.0</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1538,7 +1544,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1735,7 +1741,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1770,7 +1776,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1785,7 +1791,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1799,7 +1805,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2512,6 +2518,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
     <div class="cam-status" id="camStatus"></div>
     <button class="cam-shot" id="camShot" aria-label="Fotografar placa"></button>
     <button class="cam-manual" id="camManual">Digitar a placa</button>
+    <button class="cam-cancelar" id="camCancelar">Cancelar leitura</button>
   </div>
 </div>
 
@@ -2625,7 +2632,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.3.0';
+var TJET_VERSAO='3.5.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -5133,11 +5140,19 @@ function carregarScriptOCR(){
   return tessCarregando;
 }
 /* o worker é criado uma vez e reaproveitado: a partir da 2ª placa a leitura é bem mais rápida */
+function comLimite(p,ms,msg){
+  return Promise.race([p,new Promise(function(_,rej){
+    setTimeout(function(){rej(new Error(msg||'demorou'))},ms);
+  })]);
+}
 function prepararOCR(){
   if(tessWorker)return Promise.resolve(tessWorker);
   if(tessPreparando)return tessPreparando;
-  tessPreparando=carregarScriptOCR().then(function(T){
-    return T.createWorker('eng');
+  var primeira=!window.Tesseract;
+  tessPreparando=comLimite(carregarScriptOCR(),20000,'baixar_leitor').then(function(T){
+    /* o worker baixa ~15 MB de modelo na primeira vez: sem limite de tempo,
+       uma conexão ruim deixa a tela parada em "preparando" para sempre */
+    return comLimite(T.createWorker('eng',1,{logger:progressoOCR}),primeira?90000:30000,'preparar_leitor');
   }).then(function(w){
     tessWorker=w;DEPS.tesseract=true;
     return w.setParameters({
@@ -5148,15 +5163,23 @@ function prepararOCR(){
 }
 /* psm 7 = uma linha de texto · psm 8 = uma palavra só. Placas caem melhor num ou noutro
    dependendo do enquadramento, então tentamos os dois e cruzamos os resultados. */
+function progressoOCR(m){
+  if(!camAberta||!m)return;
+  var pc=Math.round((m.progress||0)*100),st=String(m.status||'');
+  if(/core/i.test(st))camStatus.textContent='Baixando o leitor · '+pc+'%';
+  else if(/lang|traineddata/i.test(st))camStatus.textContent='Baixando o idioma · '+pc+'%';
+  else if(/initializ/i.test(st))camStatus.textContent='Preparando o leitor…';
+  else if(/recognizing/i.test(st))camStatus.textContent='Lendo a placa · '+pc+'%';
+}
 function lerTexto(canvas,psm){
   return prepararOCR()
     .then(function(w){
       return w.setParameters({tessedit_pageseg_mode:String(psm||7)})
         .catch(function(){})
-        .then(function(){return w.recognize(canvas)});
+        .then(function(){return comLimite(w.recognize(canvas),35000,'ler_imagem')});
     })
     .then(function(r){return (r&&r.data&&r.data.text)||''})
-    .catch(function(){return ''});
+    .catch(function(e){registrarErro('OCR: '+((e&&e.message)||e),'ocr');return ''});
 }
 
 /* ---------- câmera ---------- */
@@ -5214,10 +5237,34 @@ camOverlay.addEventListener('click',function(e){
 });
 
 /* ---------- captura + OCR ---------- */
+function liberarCaptura(){
+  camOcupada=false;
+  camOverlay.classList.remove('lendo');
+  clearTimeout(travaCaptura);
+}
+var travaCaptura=null;
 document.getElementById('camShot').addEventListener('click',function(){
   if(camOcupada||!camVideo.videoWidth)return;
   camOcupada=true;camOverlay.classList.add('lendo');
-  camStatus.textContent='Preparando o leitor…';
+  camStatus.textContent='Preparando…';
+  /* rede de segurança: se nada resolver, a tela volta ao normal sozinha */
+  clearTimeout(travaCaptura);
+  travaCaptura=setTimeout(function(){
+    if(!camOcupada)return;
+    liberarCaptura();camStatus.textContent='';
+    registrarErro('Leitura travou — nenhuma resposta em 2 minutos','ocr');
+    fecharCamera();
+    toast('A leitura não respondeu','Pode ser a internet baixando o leitor. Digite a placa que eu sigo daqui.','warn');
+    setTimeout(digitarPlacaManual,300);
+  },120000);
+  try{ capturarEProcessar() }
+  catch(e){
+    liberarCaptura();camStatus.textContent='';
+    registrarErro('Captura: '+(e.stack||e.message),'ocr');
+    toast('Não consegui processar a foto',(e&&e.message)||'erro inesperado','err');
+  }
+});
+function capturarEProcessar(){
 
   var r=regiaoDoGuia();
   var rw=Math.round(r.w),rh=Math.round(r.h),rx=Math.round(r.x),ry=Math.round(r.y);
@@ -5240,7 +5287,7 @@ document.getElementById('camShot').addEventListener('click',function(){
   if(apiPlacaAtiva()){
     camStatus.textContent='Consultando a API…';
     lerPlacaPorApi(recorte).then(function(r){
-      camOcupada=false;camOverlay.classList.remove('lendo');
+      liberarCaptura();
       tentativasOCR=0;
       ultimaLeituraBruta='api: '+r.placa+' ('+Math.round((r.confianca||0)*100)+'% de confiança)';
       fecharCamera();
@@ -5283,7 +5330,7 @@ document.getElementById('camShot').addEventListener('click',function(){
       votos[r.placa]=(votos[r.placa]||0)+1+r.score/10;
       if(!melhor||votos[r.placa]>votos[melhor.placa])melhor=r;
     });
-    camOcupada=false;camOverlay.classList.remove('lendo');
+    liberarCaptura();
     if(!melhor){
       camStatus.textContent='';
       tentativasOCR++;
@@ -5302,12 +5349,19 @@ document.getElementById('camShot').addEventListener('click',function(){
     tentativasOCR=0;
     fecharCamera();
     confirmarPlacaLida(melhor.placa,fotoPlaca);
-  }).catch(function(){
-    camOcupada=false;camOverlay.classList.remove('lendo');camStatus.textContent='';
-    toast('Leitor indisponível','Sem internet para carregar o reconhecimento. Digite a placa por enquanto.','err');
+  }).catch(function(e){
+    liberarCaptura();camStatus.textContent='';
+    var m=(e&&e.message)||'';
+    registrarErro('Leitor local: '+m,'ocr');
+    fecharCamera();
+    toast('O leitor não carregou',
+      m==='baixar_leitor'?'A biblioteca de leitura não baixou. Digite a placa e tente de novo mais tarde.'
+      :m==='preparar_leitor'?'O download do leitor não terminou. Numa rede melhor ele fica salvo e não baixa de novo.'
+      :'Sem internet para carregar o reconhecimento. Digite a placa por enquanto.','err');
+    setTimeout(digitarPlacaManual,300);
   });
   }
-});
+}
 
 /* ---------- confirmação e cadastro ---------- */
 function confirmarPlacaLida(placa,foto){
@@ -5534,6 +5588,14 @@ function mostrarFalhaLeitura(leuAlgo,foto){
   });
 }
 
+document.getElementById('camCancelar').addEventListener('click',function(){
+  liberarCaptura();
+  camStatus.textContent='';
+  pularCamAuto=true;
+  fecharCamera();
+  digitarPlacaManual();
+});
+
 
 /* ================= LEITURA DE PLACA POR API ================= */
 /* O leitor local (Tesseract) acerta em condição boa. Uma API dedicada acerta em
@@ -5593,7 +5655,7 @@ function lerPlacaPorApi(cv){
     }
 
     var controle=new AbortController();
-    var expirou=setTimeout(function(){controle.abort()},9000);
+    var expirou=setTimeout(function(){controle.abort()},12000);
     return fetch(url,{method:'POST',headers:cabecalhos,body:fd,signal:controle.signal})
       .then(function(r){
         clearTimeout(expirou);
@@ -7825,7 +7887,13 @@ function marcarSync(estado){
   var el=document.getElementById('syncPill');
   if(!el)return;
   el.className='sync-pill '+estado;
-  el.textContent={sincronizando:'sincronizando',ok:'na nuvem',erro:'falhou',off:'só neste aparelho'}[estado]||'';
+  var txt={sincronizando:'sincronizando',ok:'na nuvem',erro:'falhou',off:'só neste aparelho'}[estado]||'';
+  if(estado==='ok'){
+    var m=minutosDesdeSync();
+    if(m>=60&&m<9999)txt='na nuvem · '+Math.round(m/60)+'h';
+    else if(m>=5&&m<9999)txt='na nuvem · '+Math.round(m)+'min';
+  }
+  el.textContent=txt;
   el.style.display='inline-flex';
 }
 var syncTimer=null;
@@ -7835,6 +7903,43 @@ function agendarSync(){
   syncTimer=setTimeout(function(){sincronizar(true)},5000);
 }
 window.addEventListener('online',function(){if(nuvemPronta())sincronizar(true)});
+
+/* Antes o selo só era atualizado ao abrir a tela de Admin, e a sincronização só
+   acontecia depois de alguma alteração. Abrir o app não trazia nada de volta —
+   e num segundo aparelho isso significa não enxergar o pátio de verdade. */
+function minutosDesdeSync(){
+  var n=cfgNuvem();
+  if(!n.ultimoSync)return 9999;
+  return (Date.now()-new Date(n.ultimoSync).getTime())/60000;
+}
+function iniciarNuvem(){
+  marcarSync(nuvemPronta()?'ok':'off');
+  if(!nuvemPronta())return;
+  /* deixa a tela abrir antes de puxar a rede */
+  setTimeout(function(){sincronizar(true)},1500);
+
+  /* enquanto o app estiver aberto, mantém em dia */
+  setInterval(function(){
+    if(document.hidden)return;
+    if(minutosDesdeSync()>=3)sincronizar(true);
+  },60000);
+
+  /* voltar ao app depois de um tempo pede uma atualização */
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden&&minutosDesdeSync()>=1)sincronizar(true);
+  });
+}
+/* tocar no selo força a sincronização na hora */
+(function(){
+  var p=document.getElementById('syncPill');
+  if(!p)return;
+  p.style.cursor='pointer';
+  p.title='Tocar para sincronizar agora';
+  p.addEventListener('click',function(){
+    if(!nuvemPronta()){irPara('admin');return}
+    sincronizar(false);
+  });
+})();
 
 /* ---------- painel em Admin ---------- */
 function atualizarPainelNuvem(){
@@ -8277,8 +8382,10 @@ function htmlDiagnostico(){
     linha('Câmera',!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
       location.protocol==='https:'||location.hostname==='localhost'
         ? 'disponível (HTTPS ok)' : 'bloqueada — a câmera exige HTTPS, abra pelo endereço publicado')+
-    linha('Leitor de placa (OCR)',!!window.Tesseract,
-      window.Tesseract?'carregado e pronto':'baixa na primeira leitura (precisa de internet uma vez)')+
+    linha('Leitor de placa (OCR)',apiPlacaAtiva()||!!window.Tesseract,
+      apiPlacaAtiva()?'usando a API — o leitor local fica de reserva'
+      :(window.Tesseract?'baixado e pronto para usar offline'
+        :'ainda não baixado — a primeira leitura puxa ~15 MB'))+
     (ultimaLeituraBruta?linha('Última leitura da câmera',false,ultimaLeituraBruta):'')+
     linha('Reordenar o pátio',DEPS.sortable,
       DEPS.sortable?'ativo':'indisponível — a fila continua funcionando na ordem automática')+
@@ -8310,13 +8417,30 @@ function abrirDiagnostico(){
     ]
   });
 }
+/* Nada de credencial no texto que sai daqui: o diagnóstico costuma ser colado
+   em conversa, e chave de API não pode viajar junto. */
+function semSegredo(t){
+  return String(t)
+    .replace(/eyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{5,}\.?[A-Za-z0-9_\-]*/g,'[chave oculta]')
+    .replace(/Token\s+[A-Za-z0-9]{12,}/gi,'Token [oculto]')
+    .replace(/(apikey|api_key|access_token|token)["'=:\s]+[A-Za-z0-9_\-]{12,}/gi,'$1 [oculto]');
+}
 function copiarDiagnostico(){
+  var n=(DB.config&&DB.config.nuvem)||{};
+  var host='';
+  try{host=n.url?new URL(n.url).host:''}catch(e){host=n.url?'url invalida':''}
   var txt='T-Jet v'+TJET_VERSAO+' ('+TJET_BUILD+')\n'+
     'URL: '+location.href+'\nNavegador: '+navigator.userAgent+'\n'+
     'Camera: '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)+
     ' | HTTPS: '+(location.protocol==='https:')+
     ' | OCR: '+!!window.Tesseract+' | Sortable: '+DEPS.sortable+' | FIPE: '+(FIPE?FIPE.length:0)+'\n'+
+    'Nuvem: '+(nuvemPronta()?'ligada':'desligada')+
+      (host?' | projeto: '+host:'')+
+      ' | vem do config.js: '+(n.doArquivo===true)+
+      ' | ultimo sync: '+(n.ultimoSync||'nunca')+'\n'+
+    'Leitura de placa: '+cfgPlaca().provedor+' | token configurado: '+(!!String(cfgPlaca().token||'').trim())+'\n'+
     'Erros:\n'+(errosApp.length?errosApp.map(function(e){return '- '+e.quando+' '+e.msg}).join('\n'):'nenhum');
+  txt=semSegredo(txt);
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(txt).then(function(){toast('Diagnóstico copiado','Cole na mensagem para eu analisar.','ok')})
       .catch(function(){mostrarLinkManual(txt)});
@@ -9442,6 +9566,7 @@ renderHome();
 atualizarContadores();
 renderPagamentosLista();
 setInterval(function(){if(document.getElementById('view-home').classList.contains('on'))renderHome()},30000);
+seguro('nuvem-boot',iniciarNuvem);
 bootOk=true;   /* daqui pra frente, erro é pontual e não derruba a inicialização */
 
 </script>

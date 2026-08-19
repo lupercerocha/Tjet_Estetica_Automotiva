@@ -134,7 +134,28 @@ um lugar diferente por engano.
 **Para trocar de projeto depois:** edite o `config.js`, suba de novo, e todos os
 aparelhos mudam juntos na próxima abertura.
 
----
+## Você nunca precisa sincronizar à mão
+
+A partir da v3.5.0 o app cuida disso sozinho:
+
+- **ao abrir** — sincroniza um segundo e meio depois de carregar;
+- **a cada 3 minutos** com o app aberto;
+- **ao voltar para o app** depois de mais de um minuto em outra tela;
+- **poucos segundos após qualquer alteração** sua;
+- **quando a internet volta**, se estava sem sinal.
+
+O selo mostra o estado e há quanto tempo foi a última vez:
+
+| Selo | Significa |
+|---|---|
+| **na nuvem** | sincronizado agora há pouco |
+| **na nuvem · 12min** | última sincronização há 12 minutos |
+| **sincronizando** | em andamento |
+| **falhou** | deu erro — toque para ver |
+| **só neste aparelho** | nuvem desligada |
+
+**Tocar no selo sincroniza na hora.** Útil quando você quer ver agora o que o
+outro aparelho acabou de lançar.
 
 ## Leitura de placa por API (opcional)
 
