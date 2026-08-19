@@ -211,9 +211,29 @@ PBX 4C71 e que a avaria registrada abaixo já existia antes da entrada"*, seguid
 de cada marcação (tipo, gravidade e descrição). Se nenhuma avaria foi encontrada,
 o termo declara isso — o que também protege você.
 
-**Na saída** — no painel de entrega. O termo declara recebimento do veículo,
-conferência da lataria e do serviço, ausência de divergência com a vistoria de
-entrada, e mostra o total da OS e eventual saldo em aberto.
+**Na saída** — no painel de entrega, logo abaixo de **Quem está recebendo**.
+
+Esse campo já vem com o nome do titular do cadastro. Se quem retira for outra
+pessoa, escolha a relação — *Cônjuge, Familiar, Motorista, Funcionário, Outro* —
+e o campo abre para você digitar o nome de quem está ali na sua frente.
+
+O termo se ajusta sozinho:
+
+> *"Eu, **João Pedro Lima**, na condição de **motorista** e retirando em nome de
+> **Marina Souza**, declaro que recebi o veículo PBX 4C71, conferi o estado da
+> lataria e o serviço executado, e que não há divergência em relação à vistoria
+> feita na entrada."*
+
+Seguido do total da OS e, se houver, do saldo em aberto. O cliente assina com o
+dedo na tela do celular.
+
+Fica registrado em três lugares: no selo da assinatura (*"recebeu como
+motorista · em nome de Marina Souza"*), no histórico da OS (*"Recebimento
+assinado por João Pedro Lima (motorista, em nome de Marina Souza)"*) e na ficha
+da OS quando você consultar depois.
+
+O sistema não deixa assinar sem o nome preenchido — assinatura de "alguém" não
+protege ninguém.
 
 O sistema **pede a assinatura de entrega antes de finalizar**. Dá para seguir sem
 ela ("Entregar mesmo assim"), e nesse caso fica registrado no histórico da OS que
@@ -263,7 +283,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.5.1 o sistema é à prova de dependência externa. Antes, se a
+A partir da v2.6.0 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -302,7 +322,7 @@ colunas, para o valor em reais não espremer.
 
 ## Confirmar a versão
 
-Na tela inicial, ao lado da data, tem um selo pequeno: **v2.5.1**. É a forma mais
+Na tela inicial, ao lado da data, tem um selo pequeno: **v2.6.0**. É a forma mais
 rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
 na versão antiga.
 
