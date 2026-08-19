@@ -1443,7 +1443,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.2</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1544,7 +1544,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1741,7 +1741,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1776,7 +1776,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1791,7 +1791,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1805,7 +1805,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2632,7 +2632,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.5.0';
+var TJET_VERSAO='3.5.2';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2993,6 +2993,7 @@ function carregarDB(){
   }catch(e){console.warn('Base local corrompida, recomeçando.',e);return baseVazia()}
 }
 var DB=carregarDB();
+var configPerdida=null;
 aplicarConfigDoArquivo();
 
 /* O config.js é a fonte da verdade da instalação: editado uma vez e subido junto
@@ -3006,6 +3007,11 @@ function aplicarConfigDoArquivo(){
     if(a.lavajato.nome)c.nome=a.lavajato.nome;
     if(a.lavajato.tel)c.tel=a.lavajato.tel;
   }
+  /* guarda uma cópia das credenciais que vieram do arquivo: se um dia o config.js
+     for substituído pelo modelo em branco, dá para restaurar sem procurar chave. */
+  var copia=null;
+  try{copia=JSON.parse(localStorage.getItem('tjet_config_backup')||'null')}catch(e){}
+
   if(a.nuvem&&(a.nuvem.url||'').trim()){
     if(!c.nuvem)c.nuvem={ultimoSync:''};
     c.nuvem.url=String(a.nuvem.url).trim().replace(/\/+$/,'');
@@ -3015,6 +3021,16 @@ function aplicarConfigDoArquivo(){
     c.nuvem.auto=a.nuvem.auto!==false;
     c.nuvem.enviarFotos=a.nuvem.enviarFotos===true;
     c.nuvem.doArquivo=true;
+    try{localStorage.setItem('tjet_config_backup',JSON.stringify({
+      nuvem:{url:c.nuvem.url,chave:c.nuvem.chave,loja:c.nuvem.loja,enviarFotos:c.nuvem.enviarFotos},
+      ocr:a.ocr&&a.ocr.provedor!=='local'?a.ocr:null,
+      lavajato:a.lavajato||null,
+      quando:new Date().toISOString()
+    }))}catch(e){}
+  }else if(copia&&copia.nuvem&&copia.nuvem.url){
+    /* o arquivo veio sem credencial mas já houve uma: provavelmente foi
+       sobrescrito pelo modelo. Não aplica sozinho — pergunta primeiro. */
+    configPerdida=copia;
   }
   if(a.ocr&&a.ocr.provedor&&a.ocr.provedor!=='local'){
     c.ocr={provedor:a.ocr.provedor,token:String(a.ocr.token||'').trim(),
@@ -5266,6 +5282,7 @@ document.getElementById('camShot').addEventListener('click',function(){
 });
 function capturarEProcessar(){
 
+  var vw=camVideo.videoWidth,vh=camVideo.videoHeight;
   var r=regiaoDoGuia();
   var rw=Math.round(r.w),rh=Math.round(r.h),rx=Math.round(r.x),ry=Math.round(r.y);
 
@@ -8168,6 +8185,31 @@ function formGerarConfig(){
 }
 document.getElementById('gerarConfigBtn').addEventListener('click',formGerarConfig);
 
+/* Substituir o config.js pelo modelo em branco derruba a nuvem sem aviso.
+   Como guardamos uma cópia, dá para devolver com um toque. */
+function avisarConfigPerdida(){
+  if(!configPerdida||!configPerdida.nuvem)return;
+  var c=configPerdida,host='';
+  try{host=new URL(c.nuvem.url).host}catch(e){host=c.nuvem.url}
+  confirmar({
+    titulo:'A nuvem foi desligada',
+    texto:'Este aparelho já esteve ligado ao projeto '+host+', mas o config.js publicado agora está em branco. '+
+      'Provavelmente ele foi substituído pelo arquivo de exemplo. Quer religar com as credenciais guardadas?',
+    botoes:[
+      {txt:'Agora não',classe:'btn-ghost',acao:function(){configPerdida=null;fecharConfirm()}},
+      {txt:'Religar a nuvem',classe:'entrar-btn',acao:function(){
+        var n=cfgNuvem();
+        n.url=c.nuvem.url;n.chave=c.nuvem.chave;n.loja=c.nuvem.loja||'principal';
+        n.enviarFotos=c.nuvem.enviarFotos===true;n.ativa=true;n.auto=true;n.doArquivo=false;
+        if(c.ocr&&c.ocr.provedor)DB.config.ocr={provedor:c.ocr.provedor,token:c.ocr.token||'',endpoint:c.ocr.endpoint||''};
+        configPerdida=null;
+        salvar();fecharConfirm();marcarSync('ok');sincronizar(false);
+        toast('Nuvem religada','Republique seu config.js para os outros aparelhos voltarem também.','ok');
+      }}
+    ]
+  });
+}
+
 
 /* ================= ADMIN · SERVIÇOS ================= */
 function renderAdmServicos(){
@@ -9567,6 +9609,7 @@ atualizarContadores();
 renderPagamentosLista();
 setInterval(function(){if(document.getElementById('view-home').classList.contains('on'))renderHome()},30000);
 seguro('nuvem-boot',iniciarNuvem);
+if(configPerdida)setTimeout(function(){seguro('config-perdida',avisarConfigPerdida)},2200);
 bootOk=true;   /* daqui pra frente, erro é pontual e não derruba a inicialização */
 
 </script>
