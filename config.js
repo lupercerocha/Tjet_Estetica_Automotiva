@@ -1,40 +1,30 @@
 /* ============================================================
    T-JET · CONFIGURAÇÃO DA INSTALAÇÃO
+   Gerado pelo próprio app em 19/08/2026 às 14:15.
 
-   Edite este arquivo UMA VEZ e suba junto com o index.html.
-   Todo aparelho que abrir o app já vem configurado — ninguém
-   precisa digitar URL, chave ou token em celular nenhum.
-
-   Para trocar de projeto depois, edite aqui e suba de novo.
+   Suba este arquivo junto com o index.html. Todo aparelho que
+   abrir o app já vem configurado — ninguém digita nada.
    ============================================================ */
 
 var TJET_CONFIG = {
 
-  /* ---------- Identificação ---------- */
   lavajato: {
-    nome: '',          // ex.: 'T-Jet Estética Automotiva' — vazio mantém o que está no app
-    tel:  ''           // ex.: '5583999990000' (com o 55 na frente)
+    nome: 'T-Jet Estética Automotiva',
+    tel:  '5583988494949'
   },
 
-  /* ---------- Nuvem (Supabase) ----------
-     Cole aqui a Project URL e a chave anon public.
-     Enquanto url e chave estiverem vazias, o app roda só no aparelho. */
   nuvem: {
-    ativa:       false,
-    url:         '',    // https://SEUPROJETO.supabase.co
-    chave:       '',    // chave anon public (começa com eyJ) — NUNCA a service_role
+    ativa:       true,
+    url:         'https://sgzrlgiwjdvdevbikbvs.supabase.co',
+    chave:       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnenJsZ2l3amR2ZGV2YmlrYnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNTM0MzgsImV4cCI6MjEwMjcyOTQzOH0.Uc6fHTdOd0hWbBmoAjhuXUblmWrw8qnQaYY3BYtTNyU',
     loja:        'principal',
-    enviarFotos: false, // fotos são pesadas: 500 MB do plano gratuito acabam rápido
-    auto:        true   // sincroniza sozinho alguns segundos após cada alteração
+    enviarFotos: false,
+    auto:        true
   },
 
-  /* ---------- Leitura de placa ----------
-     'local'           → leitor embarcado, funciona offline
-     'platerecognizer' → API dedicada, bem mais precisa (token obrigatório)
-     'proxy'           → seu próprio endpoint (Edge Function, por exemplo) */
   ocr: {
-    provedor: 'local',
-    token:    '',
+    provedor: 'platerecognizer',
+    token:    'd06c4d299f340dff18c8cfe6a27028e46ff17d32',
     endpoint: ''
   }
 
