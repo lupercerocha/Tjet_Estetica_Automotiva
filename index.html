@@ -1309,6 +1309,13 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
   border-left-color:var(--perigo);color:var(--perigo)}
 .pcarro-acoes{display:flex;gap:7px;margin-top:11px}
 
+/* ===== CORREÇÃO: ESTOURO HORIZONTAL NO GRID PRINCIPAL =====
+   O item direto do grid (.app > div, a coluna 1fr) tem min-width:auto por
+   padrão do CSS Grid — isso deixa qualquer conteúdo interno com min-content
+   largo (como uma linha de filtros) empurrar essa coluna para fora da tela.
+   min-width:0 devolve o controle da largura para o container, não o conteúdo. */
+.app-main{min-width:0}
+
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
    carro tem que estar no polegar — os indicadores viram uma faixa de consulta. */
@@ -1406,7 +1413,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
   </aside>
 
   <!-- ===== ÁREA PRINCIPAL ===== -->
-  <div>
+  <div class="app-main">
     <header class="top">
       <div class="top-brand">
         <svg width="30" height="30" viewBox="0 0 60 60" aria-hidden="true">
@@ -1443,7 +1450,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.2</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.5</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1544,7 +1551,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1741,7 +1748,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1776,7 +1783,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1791,7 +1798,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1805,7 +1812,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.2</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2632,8 +2639,8 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.5.2';
-var TJET_BUILD='2026-08-19';
+var TJET_VERSAO='3.5.5';
+var TJET_BUILD='19/08/2026 17:55';   /* preenchido pelo patch.py na montagem, com data e hora reais */
 var errosApp=[];
 
 /* Um erro solto no meio do script derrubava tudo que vinha depois.
@@ -5391,9 +5398,8 @@ function confirmarPlacaLida(placa,foto){
       (conhecido
         ? '<div class="dx dx-ok"><b>Já é cliente</b><span>'+esc(v.marca+' '+v.modelo+' · '+v.cor)+'</span>'+
           '<span>'+esc(nomesDonos(v))+'</span></div>'
-        : '<div class="dx dx-novo"><b>Placa sem cadastro</b>'+
-          '<span>A leitura funcionou — este veículo é que ainda não está no sistema.</span>'+
-          '<span>Vou abrir o cadastro rápido com a placa já preenchida.</span></div>'),
+        : '<div class="dx dx-novo"><b>Veículo não cadastrado</b>'+
+          '<span>Clique abaixo e cadastre agora.</span></div>'),
     botoes:[
       {txt:'Reler a placa',classe:'btn-ghost',acao:function(){fecharModal();abrirCamera()}},
       {txt:conhecido?'Carregar dados':'Cadastrar agora',classe:'entrar-btn',acao:function(){
