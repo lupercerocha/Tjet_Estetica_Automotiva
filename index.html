@@ -338,6 +338,9 @@ html[data-theme="light"] .mod-ic{background:color-mix(in srgb,var(--m) 15%,#fff)
 .sug-item:hover{background:var(--painel2)}
 .sug-item b{font-size:.85rem}
 .sug-item span{font-size:.7rem;color:var(--fumaca);font-family:'JetBrains Mono',monospace}
+.sug-modelo{align-items:flex-start;gap:12px}
+.sug-modelo b{font-size:.9rem;line-height:1.3;flex:1;min-width:0}
+.sug-modelo span{flex:none;padding-top:2px}
 .obs-chip{
   display:inline-block;margin-top:8px;background:color-mix(in srgb,var(--alerta) 16%,transparent);color:var(--alerta);
   border-radius:9px;padding:6px 10px;font-size:.76rem;
@@ -1013,11 +1016,16 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 .cam-manual:active{transform:scale(.96);background:rgba(255,255,255,.2)}
 :root{--ico-teclado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Crect x='2' y='6' width='20' height='12' rx='2'/%3E%3Cpath d='M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8'/%3E%3C/svg%3E")}
 .cam-thumb{width:100%;border-radius:14px;margin-bottom:14px;display:block;max-height:190px;object-fit:cover}
-.placa-conf{display:flex;justify-content:center;margin-bottom:10px}
-.placa-conf input{width:100%;max-width:260px;text-align:center;font:800 30px/1 var(--f-mono);letter-spacing:5px;
-  text-transform:uppercase;padding:14px 10px;border-radius:14px;border:2px solid var(--linha);
-  background:var(--vidro);color:var(--tinta)}
-.placa-conf input:focus{outline:none;border-color:var(--teal)}
+.placa-conf{display:flex;justify-content:center;margin-bottom:14px}
+.placa-conf-card{width:100%;max-width:280px;background:linear-gradient(#FBFCFD,#E4EAEF);
+  border:3px solid #0A0D12;border-radius:12px;padding:8px;box-shadow:0 14px 32px rgba(2,10,22,.4)}
+.placa-conf-top{background:#1B44C8;color:#fff;border-radius:5px 5px 0 0;height:20px;display:flex;
+  align-items:center;justify-content:space-between;padding:0 9px;font-family:'JetBrains Mono',monospace;
+  font-size:.56rem;letter-spacing:.12em}
+.placa-conf input{width:100%;text-align:center;background:transparent;border:0;
+  font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;color:#0A0D12;
+  font-size:clamp(2.1rem,9vw,2.7rem);letter-spacing:.05em;padding:9px 0 6px;text-transform:uppercase}
+.placa-conf input:focus{outline:2px solid var(--teal);outline-offset:-2px;border-radius:6px}
 .cam-recorte{width:100%;border-radius:12px;border:2px solid var(--teal);display:block;
   background:#000;image-rendering:crisp-edges}
 
@@ -1236,28 +1244,35 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .versao-pill.alerta{opacity:1;border-color:var(--alerta);color:var(--alerta)}
 
 /* ===== GRADE DE CORES ===== */
-.cor-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:7px;
-  padding:9px;background:var(--vidro);border:1px solid var(--linha);border-radius:12px}
+.cor-grade{display:flex;flex-wrap:wrap;gap:9px;padding:2px 0}
 .cor-quad{
-  aspect-ratio:1;border-radius:9px;background:var(--cq,#333);cursor:pointer;
+  width:28px;height:28px;flex:none;border-radius:8px;background:var(--cq,#333);cursor:pointer;
   border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
   transition:transform .13s,border-color .13s;position:relative;
 }
 .cor-quad:active{transform:scale(.9)}
-.cor-quad.on{border-color:var(--teal);transform:scale(1.06)}
+.cor-quad.on{border-color:var(--teal);transform:scale(1.1)}
 .cor-quad.on::after{
-  content:'';position:absolute;inset:0;margin:auto;width:11px;height:6px;
-  border-left:2.4px solid #fff;border-bottom:2.4px solid #fff;transform:rotate(-45deg) translate(1px,-2px);
+  content:'';position:absolute;inset:0;margin:auto;width:9px;height:5px;
+  border-left:2.2px solid #fff;border-bottom:2.2px solid #fff;transform:rotate(-45deg) translate(1px,-2px);
   filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));
 }
 .cor-quad.outra{
   background:var(--painel);border:1.5px dashed var(--linha);color:var(--fumaca);
-  display:flex;align-items:center;justify-content:center;font:700 17px/1 var(--f-body);box-shadow:none;
+  display:flex;align-items:center;justify-content:center;font:700 15px/1 var(--f-body);box-shadow:none;
 }
 .cor-quad.outra.on{border-color:var(--teal);color:var(--teal)}
 .cor-quad.outra.on::after{display:none}
-.cor-nome{margin-top:7px;font:600 11px/1 var(--f-mono);letter-spacing:.06em;
-  text-transform:uppercase;color:var(--fumaca)}
+.modelo-input{font-size:1.05rem !important;padding-top:13px !important;padding-bottom:13px !important}
+.placa-cat-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.placa-col{flex:0 0 150px;min-width:140px;margin-bottom:14px}
+.cat-col{flex:1 1 260px;min-width:220px;margin-bottom:14px}
+.placa-input{text-transform:uppercase;font-weight:800 !important;font-size:1.15rem !important;
+  letter-spacing:.08em;text-align:center;font-family:var(--f-mono) !important}
+@media(max-width:520px){
+  .placa-col{flex:1 1 100%}
+  .cat-col{flex:1 1 100%}
+}
 
 /* uma foto por vez: as próximas aparecem conforme forem tiradas */
 .photos.so-uma{grid-template-columns:1fr}
@@ -1621,11 +1636,27 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <div class="card">
+        <div class="placa-cat-row">
+          <div class="field placa-col">
+            <label>Placa</label>
+            <input type="text" id="placaInput" class="placa-input" autocapitalize="characters" spellcheck="false" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
+            <div class="suggest" id="placaSuggest"></div>
+          </div>
+          <div class="field cat-col">
+            <label>Categoria do veículo</label>
+            <div class="chips" id="categoriaChips">
+              <span class="chip on">Pequeno</span>
+              <span class="chip">Médio</span>
+              <span class="chip">Grande</span>
+              <span class="chip">Moto</span>
+              <span class="chip">SUV</span>
+              <span class="chip">Pickup</span>
+            </div>
+          </div>
+        </div>
+
         <div class="field">
-          <label>Placa</label>
-          <input type="text" id="placaInput" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
-          <div class="suggest" id="placaSuggest"></div>
-          <div class="chips" id="veicPicker" style="display:none;margin-top:10px"></div>
+          <div class="chips" id="veicPicker" style="display:none"></div>
           <div class="vinculo-banner" id="vinculoBanner">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
             <div class="tx"><b id="vinculoTitulo"></b><span id="vinculoSub"></span></div>
@@ -1634,49 +1665,32 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
 
         <div class="field">
-          <label>Categoria do veículo</label>
-          <div class="chips" id="categoriaChips">
-            <span class="chip on">Pequeno</span>
-            <span class="chip">Médio</span>
-            <span class="chip">Grande</span>
-            <span class="chip">Moto</span>
-            <span class="chip">SUV</span>
-            <span class="chip">Pickup</span>
+          <div class="field-label-row">
+            <label>Modelo</label>
+            <button class="visits-pill" id="fipeUpdateBtn" style="background:none;color:var(--fumaca)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
+              <span id="fipeUpdateLbl">Atualizar lista</span>
+            </button>
           </div>
+          <input type="text" id="modeloInput" class="modelo-input" placeholder="Digite 2 letras — ex. civ, hilux, cg 160" autocomplete="off">
+          <div class="suggest" id="modeloSuggest"></div>
         </div>
 
-        <div class="two-col">
-          <div class="field" style="margin-bottom:0">
-            <div class="field-label-row">
-              <label>Modelo</label>
-              <button class="visits-pill" id="fipeUpdateBtn" style="background:none;color:var(--fumaca)">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
-                <span id="fipeUpdateLbl">Atualizar lista</span>
-              </button>
-            </div>
-            <input type="text" id="modeloInput" placeholder="Digite 2 letras — ex. civ, hilux, cg 160" autocomplete="off">
-            <div class="suggest" id="modeloSuggest"></div>
+        <div class="field" style="margin-bottom:0">
+          <label>Cor</label>
+          <div class="cor-grade" id="corChips">
+            <span class="cor-quad on" data-cor="Preto" title="Preto" style="--cq:#101317"></span>
+            <span class="cor-quad" data-cor="Branco" title="Branco" style="--cq:#E4E7EA"></span>
+            <span class="cor-quad" data-cor="Prata" title="Prata" style="--cq:#C7CDD3"></span>
+            <span class="cor-quad" data-cor="Cinza" title="Cinza" style="--cq:#6E747A"></span>
+            <span class="cor-quad" data-cor="Azul" title="Azul" style="--cq:#2B4D8C"></span>
+            <span class="cor-quad" data-cor="Vermelho" title="Vermelho" style="--cq:#B5342E"></span>
+            <span class="cor-quad" data-cor="Verde" title="Verde" style="--cq:#2F7D4F"></span>
+            <span class="cor-quad" data-cor="Amarelo" title="Amarelo" style="--cq:#E4C13C"></span>
+            <span class="cor-quad" data-cor="Marrom" title="Marrom" style="--cq:#6B4A32"></span>
+            <span class="cor-quad outra" data-cor="outra" title="Outra cor">+</span>
           </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Cor</label>
-            <div class="cor-grade" id="corChips">
-              <span class="cor-quad on" data-cor="Preto" title="Preto" style="--cq:#101317"></span>
-              <span class="cor-quad" data-cor="Cinza" title="Cinza" style="--cq:#7A7F85"></span>
-              <span class="cor-quad" data-cor="Branco" title="Branco" style="--cq:#E4E7EA"></span>
-              <span class="cor-quad" data-cor="Prata" title="Prata" style="--cq:#C7CDD3"></span>
-              <span class="cor-quad" data-cor="Azul" title="Azul" style="--cq:#2B4D8C"></span>
-              <span class="cor-quad" data-cor="Vermelho" title="Vermelho" style="--cq:#B5342E"></span>
-              <span class="cor-quad" data-cor="Verde" title="Verde" style="--cq:#2F7D4F"></span>
-              <span class="cor-quad" data-cor="Laranja" title="Laranja" style="--cq:#D9772E"></span>
-              <span class="cor-quad" data-cor="Amarelo" title="Amarelo" style="--cq:#E4C13C"></span>
-              <span class="cor-quad" data-cor="Marrom" title="Marrom" style="--cq:#6B4A32"></span>
-              <span class="cor-quad" data-cor="Bege" title="Bege" style="--cq:#D8C6A8"></span>
-              <span class="cor-quad" data-cor="Vinho" title="Vinho" style="--cq:#6E1F2E"></span>
-              <span class="cor-quad outra" data-cor="outra" title="Outra cor">+</span>
-            </div>
-            <div class="cor-nome" id="corNomeAtual">Preto</div>
-            <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
-          </div>
+          <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
         </div>
       </div>
 
@@ -3265,8 +3279,7 @@ function selecionarChip(container,nome){
 }
 function selecionarCor(nome){
   var quads=document.querySelectorAll('#corChips .cor-quad'),
-      outraInput=document.getElementById('corOutraInput'),
-      rotulo=document.getElementById('corNomeAtual'),achou=null;
+      outraInput=document.getElementById('corOutraInput'),achou=null;
   quads.forEach(function(c){
     var bate=c.dataset.cor===nome;
     c.classList.toggle('on',bate);
@@ -3275,10 +3288,8 @@ function selecionarCor(nome){
   if(!achou){
     quads.forEach(function(c){c.classList.toggle('on',c.dataset.cor==='outra')});
     outraInput.style.display='block';outraInput.value=nome;
-    if(rotulo)rotulo.textContent=nome||'Outra cor';
   }else{
     outraInput.style.display='none';
-    if(rotulo)rotulo.textContent=nome;
   }
 }
 document.getElementById('categoriaChips').querySelectorAll('.chip').forEach(function(c){
@@ -3288,19 +3299,12 @@ document.getElementById('corChips').addEventListener('click',function(e){
   var quad=e.target.closest('.cor-quad');if(!quad)return;
   document.querySelectorAll('#corChips .cor-quad').forEach(function(c){c.classList.remove('on')});
   quad.classList.add('on');
-  var outraInput=document.getElementById('corOutraInput'),
-      rotulo=document.getElementById('corNomeAtual');
+  var outraInput=document.getElementById('corOutraInput');
   if(quad.dataset.cor==='outra'){
     outraInput.style.display='block';outraInput.value='';outraInput.focus();
-    if(rotulo)rotulo.textContent='Outra cor';
   }else{
     outraInput.style.display='none';
-    if(rotulo)rotulo.textContent=quad.dataset.cor;
   }
-});
-document.getElementById('corOutraInput').addEventListener('input',function(){
-  var rotulo=document.getElementById('corNomeAtual');
-  if(rotulo)rotulo.textContent=this.value.trim()||'Outra cor';
 });
 
 /* ================= MODELO (base FIPE mockada) ================= */
@@ -3308,21 +3312,101 @@ var FIPE_TXT="Acura|M:Integra,Legend,Nsx\nAdly|O:Atv,Jaguar,RT\nAgrale|M:City|K:
 
 /* ================= BASE FIPE (marcas, modelos e porte) ================= */
 var PORTE_COD={P:'Pequeno',M:'Médio',S:'SUV',G:'Grande',K:'Pickup',O:'Moto'};
-var FIPE=(function(){
-  var lista=[];
-  FIPE_TXT.split('\n').forEach(function(linha){
+/* Dois formatos convivem:
+   v1 (embarcada)  Marca|P:Modelo,Modelo|S:Modelo      — modelo base, sem versão
+   v2 (nuvem)      Marca \t P \t Modelo|Modelo|Modelo  — nome completo da FIPE,
+                                                         já com motor e versão
+   O v2 é detectado pela tabulação. Nomes da FIPE têm vírgula ("1.0, 8V"),
+   por isso o separador do v2 é o pipe. */
+function montarFipe(txt){
+  var lista=[],vistos={};
+  String(txt).split('\n').forEach(function(linha){
+    if(!linha)return;
+    if(linha.indexOf('\t')>-1){
+      var cols=linha.split('\t');
+      if(cols.length<3)return;
+      var mk=cols[0].split('/')[0].trim(),pt=PORTE_COD[cols[1].trim()]||'Médio';
+      cols[2].split('|').forEach(function(nome){
+        nome=nome.trim();if(!nome)return;
+        var ch=semAcento((mk+' '+nome).toLowerCase());
+        if(vistos[ch])return;
+        vistos[ch]=1;
+        lista.push({marca:mk,modelo:nome,porte:pt,busca:ch});
+      });
+      return;
+    }
     var partes=linha.split('|'),marca=partes[0];
+    if(!marca)return;
+    /* "Caoa Chery/Chery" é a mesma marca listada de dois jeitos na FIPE */
+    var marcaLimpa=marca.split('/')[0].trim();
     partes.slice(1).forEach(function(grupo){
       var cod=grupo.charAt(0),porte=PORTE_COD[cod]||'Médio';
       grupo.slice(2).split(',').forEach(function(modelo){
         if(!modelo)return;
-        lista.push({marca:marca,modelo:modelo,porte:porte,
-          busca:semAcento((marca+' '+modelo).toLowerCase())});
+        var ch=semAcento((marcaLimpa+' '+modelo).toLowerCase());
+        if(vistos[ch])return; /* mesma marca+modelo já entrou */
+        vistos[ch]=1;
+        lista.push({marca:marcaLimpa,modelo:modelo,porte:porte,busca:ch});
       });
     });
   });
   return lista;
+}
+var FIPE=montarFipe(FIPE_TXT);
+
+/* ---------- base de veículos na nuvem ----------
+   A lista embarcada acima é a reserva: funciona offline e nunca falha.
+   Se houver uma versão mais nova no Supabase, ela substitui em memória e fica
+   guardada no aparelho. Verifica no máximo uma vez por semana. */
+var FIPE_CHAVE_LOCAL='tjet_fipe_nuvem';
+function fipeInfo(){
+  var c=DB.config;
+  if(!c.fipe)c.fipe={versao:0,verificadoISO:'',origem:'embarcada'};
+  return c.fipe;
+}
+function aplicarFipeTxt(txt,versao,origem){
+  var nova=montarFipe(txt);
+  if(nova.length<200)throw new Error('base recebida parece incompleta');
+  FIPE=nova;
+  var info=fipeInfo();
+  info.versao=versao||0;info.origem=origem||'nuvem';info.verificadoISO=isoAgora();
+  return nova.length;
+}
+/* na abertura: se já baixamos antes, usa a guardada sem esperar a rede */
+(function restaurarFipeLocal(){
+  try{
+    var bruto=localStorage.getItem(FIPE_CHAVE_LOCAL);
+    if(!bruto)return;
+    var g=JSON.parse(bruto);
+    if(g&&g.txt&&g.versao>(fipeInfo().versao||0))aplicarFipeTxt(g.txt,g.versao,'nuvem');
+  }catch(e){/* qualquer problema: segue com a embarcada */}
 })();
+
+function baixarFipeDaNuvem(forcado){
+  var info=fipeInfo();
+  if(!forcado){
+    if(!nuvemPronta())return Promise.resolve(null);
+    var ult=info.verificadoISO?new Date(info.verificadoISO).getTime():0;
+    if(Date.now()-ult<7*24*60*60*1000)return Promise.resolve(null); /* uma vez por semana */
+  }
+  if(!nuvemPronta())return Promise.reject(new Error('Nuvem não configurada'));
+  return carregarSupabase().then(function(){
+    return sb.from('tjet_registros').select('dados,atualizado_em')
+      .eq('loja','_global').eq('colecao','fipe').eq('chave','base').maybeSingle();
+  }).then(function(r){
+    info.verificadoISO=isoAgora();salvar();
+    if(r.error)throw new Error(r.error.message);
+    var d=r.data&&r.data.dados;
+    if(!d||!d.txt)return null;
+    var versaoRemota=+d.versao||0;
+    if(versaoRemota<=(info.versao||0))return 0; /* já estamos em dia */
+    var total=aplicarFipeTxt(d.txt,versaoRemota,'nuvem');
+    try{localStorage.setItem(FIPE_CHAVE_LOCAL,JSON.stringify({txt:d.txt,versao:versaoRemota}))}catch(e){}
+    salvar();
+    return total;
+  });
+}
+
 function semAcento(s){
   return String(s).normalize?String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,''):String(s);
 }
@@ -3336,7 +3420,10 @@ function buscarModelos(q,limite){
       var f=FIPE[i];
       if(!ts.every(function(t){return f.busca.indexOf(t)>-1}))continue;
       (semAcento(f.modelo.toLowerCase()).indexOf(ts[0])===0?ini:meio).push(f);
+      /* com a base completa (dezenas de milhares) não faz sentido varrer tudo:
+         para quando já há resultados suficientes dos dois tipos */
       if(ini.length>=lim)break;
+      if(ini.length+meio.length>=lim*6)break;
     }
     return ini.concat(meio);
   }
@@ -3344,6 +3431,12 @@ function buscarModelos(q,limite){
   /* "cg 160" não existe como modelo base: cai para o primeiro termo */
   if(!r.length&&termos.length>1)r=varrer([termos[0]]);
   return r.slice(0,lim);
+}
+/* "Tiggo 8 PRO 1.5 Turbo (Híbrido) Chery" — versão vem da base da nuvem,
+   quando publicada. Sem versão, mostra modelo + marca. */
+function nomeCompletoFipe(f){
+  if(!f)return '';
+  return (f.modelo+(f.versao?' '+f.versao:'')+' '+f.marca).replace(/\s+/g,' ').trim();
 }
 function fipePorNome(marca,modelo){
   var a=semAcento(String(marca||'').toLowerCase()),b=semAcento(String(modelo||'').toLowerCase());
@@ -3362,8 +3455,9 @@ modeloInput.addEventListener('input',function(){
   var achou=buscarModelos(modeloInput.value,10);
   if(!achou.length){modeloSuggest.classList.remove('show');return}
   modeloSuggest.innerHTML=achou.map(function(f,i){
-    return '<div class="sug-item" data-fi="'+i+'"><b>'+esc(f.modelo)+'</b>'+
-      '<span>'+esc(f.marca)+' · '+esc(f.porte)+'</span></div>';
+    return '<div class="sug-item sug-modelo" data-fi="'+i+'">'+
+      '<b>'+esc(nomeCompletoFipe(f))+'</b>'+
+      '<span>'+esc(f.porte)+'</span></div>';
   }).join('');
   modeloSuggest.dataset.res=JSON.stringify(achou);
   modeloSuggest.classList.add('show');
@@ -3376,14 +3470,14 @@ modeloSuggest.addEventListener('click',function(e){
   modeloSuggest.classList.remove('show');
 });
 function aplicarModeloFipe(f){
-  marcaSelecionada=f.marca;modeloSelecionado=f.modelo;
-  modeloInput.value=f.marca+' '+f.modelo;
+  marcaSelecionada=f.marca;modeloSelecionado=f.modelo+(f.versao?' '+f.versao:'');
+  modeloInput.value=nomeCompletoFipe(f);
   var chips=document.getElementById('categoriaChips');
   if(chips&&f.porte){
     selecionarChip(chips,f.porte);
     if(typeof reprecificarSelecionados==='function')reprecificarSelecionados();
   }
-  toast('Porte aplicado',f.marca+' '+f.modelo+' · '+f.porte,'ok');
+  toast('Porte aplicado',nomeCompletoFipe(f)+' · '+f.porte,'ok');
 }
 document.addEventListener('click',function(e){
   if(!e.target.closest('#modeloInput'))modeloSuggest.classList.remove('show');
@@ -3392,9 +3486,22 @@ document.getElementById('fipeUpdateBtn').addEventListener('click',function(e){
   e.preventDefault();
   var lbl=document.getElementById('fipeUpdateLbl');
   lbl.textContent='Verificando…';
-  setTimeout(function(){
-    lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · base FIPE embarcada';
-  },700);
+  baixarFipeDaNuvem(true).then(function(total){
+    if(total===null){
+      lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · sem base na nuvem';
+      toast('Nada na nuvem ainda','A base publicada não foi encontrada. Seguindo com a lista embarcada.','warn');
+    }else if(total===0){
+      lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · já está em dia';
+      toast('Base em dia','Você já tem a versão mais recente.','ok');
+    }else{
+      lbl.textContent=total.toLocaleString('pt-BR')+' modelos · atualizada agora';
+      toast('Base atualizada',total.toLocaleString('pt-BR')+' modelos disponíveis.','ok');
+    }
+  }).catch(function(err){
+    lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · base embarcada';
+    registrarErro('FIPE nuvem: '+((err&&err.message)||err),'nuvem');
+    toast('Não consegui verificar',(err&&err.message)||'Sem conexão. A lista embarcada continua funcionando.','warn');
+  });
 });
 
 
@@ -5393,11 +5500,13 @@ function capturarEProcessar(){
 /* ---------- confirmação e cadastro ---------- */
 function confirmarPlacaLida(placa,foto){
   var v=veiculoPorPlaca(placa),conhecido=!!v;
+  plateNum.textContent=placaFmt(placa); // evita mostrar uma placa diferente atrás do modal
   abrirModal({
     titulo:'Li a placa',
     sub:'Confira os caracteres antes de continuar',
     html:(foto?'<img src="'+foto+'" class="cam-thumb">':'')+
-      '<div class="placa-conf"><input type="text" id="placaConfInput" maxlength="8" value="'+placaFmt(placa)+'" autocomplete="off" spellcheck="false"></div>'+
+      '<div class="placa-conf"><div class="placa-conf-card"><div class="placa-conf-top"><span>BRASIL</span><span>PB</span></div>'+
+      '<input type="text" id="placaConfInput" maxlength="8" value="'+placaFmt(placa)+'" autocomplete="off" spellcheck="false"></div></div>'+
       (conhecido
         ? '<div class="dx dx-ok"><b>Já é cliente</b><span>'+esc(v.marca+' '+v.modelo+' · '+v.cor)+'</span>'+
           '<span>'+esc(nomesDonos(v))+'</span></div>'
@@ -7943,6 +8052,15 @@ function iniciarNuvem(){
   if(!nuvemPronta())return;
   /* deixa a tela abrir antes de puxar a rede */
   setTimeout(function(){sincronizar(true)},1500);
+
+  /* base de veículos: verifica no máximo uma vez por semana, em silêncio */
+  setTimeout(function(){
+    baixarFipeDaNuvem(false).then(function(total){
+      if(total)toast('Base de veículos atualizada',total.toLocaleString('pt-BR')+' modelos disponíveis.','ok');
+    }).catch(function(e){
+      registrarErro('FIPE nuvem (auto): '+((e&&e.message)||e),'nuvem');
+    });
+  },6000);
 
   /* enquanto o app estiver aberto, mantém em dia */
   setInterval(function(){
