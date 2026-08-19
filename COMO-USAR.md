@@ -13,6 +13,9 @@ Arquivo único, sem build e sem dependência de servidor. Os dados ficam no
 | `icons/` | Ícones do app |
 | `favicon.ico` + `favicon.svg` | Ícone da aba do navegador |
 
+> **Leia o `LEIA-PRIMEIRO.md` antes de tudo** se você já usou uma versão anterior
+> neste celular.
+
 Os quatro precisam ficar **na mesma pasta**.
 
 ## Publicar no GitHub Pages
@@ -228,3 +231,30 @@ da previsão, não depois.
 
 O link não expõe telefone, endereço, valores nem histórico do cliente — só o
 necessário para acompanhar aquele serviço.
+
+
+## Previsão de entrega
+
+Toda entrada nasce com **1 hora a partir de agora**. É o padrão e já vem marcado —
+não precisa tocar em nada.
+
+Para mudar, toque no horário. As opções mostram:
+
+- **o padrão** (1 hora), sempre em primeiro;
+- **o tempo técnico**, calculado pelos serviços escolhidos e pela fila do pátio —
+  útil quando o pátio está cheio e uma hora é otimista demais;
+- horários de 30 em 30 minutos até o fechamento, com a folga de cada um.
+
+## Quando algo não funciona
+
+A partir da v2.3.0 o sistema é à prova de dependência externa. Antes, se a
+biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
+resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
+
+Agora cada parte é isolada: se a biblioteca de arrastar falhar, você perde apenas
+o reordenar manual da fila. Todo o resto continua de pé, e o erro fica registrado
+no diagnóstico.
+
+Erros também são capturados e listados em **Admin → Dados → Diagnóstico**, com
+horário e mensagem — em vez de o sistema simplesmente parar de responder sem
+explicação.

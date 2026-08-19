@@ -1116,6 +1116,24 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .dx-ok{border-left-color:var(--ok)}
 .dx-novo{border-left-color:var(--teal)}
 
+/* ===== DIAGNÓSTICO ===== */
+.diag-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--linha)}
+.diag-row:last-child{border-bottom:0}
+.diag-row>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.diag-row b{font:700 13px/1.25 var(--f-body);color:var(--tinta)}
+.diag-row span{font:400 11.5px/1.4 var(--f-body);color:var(--texto2)}
+.diag-dot{width:9px;height:9px;border-radius:50%;flex:none;margin-top:5px}
+.diag-dot.ok{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+.diag-dot.off{background:var(--alerta);box-shadow:0 0 0 3px color-mix(in srgb,var(--alerta) 22%,transparent)}
+.diag-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;
+  padding:0 5px;border-radius:9px;background:var(--perigo);color:#fff;
+  font:700 10px/1 var(--f-mono);margin-left:6px}
+.diag-erros{margin-top:10px;background:var(--vidro);border:1px solid var(--linha);border-radius:10px;
+  padding:10px 12px;max-height:170px;overflow-y:auto}
+.diag-erros div{font:400 10.5px/1.5 var(--f-mono);color:var(--texto2);word-break:break-word;margin-bottom:6px}
+.diag-erros b{color:var(--perigo)}
+.slot-opt.on{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}
+
 </style>
 </head>
 <body>
@@ -1291,7 +1309,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1480,7 +1498,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1515,7 +1533,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1530,7 +1548,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1544,7 +1562,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -1928,6 +1946,14 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <div class="card">
           <div class="card-lbl">Armazenamento</div>
           <div id="dadosStats"></div>
+
+          <div class="card-lbl" style="margin-top:18px">Diagnóstico do sistema <span class="diag-badge" id="diagBadge" style="display:none">0</span></div>
+          <p class="mini-note">Se alguma função não estiver respondendo, confira aqui antes de qualquer coisa.</p>
+          <div id="diagBox"></div>
+          <div class="btn-row" style="margin-top:12px">
+            <button class="btn-ghost" id="copiarDiagBtn">Copiar diagnóstico</button>
+            <button class="entrar-btn" id="atualizarAppBtn" style="margin:0">Forçar atualização</button>
+          </div>
         </div>
       </div>
       <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
@@ -2266,6 +2292,47 @@ document.getElementById('digitarPlacaBtn').addEventListener('click',function(){d
 document.getElementById('entrarBtn').addEventListener('click',function(){
   confirmarEntrada();
 });
+
+/* ================= VERSÃO E BLINDAGEM ================= */
+var TJET_VERSAO='2.3.0';
+var TJET_BUILD='2026-08-19';
+var errosApp=[];
+
+/* Um erro solto no meio do script derrubava tudo que vinha depois.
+   Aqui ele é capturado, guardado e mostrado — o resto do sistema continua de pé. */
+window.addEventListener('error',function(e){
+  registrarErro((e.error&&e.error.stack)||e.message||'erro desconhecido',e.filename+':'+e.lineno);
+});
+window.addEventListener('unhandledrejection',function(e){
+  registrarErro('Promise rejeitada: '+((e.reason&&e.reason.message)||e.reason),'');
+});
+function registrarErro(msg,onde){
+  errosApp.unshift({msg:String(msg).slice(0,400),onde:onde||'',quando:new Date().toISOString()});
+  errosApp=errosApp.slice(0,25);
+  try{
+    var b=document.getElementById('diagBadge');
+    if(b){b.style.display='inline-flex';b.textContent=errosApp.length}
+  }catch(x){}
+}
+/* Executa um trecho isolado: se quebrar, registra e segue a vida. */
+function seguro(nome,fn){
+  try{return fn()}
+  catch(e){registrarErro('['+nome+'] '+(e.stack||e.message),nome);return null}
+}
+
+/* ---------- dependências externas ---------- */
+var DEPS={sortable:false,tesseract:false};
+function carregarScript(url,timeout){
+  return new Promise(function(ok,erro){
+    var s=document.createElement('script'),pronto=false;
+    var t=setTimeout(function(){if(!pronto){pronto=true;erro(new Error('timeout'))}},timeout||9000);
+    s.src=url;
+    s.onload=function(){if(pronto)return;pronto=true;clearTimeout(t);ok()};
+    s.onerror=function(){if(pronto)return;pronto=true;clearTimeout(t);erro(new Error('rede'))};
+    document.head.appendChild(s);
+  });
+}
+
 
 /* ================= UTILITÁRIOS ================= */
 function esc(s){
@@ -3076,19 +3143,30 @@ setInterval(function(){
 },10000);
 
 /* ---------- arrastar: pega em qualquer ponto do card ---------- */
-var arrastandoAgora=false;
-var sortablePatio=new Sortable(filaPatio,{
-  animation:180,delay:170,delayOnTouchOnly:true,touchStartThreshold:6,
-  filter:'button,.prisma-chip',preventOnFilter:false,
-  ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'arrastando',
-  onStart:function(){arrastandoAgora=true},
-  onEnd:function(){
-    var novaOrdem=Array.from(filaPatio.children).map(function(el){return +el.dataset.id});
-    PATIO.sort(function(a,b){return novaOrdem.indexOf(a.id)-novaOrdem.indexOf(b.id)});
-    modoAuto=false;salvar();renderPatio();
-    setTimeout(function(){arrastandoAgora=false},80);
-  }
-});
+var arrastandoAgora=false,sortablePatio=null;
+function ligarArraste(){
+  if(sortablePatio||typeof Sortable==='undefined')return false;
+  sortablePatio=new Sortable(filaPatio,{
+    animation:180,delay:170,delayOnTouchOnly:true,touchStartThreshold:6,
+    filter:'button,.prisma-chip',preventOnFilter:false,
+    ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'arrastando',
+    onStart:function(){arrastandoAgora=true},
+    onEnd:function(){
+      var novaOrdem=Array.from(filaPatio.children).map(function(el){return +el.dataset.id});
+      PATIO.sort(function(a,b){return novaOrdem.indexOf(a.id)-novaOrdem.indexOf(b.id)});
+      modoAuto=false;salvar();renderPatio();
+      setTimeout(function(){arrastandoAgora=false},80);
+    }
+  });
+  DEPS.sortable=true;
+  return true;
+}
+/* o reordenar manual é um extra: se a biblioteca não vier, o resto do sistema segue inteiro */
+if(!seguro('arraste',ligarArraste)||!sortablePatio){
+  carregarScript('https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js')
+    .then(function(){seguro('arraste',ligarArraste)})
+    .catch(function(){registrarErro('Sortable indisponível — reordenar manual desligado','cdn')});
+}
 document.getElementById('modoAutoBtn').addEventListener('click',function(){
   modoAuto=!modoAuto;renderPatio();
   toast(modoAuto?'Ordem automática ligada':'Ordem manual',modoAuto?'A fila se reorganiza sozinha pelo prazo de entrega.':'A fila fica exatamente como você deixou.','ok');
@@ -4002,21 +4080,32 @@ function filaAtualMin(){
     .reduce(function(a,c){return a+tempoRestanteEstimado(c)},0);
   return Math.round(carga/boxes);
 }
+var PREVISAO_PADRAO=60;   /* toda entrada nasce com 1 hora — dá para trocar em dois toques */
+function previsaoAutomatica(){return minutosAgora()+PREVISAO_PADRAO}
 function gerarSlots(){
   var agora=minutosAgora(),dur=duracaoSelecionada(),espera=filaAtualMin();
-  var base=agora+espera+dur,fecha=paraMin(DB.config.fecha||'18:00');
-  var lista=[{min:base,h:paraHM(base),info:espera<5?'assim que der · sem espera':'depois da fila · '+espera+' min de espera'}];
-  var t=Math.ceil((base+1)/30)*30;
-  while(t<=fecha&&lista.length<7){lista.push({min:t,h:paraHM(t),info:'com folga de '+(t-base)+' min'});t+=30}
-  if(lista.length<3)lista.push({min:base+60,h:paraHM(base+60),info:'com folga de 60 min'});
+  var padrao=previsaoAutomatica(),fecha=paraMin(DB.config.fecha||'18:00');
+  var tecnico=agora+espera+dur;
+  var lista=[{min:padrao,h:paraHM(padrao),info:'padrão · 1 hora a partir de agora'}];
+  if(Math.abs(tecnico-padrao)>10){
+    lista.push({min:tecnico,h:paraHM(tecnico),
+      info:espera<5?'pelo tempo dos serviços · '+dur+' min':'pela fila · '+espera+' min de espera + '+dur+' min'});
+  }
+  var t=Math.ceil((Math.max(padrao,tecnico)+1)/30)*30;
+  while(t<=fecha&&lista.length<8){lista.push({min:t,h:paraHM(t),info:'com folga de '+(t-padrao)+' min'});t+=30}
+  if(lista.length<3)lista.push({min:padrao+60,h:paraHM(padrao+60),info:'mais 1 hora de folga'});
   return lista;
 }
 function renderSlots(){
   var slots=gerarSlots();
-  slotPanel.innerHTML=slots.map(function(s,i){
-    return '<div class="slot-opt" data-min="'+s.min+'"><b>'+s.h+'</b><span>'+s.info+'</span></div>';
+  slotPanel.innerHTML=slots.map(function(s){
+    return '<div class="slot-opt'+(previsaoMin===s.min?' on':'')+'" data-min="'+s.min+'"><b>'+s.h+'</b><span>'+esc(s.info)+'</span></div>';
   }).join('');
-  if(previsaoMin===null){previsaoMin=slots[0].min;horaLabel.textContent=slots[0].h;horaBtn.classList.add('picked')}
+  if(previsaoMin===null){
+    previsaoMin=previsaoAutomatica();
+    horaLabel.textContent=paraHM(previsaoMin);
+    horaBtn.classList.add('picked');
+  }
 }
 horaBtn.addEventListener('click',function(){renderSlots();slotPanel.classList.toggle('show')});
 slotPanel.addEventListener('click',function(e){
@@ -4162,7 +4251,7 @@ function confirmarEntrada(){
   }
 
   var dur=duracaoSelecionada();
-  if(previsaoMin===null)previsaoMin=minutosAgora()+filaAtualMin()+dur;
+  if(previsaoMin===null)previsaoMin=previsaoAutomatica();
 
   var os={
     id:Date.now(),numero:proximo('os'),
@@ -4403,8 +4492,8 @@ function limiarOtsu(img){
   }
   return limiar;
 }
-function prepararCanvas(origem,binarizar){
-  var alvoW=1100,esc=alvoW/origem.width;
+function prepararCanvas(origem,binarizar,inverter){
+  var alvoW=1600,esc=alvoW/origem.width;
   var cv=document.createElement('canvas');
   cv.width=alvoW;cv.height=Math.round(origem.height*esc);
   var ctx=cv.getContext('2d');
@@ -4415,6 +4504,7 @@ function prepararCanvas(origem,binarizar){
     var lim=limiarOtsu(img),d=img.data;
     for(var i=0;i<d.length;i+=4){
       var v=d[i]>lim?255:0;
+      if(inverter)v=255-v;
       d[i]=d[i+1]=d[i+2]=v;
     }
   }
@@ -4443,17 +4533,24 @@ function prepararOCR(){
   tessPreparando=carregarScriptOCR().then(function(T){
     return T.createWorker('eng');
   }).then(function(w){
+    tessWorker=w;DEPS.tesseract=true;
     return w.setParameters({
-      tessedit_char_whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-      tessedit_pageseg_mode:'7'
-    }).then(function(){tessWorker=w;return w});
+      tessedit_char_whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    }).then(function(){return w}).catch(function(){return w});
   }).catch(function(e){tessPreparando=null;throw e});
   return tessPreparando;
 }
-function lerTexto(canvas){
+/* psm 7 = uma linha de texto · psm 8 = uma palavra só. Placas caem melhor num ou noutro
+   dependendo do enquadramento, então tentamos os dois e cruzamos os resultados. */
+function lerTexto(canvas,psm){
   return prepararOCR()
-    .then(function(w){return w.recognize(canvas)})
-    .then(function(r){return (r&&r.data&&r.data.text)||''});
+    .then(function(w){
+      return w.setParameters({tessedit_pageseg_mode:String(psm||7)})
+        .catch(function(){})
+        .then(function(){return w.recognize(canvas)});
+    })
+    .then(function(r){return (r&&r.data&&r.data.text)||''})
+    .catch(function(){return ''});
 }
 
 /* ---------- câmera ---------- */
@@ -4519,9 +4616,18 @@ document.getElementById('camShot').addEventListener('click',function(){
   var fotoPlaca=completa.toDataURL('image/jpeg',.68);
 
   camStatus.textContent='Lendo a placa…';
-  var variantes=[prepararCanvas(recorte,true),prepararCanvas(recorte,false)];
-  Promise.all(variantes.map(function(cv){
-    return lerTexto(cv).catch(function(){return ''});
+  var variantes=[
+    {cv:prepararCanvas(recorte,true,false),psm:7},
+    {cv:prepararCanvas(recorte,false,false),psm:7},
+    {cv:prepararCanvas(recorte,true,false),psm:8},
+    {cv:prepararCanvas(recorte,true,true),psm:7}
+  ];
+  var feitos=0;
+  Promise.all(variantes.map(function(v){
+    return lerTexto(v.cv,v.psm).then(function(t){
+      feitos++;camStatus.textContent='Lendo a placa… '+Math.round(feitos/variantes.length*100)+'%';
+      return t;
+    });
   })).then(function(textos){
     var votos={},melhor=null;
     textos.forEach(function(t){
@@ -4534,11 +4640,15 @@ document.getElementById('camShot').addEventListener('click',function(){
     if(!melhor){
       camStatus.textContent='';
       tentativasOCR++;
-      camDica.textContent=tentativasOCR>=2
-        ? 'Ainda não deu. Se preferir, toque em "Digitar a placa" abaixo.'
-        : 'Não consegui LER a placa. Aproxime, firme o celular e evite reflexo.';
+      if(tentativasOCR>=2){
+        fecharCamera();
+        toast('Vamos pelo caminho curto','Duas tentativas sem sucesso — digite a placa que sigo daqui.','warn');
+        setTimeout(digitarPlacaManual,300);
+        return;
+      }
+      camDica.textContent='Não consegui LER a placa. Aproxime até a placa preencher a moldura e evite reflexo.';
       toast('Não consegui ler a placa',
-        'Isso é a leitura da foto, não o cadastro. Aproxime a câmera, evite reflexo e mantenha a placa reta.','warn');
+        'Isso é a leitura da foto, não o cadastro. Aproxime mais, evite reflexo e mantenha a placa reta.','warn');
       return;
     }
     tentativasOCR=0;
@@ -6595,6 +6705,49 @@ function renderDadosStats(){
       '<div class="rsum-row tot"><span>Espaço usado</span><b>'+(bytes/1024).toFixed(0)+' KB</b></div>'+
     '</div>';
 }
+function renderDiagnostico(){
+  var box=document.getElementById('diagBox');if(!box)return;
+  function linha(nome,ok,detalhe){
+    return '<div class="diag-row"><span class="diag-dot '+(ok?'ok':'off')+'"></span>'+
+      '<div><b>'+esc(nome)+'</b><span>'+esc(detalhe)+'</span></div></div>';
+  }
+  var sw=('serviceWorker' in navigator)&&navigator.serviceWorker.controller;
+  box.innerHTML=
+    linha('Versão instalada',true,'v'+TJET_VERSAO+' · build '+TJET_BUILD)+
+    linha('Câmera',!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
+      location.protocol==='https:'||location.hostname==='localhost'
+        ? 'disponível (HTTPS ok)' : 'bloqueada — a câmera exige HTTPS, abra pelo endereço publicado')+
+    linha('Leitor de placa (OCR)',!!window.Tesseract,
+      window.Tesseract?'carregado e pronto':'baixa na primeira leitura (precisa de internet uma vez)')+
+    linha('Reordenar o pátio',DEPS.sortable,
+      DEPS.sortable?'ativo':'indisponível — a fila continua funcionando na ordem automática')+
+    linha('Base de veículos',FIPE&&FIPE.length>0,(FIPE?FIPE.length:0)+' modelos carregados')+
+    linha('Modo offline',!!sw,sw?'service worker ativo':'sem service worker nesta aba')+
+    linha('Erros capturados',errosApp.length===0,
+      errosApp.length?errosApp.length+' erro(s) — veja abaixo':'nenhum erro nesta sessão')+
+    (errosApp.length?'<div class="diag-erros">'+errosApp.slice(0,6).map(function(e){
+      return '<div><b>'+esc(e.quando.slice(11,19))+'</b> '+esc(e.msg.slice(0,180))+'</div>';
+    }).join('')+'</div>':'');
+}
+document.getElementById('atualizarAppBtn').addEventListener('click',function(){
+  confirmar({titulo:'Forçar atualização',
+    texto:'Limpa o cache do aparelho e recarrega buscando a versão mais recente. Seus dados não são apagados.',
+    botoes:[{txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm},
+      {txt:'Atualizar agora',classe:'entrar-btn',acao:forcarAtualizacao}]});
+});
+document.getElementById('copiarDiagBtn').addEventListener('click',function(){
+  var txt='T-Jet v'+TJET_VERSAO+' ('+TJET_BUILD+')\n'+
+    'URL: '+location.href+'\nNavegador: '+navigator.userAgent+'\n'+
+    'Camera: '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)+
+    ' | HTTPS: '+(location.protocol==='https:')+
+    ' | OCR: '+!!window.Tesseract+' | Sortable: '+DEPS.sortable+' | FIPE: '+(FIPE?FIPE.length:0)+'\n'+
+    'Erros:\n'+(errosApp.length?errosApp.map(function(e){return '- '+e.quando+' '+e.msg}).join('\n'):'nenhum');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){toast('Diagnóstico copiado','Cole na mensagem para eu analisar.','ok')})
+      .catch(function(){mostrarLinkManual(txt)});
+  }else mostrarLinkManual(txt);
+});
+
 document.getElementById('exportarDadosBtn').addEventListener('click',function(){
   var blob=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'});
   var a=document.createElement('a');
@@ -7383,7 +7536,7 @@ function aoTrocarTela(id){
   if(id==='orcamento')renderOrcamentos();
   if(id==='estoque'){renderEstoque();renderEstoqueMovs();renderFichas()}
   if(id==='retorno')renderRetornos();
-  if(id==='admin'){renderAdmServicos();renderAdmEquipe();carregarConfigForm();renderDadosStats()}
+  if(id==='admin'){renderAdmServicos();renderAdmEquipe();carregarConfigForm();renderDadosStats();seguro('diag',renderDiagnostico)}
   if(id==='clientes')renderClientesLista(document.getElementById('clienteBuscaInput').value);
   if(id==='patio')renderPatio();
   if(id==='home')renderHome();
@@ -7589,10 +7742,45 @@ document.getElementById('seedDemoBtn').addEventListener('click',function(){
       {txt:'Carregar',classe:'entrar-btn',acao:function(){fecharConfirm();seedDemo()}}]});
 });
 
-/* ================= PWA ================= */
+/* ================= PWA E ATUALIZAÇÃO ================= */
+function forcarAtualizacao(){
+  var tarefas=[];
+  if(window.caches&&caches.keys)tarefas.push(caches.keys().then(function(ks){
+    return Promise.all(ks.map(function(k){return caches.delete(k)}));
+  }));
+  if('serviceWorker' in navigator)tarefas.push(
+    navigator.serviceWorker.getRegistrations().then(function(rs){
+      return Promise.all(rs.map(function(r){return r.unregister()}));
+    })
+  );
+  Promise.all(tarefas).catch(function(){}).then(function(){
+    location.replace(location.pathname+'?v='+Date.now());
+  });
+}
 if('serviceWorker' in navigator){
   window.addEventListener('load',function(){
-    navigator.serviceWorker.register('sw.js').catch(function(){});
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      reg.update();
+      /* uma versão nova baixou enquanto o app estava aberto */
+      reg.addEventListener('updatefound',function(){
+        var novo=reg.installing;
+        if(!novo)return;
+        novo.addEventListener('statechange',function(){
+          if(novo.state==='installed'&&navigator.serviceWorker.controller){
+            confirmar({titulo:'Nova versão disponível',
+              texto:'Baixei uma atualização do sistema. Recarregar agora para usar a versão nova?',
+              botoes:[
+                {txt:'Depois',classe:'btn-ghost',acao:fecharConfirm},
+                {txt:'Recarregar',classe:'entrar-btn',acao:function(){
+                  novo.postMessage({tipo:'pular_espera'});
+                  setTimeout(function(){location.reload()},250);
+                }}
+              ]});
+          }
+        });
+      });
+      setInterval(function(){reg.update()},15*60*1000);
+    }).catch(function(){});
   });
 }
 var promptInstalar=null;
@@ -7616,6 +7804,7 @@ document.getElementById('instalarBtn').addEventListener('click',function(){
 
 /* ================= INICIALIZAÇÃO ================= */
 document.getElementById('scrSub').textContent=DB.config.nome;
+document.querySelectorAll('.versao-app').forEach(function(el){el.textContent='v'+TJET_VERSAO});
 renderSvcCatalogo();
 renderFotosEntrada();
 atualizarResumoAvarias();
