@@ -73,41 +73,52 @@ Engrenagem **Project Settings → API**. Você precisa de dois valores:
 
 ---
 
-## Parte 2 — No arquivo config.js (uma vez também)
+## Parte 2 — Gerar o config.js (sem editar código)
 
-Abra o `config.js` num editor de texto e preencha:
+O próprio app monta o arquivo. Você não precisa abrir editor nenhum.
 
-```js
-var TJET_CONFIG = {
+### 1. Abra o gerador
 
-  lavajato: {
-    nome: 'T-Jet Estética Automotiva',
-    tel:  '5583999990000'
-  },
+No T-Jet: **Admin → Nuvem → Gerar o config.js**
 
-  nuvem: {
-    ativa:       true,
-    url:         'https://abcdefgh.supabase.co',
-    chave:       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    loja:        'principal',
-    enviarFotos: false,
-    auto:        true
-  },
+### 2. Preencha
 
-  ocr: {
-    provedor: 'local',
-    token:    '',
-    endpoint: ''
-  }
+| Campo | O que colocar |
+|---|---|
+| Nome do lava jato | Como aparece nas mensagens de WhatsApp |
+| WhatsApp da loja | Seu número — o app põe o `55` sozinho |
+| **Project URL** | Cole da tela do Supabase (passo 5) |
+| **Chave anon public** | Cole da tela do Supabase (passo 5) |
+| Identificação da loja | Deixe `principal` |
+| Enviar fotos | **Não** — ficam no aparelho e poupam espaço |
+| Como ler placa | `Leitor local` por enquanto |
 
-};
-```
+### 3. Teste antes de baixar
 
-Suba o `config.js` junto com os outros arquivos no GitHub Pages.
+Botão **Testar conexão**. Ele conversa com o seu Supabase de verdade e responde:
 
-**Pronto. Acabou.**
+- ✅ *Conexão funcionando* — a tabela existe e a chave foi aceita
+- ❌ *A tabela tjet_registros não existe* — o SQL do passo 4 não rodou
+- ❌ *Chave recusada* — provavelmente você copiou a `service_role`
 
----
+Isso evita subir um arquivo errado e descobrir só depois.
+
+### 4. Baixe
+
+Botão **Baixar config.js**. O arquivo cai na pasta de downloads e o conteúdo
+também aparece na tela, com botão de copiar.
+
+### 5. Suba no GitHub
+
+Pelo site, sem instalar nada:
+
+1. Abra seu repositório no github.com
+2. Clique no arquivo **config.js**
+3. Ícone do **lápis** (canto superior direito)
+4. Apague tudo e cole o conteúdo novo
+5. Botão verde **Commit changes**
+
+Um ou dois minutos depois o GitHub Pages publica. Pronto.
 
 ## Nos celulares: nada
 

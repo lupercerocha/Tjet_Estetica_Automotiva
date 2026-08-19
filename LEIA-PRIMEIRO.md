@@ -9,7 +9,7 @@ as funções novas não estavam no arquivo que rodou aí.
 1. Suba **todos** os arquivos desta entrega para o GitHub Pages, substituindo os antigos.
 2. No celular, abra o T-Jet.
 3. Vá em **Admin → Dados → Forçar atualização**.
-4. Confirme no rodapé da tela inicial: deve aparecer **v3.2.0**.
+4. Confirme no rodapé da tela inicial: deve aparecer **v3.3.0**.
 
 Se o botão não existir na tela, você ainda está na versão velha. Nesse caso:
 
@@ -37,7 +37,7 @@ O botão **Copiar diagnóstico** monta um texto com tudo isso mais o modelo do s
 celular. Cole numa mensagem para mim e eu vejo exatamente o que aconteceu, em vez
 de adivinhar.
 
-## Leitura de placa — corrigida na v3.2.0
+## Leitura de placa — corrigida na v3.3.0
 
 Até a v2.7.0 a leitura falhava mesmo com a placa perfeitamente enquadrada. A causa
 era um erro de coordenadas: a moldura na tela é medida em pixels da **tela**, mas o

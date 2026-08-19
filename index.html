@@ -1437,7 +1437,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.2.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.3.0</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1538,7 +1538,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1735,7 +1735,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1770,7 +1770,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1785,7 +1785,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1799,7 +1799,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.2.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.3.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2248,6 +2248,8 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
             <button class="entrar-btn" id="salvarNuvemBtn" style="margin:0">Salvar</button>
           </div>
           <button class="btn-ghost" id="sincronizarBtn" style="width:100%;margin-top:10px">Sincronizar agora</button>
+          <button class="entrar-btn" id="gerarConfigBtn" style="width:100%;margin-top:10px">Gerar o config.js</button>
+          <p class="mini-note">Preencha na tela, teste a conexão e baixe o arquivo pronto — sem editar código.</p>
         </div>
       </div>
 
@@ -2623,7 +2625,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.2.0';
+var TJET_VERSAO='3.3.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -7927,6 +7929,139 @@ document.getElementById('sqlNuvemBtn').addEventListener('click',function(){
       }},
       {txt:'Fechar',classe:'entrar-btn',acao:fecharModal}]});
 });
+
+/* ================= GERADOR DE config.js =================
+   Editar arquivo à mão é onde a maioria trava. Aqui os campos são preenchidos
+   na tela, a conexão é testada de verdade e o arquivo sai pronto para subir. */
+function testarConexaoNuvem(url,chave,loja){
+  return import(SB_CDN).then(function(mod){
+    var cli=mod.createClient(url,chave,{auth:{persistSession:false}});
+    return cli.from('tjet_registros').select('chave').eq('loja',loja||'principal').limit(1);
+  }).then(function(r){
+    if(r.error)throw new Error(r.error.message);
+    return {ok:true,registros:(r.data||[]).length};
+  });
+}
+function montarConfigJs(d){
+  function txt(v){return String(v||'').replace(/'/g,"\\'")}
+  return [
+"/* ============================================================",
+"   T-JET · CONFIGURAÇÃO DA INSTALAÇÃO",
+"   Gerado pelo próprio app em "+dataBR(isoAgora())+" às "+horaDe(isoAgora())+".",
+"",
+"   Suba este arquivo junto com o index.html. Todo aparelho que",
+"   abrir o app já vem configurado — ninguém digita nada.",
+"   ============================================================ */",
+"",
+"var TJET_CONFIG = {",
+"",
+"  lavajato: {",
+"    nome: '"+txt(d.nome)+"',",
+"    tel:  '"+txt(d.tel)+"'",
+"  },",
+"",
+"  nuvem: {",
+"    ativa:       "+(d.url?'true':'false')+",",
+"    url:         '"+txt(d.url)+"',",
+"    chave:       '"+txt(d.chave)+"',",
+"    loja:        '"+txt(d.loja||'principal')+"',",
+"    enviarFotos: "+(d.fotos?'true':'false')+",",
+"    auto:        true",
+"  },",
+"",
+"  ocr: {",
+"    provedor: '"+txt(d.ocrProv||'local')+"',",
+"    token:    '"+txt(d.ocrToken)+"',",
+"    endpoint: '"+txt(d.ocrEndpoint)+"'",
+"  }",
+"",
+"};",""].join('\n');
+}
+function formGerarConfig(){
+  var n=cfgNuvem(),o=cfgPlaca(),c=DB.config;
+  abrirModal({
+    titulo:'Gerar o config.js',
+    sub:'Preencha, teste e baixe o arquivo pronto',
+    html:'<div class="card-lbl">Identificação</div>'+
+      '<div class="form-grid c2">'+
+        '<div class="fld"><label>Nome do lava jato</label><input type="text" id="gcNome" value="'+esc(c.nome||'')+'"></div>'+
+        '<div class="fld"><label>WhatsApp da loja</label><input type="text" id="gcTel" inputmode="tel" value="'+esc(c.tel?formataTel(c.tel):'')+'"></div>'+
+      '</div>'+
+      '<div class="card-lbl" style="margin-top:16px">Supabase</div>'+
+      '<p class="mini-note">Em Project Settings › API do seu projeto. A chave certa é a <b>anon public</b> — nunca a service_role.</p>'+
+      '<div class="fld"><label>Project URL</label><input type="text" id="gcUrl" placeholder="https://abcdefgh.supabase.co" value="'+esc(n.url||'')+'" autocomplete="off"></div>'+
+      '<div class="fld" style="margin-top:10px"><label>Chave anon public</label><textarea id="gcChave" placeholder="eyJhbGciOi..." style="min-height:70px;font:500 11px/1.5 var(--f-mono)">'+esc(n.chave||'')+'</textarea></div>'+
+      '<div class="form-grid c2" style="margin-top:10px">'+
+        '<div class="fld"><label>Identificação da loja</label><input type="text" id="gcLoja" value="'+esc(n.loja||'principal')+'"></div>'+
+        '<div class="fld"><label>Enviar fotos</label><select id="gcFotos">'+
+          '<option value="0"'+(n.enviarFotos?'':' selected')+'>Não — ficam no aparelho</option>'+
+          '<option value="1"'+(n.enviarFotos?' selected':'')+'>Sim — ocupam espaço</option></select></div>'+
+      '</div>'+
+      '<div class="card-lbl" style="margin-top:16px">Leitura de placa</div>'+
+      '<div class="form-grid c2">'+
+        '<div class="fld"><label>Como ler</label><select id="gcOcr">'+
+          '<option value="local"'+(o.provedor==='local'?' selected':'')+'>Leitor local (offline)</option>'+
+          '<option value="platerecognizer"'+(o.provedor==='platerecognizer'?' selected':'')+'>Plate Recognizer</option>'+
+          '<option value="proxy"'+(o.provedor==='proxy'?' selected':'')+'>Endpoint próprio</option></select></div>'+
+        '<div class="fld"><label>Token da API</label><input type="text" id="gcOcrToken" value="'+esc(o.token||'')+'" autocomplete="off"></div>'+
+      '</div>'+
+      '<div class="fld" style="margin-top:10px"><label>URL do endpoint (só para proxy)</label><input type="text" id="gcOcrEnd" value="'+esc(o.endpoint||'')+'" autocomplete="off"></div>'+
+      '<div id="gcResultado" style="margin-top:14px"></div>',
+    botoes:[
+      {txt:'Testar conexão',classe:'btn-ghost',acao:function(){
+        var url=document.getElementById('gcUrl').value.trim().replace(/\/+$/,''),
+            chave=document.getElementById('gcChave').value.trim(),
+            loja=document.getElementById('gcLoja').value.trim()||'principal';
+        var box=document.getElementById('gcResultado');
+        if(!url||!chave){box.innerHTML='<div class="dx" style="border-left-color:var(--alerta)"><b>Faltam a URL e a chave</b><span>Copie os dois em Project Settings › API.</span></div>';return}
+        box.innerHTML='<p class="mini-note">Testando…</p>';
+        testarConexaoNuvem(url,chave,loja).then(function(){
+          box.innerHTML='<div class="dx dx-ok"><b>Conexão funcionando</b>'+
+            '<span>A tabela existe e a chave foi aceita. Pode baixar o arquivo.</span></div>';
+        }).catch(function(e){
+          box.innerHTML='<div class="dx" style="border-left-color:var(--perigo)"><b>Não conectou</b>'+
+            '<span>'+esc(explicarErroNuvem(e))+'</span></div>';
+        });
+      }},
+      {txt:'Baixar config.js',classe:'entrar-btn',acao:function(){
+        var d={
+          nome:document.getElementById('gcNome').value.trim(),
+          tel:(function(){var t=soNumeros(document.getElementById('gcTel').value);
+            return t?('55'+t.replace(/^55/,'')):''})(),
+          url:document.getElementById('gcUrl').value.trim().replace(/\/+$/,''),
+          chave:document.getElementById('gcChave').value.trim(),
+          loja:document.getElementById('gcLoja').value.trim()||'principal',
+          fotos:document.getElementById('gcFotos').value==='1',
+          ocrProv:document.getElementById('gcOcr').value,
+          ocrToken:document.getElementById('gcOcrToken').value.trim(),
+          ocrEndpoint:document.getElementById('gcOcrEnd').value.trim()
+        };
+        var texto=montarConfigJs(d);
+        var blob=new Blob([texto],{type:'text/javascript'});
+        var a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);a.download='config.js';a.click();
+        setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
+        document.getElementById('gcResultado').innerHTML=
+          '<div class="dx dx-ok"><b>Arquivo baixado</b>'+
+          '<span>Agora suba o config.js no GitHub, por cima do antigo.</span>'+
+          '<span>No repositório: abra o config.js › ícone do lápis › apague tudo › cole o conteúdo abaixo › Commit changes.</span></div>'+
+          '<textarea readonly style="width:100%;min-height:190px;margin-top:10px;font:500 10.5px/1.5 var(--f-mono)">'+esc(texto)+'</textarea>'+
+          '<button class="btn-ghost" id="gcCopiar" style="width:100%;margin-top:8px">Copiar conteúdo</button>';
+        var bc=document.getElementById('gcCopiar');
+        if(bc)bc.addEventListener('click',function(){
+          if(navigator.clipboard)navigator.clipboard.writeText(texto)
+            .then(function(){toast('Copiado','Cole no config.js do GitHub.','ok')})
+            .catch(function(){toast('Selecione e copie à mão','','warn')});
+        });
+      }}
+    ],
+    aoAbrir:function(){
+      var t=document.getElementById('gcTel');
+      if(t)t.addEventListener('input',function(){this.value=formataTel(this.value)});
+    }
+  });
+}
+document.getElementById('gerarConfigBtn').addEventListener('click',formGerarConfig);
 
 
 /* ================= ADMIN · SERVIÇOS ================= */

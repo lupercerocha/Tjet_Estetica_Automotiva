@@ -283,7 +283,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v3.2.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v3.3.0 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -322,7 +322,7 @@ colunas, para o valor em reais não espremer.
 
 ## Confirmar a versão
 
-Na tela inicial, ao lado da data, tem um selo pequeno: **v3.2.0**. É a forma mais
+Na tela inicial, ao lado da data, tem um selo pequeno: **v3.3.0**. É a forma mais
 rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
 na versão antiga.
 
@@ -363,7 +363,7 @@ e é lá que você olha relatório. A troca de ordem e os tamanhos valem só aba
 700px de largura.
 
 
-## Tela de entrada (v3.2.0)
+## Tela de entrada (v3.3.0)
 
 - **Placa** sobe sempre em maiúsculo, mesmo digitando em minúsculo.
 - **Modelo**: digite duas letras e escolha na lista. Marca, modelo e porte entram
@@ -382,7 +382,7 @@ só o primeiro nome — mais informal —, use `{primeiro}`. Os dois funcionam, 
 edita os textos em **Admin → Configurações → Mensagens**.
 
 
-## Pátio (v3.2.0)
+## Pátio (v3.3.0)
 
 O card ficou com o essencial:
 
@@ -423,7 +423,7 @@ Os estágios *Lavando* e *Secando* continuam disponíveis dentro da OS, para que
 quiser acompanhar tempo de execução por etapa — mas não travam mais o caminho.
 
 
-## Custos fixos e ponto de equilíbrio (v3.2.0)
+## Custos fixos e ponto de equilíbrio (v3.3.0)
 
 **Admin → Custos.** Cadastre aluguel, água, energia, folha, contabilidade. O valor
 é mensal e o sistema rateia por dia conforme o período que você estiver olhando.
