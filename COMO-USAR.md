@@ -11,6 +11,7 @@ Arquivo único, sem build e sem dependência de servidor. Os dados ficam no
 | `manifest.json` | Instalação como app no Android |
 | `sw.js` | Funcionamento offline |
 | `icons/` | Ícones do app |
+| `favicon.ico` + `favicon.svg` | Ícone da aba do navegador |
 
 Os quatro precisam ficar **na mesma pasta**.
 
@@ -88,3 +89,115 @@ soma o selo de fidelidade e move a OS do pátio para o histórico.
 **Admin → Dados → Exportar backup** gera um `.json` com tudo. Guarde fora do
 aparelho. Trocar de celular, limpar o navegador ou desinstalar o app **apaga os
 dados** — o backup é a única rede de proteção. Faça um por semana.
+
+
+## Indicadores
+
+Seis painéis, todos respondendo aos mesmos filtros do topo — período (incluindo
+intervalo escolhido a dedo), porte, marca, serviço, lavador e forma de pagamento.
+A busca filtra as linhas de todos os rankings ao mesmo tempo.
+
+| Painel | O que responde |
+|---|---|
+| **Visão** | Faturamento, ticket e margem contra o período anterior · meta do mês com projeção · tendência de 12 meses · recomendações separadas em operacional, tático e estratégico |
+| **Vendas** | Faturamento por dia · quantidade por serviço · ranking de serviços com margem · pares vendidos juntos · ticket médio por porte |
+| **Operação** | Tempo médio, % no prazo, carros/dia, receita por hora de box · entradas por hora · mapa de calor dia × faixa · produtividade da equipe · dia da semana |
+| **Clientes** | Atendidos, novos, recorrentes, em risco · ranking · curva ABC · retenção em 30/60/90 dias · quem está sumindo · upsell · fidelidade |
+| **Veículos** | Marcas, modelos, portes e cores mais atendidos · ticket por marca · % de porte grande |
+| **Financeiro** | DRE do período · margem por serviço · insumos consumidos · formas de pagamento · contas a receber |
+
+**Exportar CSV** gera uma linha por OS já com custo, comissão e margem calculados,
+respeitando os filtros ativos — pronto para abrir no Excel.
+
+### Como ler os três níveis de recomendação
+
+- **Operacional** — o que resolver hoje: carro atrasado, pronto sem retirar, caixa fechado, insumo no limite.
+- **Tático** — o que atacar na semana: cliente sumindo, orçamento sem resposta, revisão vencida, faixa ociosa.
+- **Estratégico** — o que decidir no trimestre: dependência de lavagem simples, concentração de carteira, qual serviço realmente deixa dinheiro, retenção baixa.
+
+
+## Base de veículos (FIPE)
+
+O sistema traz **1.834 modelos de 200 marcas** embarcados — carros, comerciais e
+motos —, derivados da tabela FIPE e já **classificados por porte**.
+
+Digite duas letras no campo de modelo. Ao escolher na lista, o sistema preenche
+marca, modelo e **marca o porte sozinho** — e os preços dos serviços já
+selecionados são recalculados na hora para aquele porte.
+
+```
+"hilu"      → Toyota Hilux SW4 [SUV] · Toyota Hilux [Pickup]
+"corolla cr"→ Toyota Corolla Cross [SUV]
+"t-cro"     → Volkswagen T-Cross [SUV]
+"cg 1"      → Honda CG [Moto]
+```
+
+### Por que a base é enxuta e não traz as 9.363 versões da FIPE
+
+A FIPE lista cada motorização e acabamento: *"Civic Sedan EXL 2.0 Flex 16V Aut."*,
+*"Civic Sedan EX 2.0 16V 156cv Aut."* e mais quarenta variações do mesmo carro.
+Isso serve para avaliar preço de veículo — **não** para o balcão de um lava jato.
+
+O que importa aqui é o **porte**, porque é ele que define o preço do serviço. Um
+Civic é Médio em qualquer versão. Então a base foi consolidada em modelo-base:
+9.363 versões viraram 1.834 modelos, e o arquivo pesa **14 KB** em vez de vários
+megabytes. Funciona offline, é instantâneo e o atendente escolhe entre duas
+opções em vez de quarenta.
+
+### Se aparecer um carro fora da lista
+
+Digite o modelo à mão e escolha o porte no chip. Funciona normalmente — a lista é
+uma conveniência, não uma trava. Se for um carro que aparece sempre, cadastre o
+serviço com o preço certo em **Admin → Serviços** e siga.
+
+A base é estática: não depende de internet nem de API de terceiros, então não
+quebra se o serviço externo sair do ar. Para atualizar com lançamentos novos,
+é só me pedir uma base nova.
+
+
+## Assinatura do cliente
+
+Duas assinaturas por OS, colhidas com o dedo na tela:
+
+**Na entrada** — dentro da vistoria, em *Aceite do cliente*. O termo é montado na
+hora e lista as avarias marcadas: *"Declaro que acompanhei a vistoria do veículo
+PBX 4C71 e que a avaria registrada abaixo já existia antes da entrada"*, seguida
+de cada marcação (tipo, gravidade e descrição). Se nenhuma avaria foi encontrada,
+o termo declara isso — o que também protege você.
+
+**Na saída** — no painel de entrega. O termo declara recebimento do veículo,
+conferência da lataria e do serviço, ausência de divergência com a vistoria de
+entrada, e mostra o total da OS e eventual saldo em aberto.
+
+O sistema **pede a assinatura de entrega antes de finalizar**. Dá para seguir sem
+ela ("Entregar mesmo assim"), e nesse caso fica registrado no histórico da OS que
+a entrega foi feita sem assinatura.
+
+As duas ficam guardadas na OS e aparecem juntas ao consultar o histórico do
+veículo — com nome de quem assinou, data e hora.
+
+## Link de acompanhamento
+
+No card do pátio, botão **Link**. Envia pelo WhatsApp ou copia para colar onde
+quiser. O cliente abre no celular dele e vê uma página limpa com o status do
+carro, a barra de progresso, os quatro passos (Recebido → Em lavagem → Secagem →
+Pronto), a previsão de conclusão e os serviços contratados.
+
+### O que esse link é — e o que ainda não é
+
+O link carrega um **retrato do momento em que foi gerado**: placa, modelo,
+serviços, hora de entrada e previsão de conclusão. A página calcula o progresso
+pelo relógio do celular do cliente, então a barra anda sozinha e a previsão vai
+diminuindo.
+
+**Mas ele não sabe o que acontece depois.** Se o carro ficar pronto vinte minutos
+antes, o cliente continua vendo "em lavagem". Se atrasar, a página avisa que
+passou da previsão e pede paciência — sem inventar um horário novo.
+
+Tempo real exige um servidor. Quando a base migrar para o Supabase, esse mesmo
+link passa a consultar o status atual e o problema some. Até lá ele já resolve a
+maior parte das ligações de "já tá pronto?", porque a maioria acontece **antes**
+da previsão, não depois.
+
+O link não expõe telefone, endereço, valores nem histórico do cliente — só o
+necessário para acompanhar aquele serviço.

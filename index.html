@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="T-Jet">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
 <title>T-Jet Sistema</title>
@@ -1006,6 +1008,93 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
   background:var(--vidro);color:var(--tinta)}
 .placa-conf input:focus{outline:none;border-color:var(--teal)}
 
+/* ===== FILTROS DE INDICADORES ===== */
+.filtros-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:8px}
+.filtros-bar .fld{margin:0}
+.filtro-resumo{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:12px;padding-top:11px;border-top:1px solid var(--linha)}
+.filtro-resumo span{font:600 11.5px/1.45 var(--f-mono);color:var(--texto2);letter-spacing:.2px;text-transform:uppercase}
+.nivel-lbl{font:700 10.5px/1 var(--f-mono);letter-spacing:1.4px;text-transform:uppercase;color:var(--texto3);
+  margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--linha)}
+.nivel-lbl:first-child{margin-top:4px}
+
+/* ===== MAPA DE CALOR ===== */
+.heat{display:flex;flex-direction:column;gap:4px;margin-top:4px;overflow-x:auto;padding-bottom:2px}
+.heat-row{display:grid;grid-template-columns:42px repeat(6,minmax(40px,1fr));gap:4px;align-items:center}
+.heat-row.head span{font:600 9.5px/1 var(--f-mono);color:var(--texto3);text-align:center;letter-spacing:.3px}
+.heat-dia{font:700 11px/1 var(--f-body);color:var(--texto2)}
+.heat-cell{height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font:700 11.5px/1 var(--f-mono);color:#fff;position:relative;
+  background:color-mix(in srgb, var(--teal) calc(var(--o) * 100%), var(--vidro))}
+.heat-cell.vazio{background:var(--vidro);border:1px dashed var(--linha)}
+
+/* ===== CURVA ABC ===== */
+.abc-bar{height:12px;border-radius:99px;background:var(--vidro);border:1px solid var(--linha);
+  overflow:hidden;margin:12px 0 4px;position:relative}
+.abc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--perigo),var(--alerta));border-radius:99px}
+.abc-bar::after{content:'80% da receita';position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font:700 8.5px/1 var(--f-mono);color:var(--texto3);letter-spacing:.5px}
+
+/* ===== ASSINATURA ===== */
+.termo{background:var(--vidro);border:1px solid var(--linha);border-radius:12px;padding:12px 14px;margin-bottom:14px;
+  font:400 12.5px/1.55 var(--f-body);color:var(--texto2);max-height:150px;overflow-y:auto}
+.termo p{margin:0 0 6px}.termo p:last-child{margin:0}
+.termo b{color:var(--tinta);font-weight:700}
+.termo-lista{margin:6px 0 0;padding-left:16px}
+.termo-lista li{margin-bottom:3px}
+.termo-valor{border-top:1px solid var(--linha);padding-top:8px;margin-top:8px !important}
+.ass-pad{position:relative;background:#fff;border:2px dashed var(--linha);border-radius:14px;margin-top:12px;
+  overflow:hidden;touch-action:none}
+.ass-pad canvas{display:block;width:100%;height:190px;touch-action:none;cursor:crosshair}
+.ass-linha{position:absolute;left:9%;right:9%;bottom:38px;height:1px;background:#C3D2E2;pointer-events:none}
+.ass-dica{font:500 11.5px/1.4 var(--f-body);color:var(--texto3);text-align:center;margin:8px 0 14px}
+.ass-selo{display:flex;align-items:center;gap:12px;background:var(--vidro);border:1px solid var(--linha);
+  border-radius:12px;padding:9px 12px;margin-top:8px}
+.ass-selo img{width:104px;height:46px;object-fit:contain;background:#fff;border-radius:8px;padding:3px;flex-shrink:0}
+.ass-selo-tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ass-selo-tx b{font:700 13px/1.2 var(--f-body);color:var(--tinta)}
+.ass-selo-tx span{font:500 10.5px/1.3 var(--f-mono);color:var(--texto3);letter-spacing:.2px}
+
+/* ===== PÁGINA PÚBLICA ===== */
+.publico-wrap{display:none}
+.publico-wrap.show{display:block;position:fixed;inset:0;z-index:200;overflow-y:auto;
+  background:linear-gradient(165deg,#0A1B2E,#08304A 60%,#0A1B2E);padding:24px 16px 40px}
+body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{display:none !important}
+.pub-card{max-width:440px;margin:0 auto;background:var(--painel);border:1px solid var(--linha);
+  border-radius:22px;padding:22px 20px 20px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.pub-topo{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.pub-marca{font:800 13px/1 var(--f-display);letter-spacing:.4px;color:var(--teal);text-transform:uppercase}
+.pub-os{font:600 10.5px/1 var(--f-mono);color:var(--texto3);letter-spacing:1px}
+.pub-card h1{font:800 26px/1.15 var(--f-display);color:var(--tinta);margin:0 0 4px}
+.pub-veic{font:500 13.5px/1.4 var(--f-body);color:var(--texto2);margin:0 0 18px}
+.pub-veic b{color:var(--tinta);font:700 13.5px/1 var(--f-mono);letter-spacing:.6px}
+.pub-status{background:var(--vidro);border:1px solid var(--linha);border-left:4px solid var(--azul);
+  border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;gap:3px}
+.pub-status.ok{border-left-color:var(--ok)}
+.pub-status.warn{border-left-color:var(--alerta)}
+.pub-status b{font:800 16px/1.2 var(--f-display);color:var(--tinta)}
+.pub-status span{font:400 12.5px/1.45 var(--f-body);color:var(--texto2)}
+.pub-prog{height:8px;border-radius:99px;background:var(--vidro);border:1px solid var(--linha);
+  overflow:hidden;margin:16px 0 8px}
+.pub-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--azul),var(--teal));
+  border-radius:99px;transition:width .6s ease}
+.pub-passos{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:18px}
+.pub-passos span{font:600 9px/1.25 var(--f-mono);color:var(--texto3);text-align:center;
+  letter-spacing:.2px;text-transform:uppercase}
+.pub-passos span.feito{color:var(--ok)}
+.pub-passos span.agora{color:var(--teal)}
+.pub-tempo{background:var(--vidro);border:1px solid var(--linha);border-radius:12px;padding:14px;
+  text-align:center;display:flex;flex-direction:column;gap:3px}
+.pub-tempo b{font:800 22px/1 var(--f-display);color:var(--tinta)}
+.pub-tempo span{font:500 11.5px/1.4 var(--f-body);color:var(--texto2)}
+.pub-svc{margin-top:16px;background:var(--vidro);border:1px solid var(--linha);border-radius:12px;padding:12px 14px}
+.pub-lbl{display:block;font:700 9.5px/1 var(--f-mono);letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--texto3);margin-bottom:8px}
+.pub-svc div{font:600 13px/1.5 var(--f-body);color:var(--tinta)}
+.pub-acoes{display:flex;flex-direction:column;gap:8px;margin-top:18px}
+.pub-acoes button{width:100%}
+.pub-nota{font:400 11px/1.5 var(--f-body);color:var(--texto3);text-align:center;margin:14px 0 0}
+
 </style>
 </head>
 <body>
@@ -1281,7 +1370,7 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
                 <span id="fipeUpdateLbl">Atualizar lista</span>
               </button>
             </div>
-            <input type="text" id="modeloInput" placeholder="Digite 2 letras — ex. civ" autocomplete="off">
+            <input type="text" id="modeloInput" placeholder="Digite 2 letras — ex. civ, hilux, cg 160" autocomplete="off">
             <div class="suggest" id="modeloSuggest"></div>
           </div>
           <div class="field" style="margin-bottom:0">
@@ -1438,68 +1527,169 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
     </div>
 
     <div class="view" id="view-indicadores">
-      <div class="scr-head"><div><h2>Indicadores</h2></div></div>
-
-      <div class="seg" id="indPeriodoSeg"></div>
-      <div id="indMeta"></div>
-      <div class="kpi-grid" id="indKpis"></div>
-
-      <button class="insight" id="indInsightHead">
-        <span class="insight-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.6 5.9L19.5 10l-5.9 1.6L12 17.5l-1.6-5.9L4.5 10l5.9-1.6z"/></svg></span>
-        <span><b>O que fazer agora</b><span id="insightResumo">calculando…</span></span>
-        <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-      <div id="insightsList"></div>
-
-      <div class="subtabs" id="indTabs" style="margin-top:18px">
-        <button class="subtab on" data-sub="ind-venda">Vendas</button>
-        <button class="subtab" data-sub="ind-oper">Operação</button>
-        <button class="subtab" data-sub="ind-cli">Clientes</button>
-        <button class="subtab" data-sub="ind-fin">Financeiro</button>
+      <div class="scr-head">
+        <div><h2>Indicadores</h2><p>Decisões com base no que já aconteceu</p></div>
+        <button class="btn-mini" id="indExportar">Exportar CSV</button>
       </div>
 
-      <div class="subview on" id="sub-ind-venda">
+      <div class="card">
+        <div class="card-lbl">Período</div>
+        <div class="seg" id="indPeriodoSeg"></div>
+        <div class="form-grid c2" id="indDatas" style="display:none;margin-top:10px">
+          <div class="fld"><label>De</label><input type="date" id="indDataIni"></div>
+          <div class="fld"><label>Até</label><input type="date" id="indDataFim"></div>
+        </div>
+
+        <div class="card-lbl" style="margin-top:14px">Recortes</div>
+        <div class="filtros-bar" id="indFiltros">
+          <div class="fld"><label>Porte</label><select id="fPorte"></select></div>
+          <div class="fld"><label>Marca</label><select id="fMarca"></select></div>
+          <div class="fld"><label>Serviço</label><select id="fServico"></select></div>
+          <div class="fld"><label>Lavador</label><select id="fLavador"></select></div>
+          <div class="fld"><label>Pagamento</label><select id="fForma"></select></div>
+          <div class="fld"><label>Buscar nos rankings</label><input type="text" id="fBusca" placeholder="nome, placa, marca, servico..." autocomplete="off"></div>
+        </div>
+        <div class="filtro-resumo" id="indFiltroResumo"></div>
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab on" data-sub="indVisao">Visão</button>
+        <button class="subtab" data-sub="indVendas">Vendas</button>
+        <button class="subtab" data-sub="indOper">Operação</button>
+        <button class="subtab" data-sub="indClientes">Clientes</button>
+        <button class="subtab" data-sub="indVeic">Veículos</button>
+        <button class="subtab" data-sub="indFin">Financeiro</button>
+      </div>
+
+      <div class="subview on" id="sub-indVisao">
+        <div class="kpi-grid" id="indKpis"></div>
+        <div id="indMeta"></div>
+        <div id="chartTendencia"></div>
+        <div class="card">
+          <div class="card-lbl">Recomendações</div>
+          <p class="mini-note" id="insightResumo"></p>
+          <div id="insightsList"></div>
+        </div>
+      </div>
+
+      <div class="subview" id="sub-indVendas">
         <div id="chartFaturamento"></div>
-        <div class="card-lbl" style="margin-top:16px">Serviços que mais faturam</div>
-        <div class="card" id="rankServicos"></div>
-        <div class="card-lbl" style="margin-top:16px">Receita por porte de veículo</div>
-        <div class="card" id="rankCategorias"></div>
-        <div class="card-lbl" style="margin-top:16px">Oportunidades de venda</div>
-        <div id="upsellLista"></div>
+        <div id="chartSvcQtd"></div>
+        <div class="card">
+          <div class="card-lbl">Ranking de serviços</div>
+          <p class="mini-note">Ordenado por receita. A margem já desconta insumos da ficha e comissão.</p>
+          <div id="rankServicos"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Serviços vendidos juntos</div>
+          <p class="mini-note">Pares que mais aparecem na mesma OS — a base para montar combo e treinar o balcão.</p>
+          <div id="rankCombos"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Ticket médio por porte</div>
+          <div id="ticketPorte"></div>
+        </div>
       </div>
 
-      <div class="subview" id="sub-ind-oper">
-        <div id="chartHoras"></div>
+      <div class="subview" id="sub-indOper">
         <div class="kpi-grid" id="operKpis"></div>
-        <div class="card-lbl" style="margin-top:16px">Produtividade da equipe</div>
-        <div class="card" id="rankEquipe"></div>
-        <div class="card-lbl" style="margin-top:16px">Movimento por dia da semana</div>
-        <div class="card" id="rankDiaSemana"></div>
+        <div id="chartHoras"></div>
+        <div class="card">
+          <div class="card-lbl">Mapa de movimento</div>
+          <p class="mini-note">Onde concentrar equipe e onde abrir promoção. Quanto mais forte a cor, mais carros entraram naquela faixa.</p>
+          <div id="heatmap"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Produtividade da equipe</div>
+          <div id="rankEquipe"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Faturamento por dia da semana</div>
+          <div id="rankDiaSemana"></div>
+        </div>
       </div>
 
-      <div class="subview" id="sub-ind-cli">
+      <div class="subview" id="sub-indClientes">
         <div class="kpi-grid" id="cliKpis"></div>
-        <div class="card-lbl" style="margin-top:6px">Melhores clientes do período</div>
-        <div class="card" id="rankClientes"></div>
-        <div class="card-lbl" style="margin-top:16px">Clientes em risco de sumir</div>
-        <div id="churnLista"></div>
-        <div class="card-lbl" style="margin-top:16px">Fidelidade</div>
-        <div class="card" id="fidResumo"></div>
+        <div class="card">
+          <div class="card-lbl">Ranking de clientes</div>
+          <div id="rankClientes"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Concentração da receita (curva ABC)</div>
+          <p class="mini-note">Se poucos clientes respondem por quase tudo, perder um deles dói. Este é o seu risco de carteira.</p>
+          <div id="curvaABC"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Retenção</div>
+          <p class="mini-note">De quem veio pela primeira vez, quantos voltaram dentro de cada janela.</p>
+          <div id="retencao"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Clientes sumindo</div>
+          <div id="churnLista"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Oportunidades de upsell</div>
+          <p class="mini-note">Clientes fiéis que nunca compraram serviços de maior valor.</p>
+          <div id="upsellLista"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Fidelidade</div>
+          <div id="fidResumo"></div>
+        </div>
       </div>
 
-      <div class="subview" id="sub-ind-fin">
+      <div class="subview" id="sub-indVeic">
+        <div class="kpi-grid" id="veicKpis"></div>
+        <div id="chartPortes"></div>
+        <div class="card">
+          <div class="card-lbl">Marcas mais atendidas</div>
+          <p class="mini-note">Define o mix de produto e o preço: SUV e pickup pagam mais e ocupam box por mais tempo.</p>
+          <div id="rankMarcas"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Modelos mais atendidos</div>
+          <div id="rankModelos"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Receita por porte</div>
+          <div id="rankPortes"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Cores mais atendidas</div>
+          <p class="mini-note">Carro escuro marca mais e puxa polimento e vitrificação.</p>
+          <div id="rankCores"></div>
+        </div>
+      </div>
+
+      <div class="subview" id="sub-indFin">
         <div class="kpi-grid" id="finKpis"></div>
-        <div class="card-lbl" style="margin-top:6px">Recebimentos por forma de pagamento</div>
-        <div class="card" id="rankFormas"></div>
-        <div class="card-lbl" style="margin-top:16px">Composição do resultado</div>
-        <div class="card" id="dreBox"></div>
-        <div class="card-lbl" style="margin-top:16px">Contas a receber</div>
-        <div class="card" id="receberBox"></div>
+        <div class="card">
+          <div class="card-lbl">Resultado do período</div>
+          <div id="dreBox"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Margem por serviço</div>
+          <p class="mini-note">O que mais vende nem sempre é o que mais sobra. Ordenado pelo dinheiro que fica.</p>
+          <div id="rankMargem"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Produtos e insumos consumidos</div>
+          <p class="mini-note">Saída calculada pela ficha técnica de cada serviço executado.</p>
+          <div id="rankInsumos"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Formas de pagamento</div>
+          <div id="rankFormas"></div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Contas a receber</div>
+          <div id="receberBox"></div>
+        </div>
       </div>
-
-      <p class="fonte" style="text-align:left;margin-top:18px">Calculado sobre as OS entregues e os lançamentos de caixa do período escolhido.</p>
-      <div class="foot"><span>T-JET SISTEMA · V2.0</span></div>
     </div>
+
 
     <!-- ===================== SAÍDA ===================== -->
     <div class="view" id="view-saida">
@@ -1946,6 +2136,27 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
     <button class="cam-manual" id="camManual">Digitar a placa</button>
   </div>
 </div>
+
+<!-- ===== ASSINATURA DO CLIENTE ===== -->
+<div class="overlay" id="assOverlay">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-head">
+      <div><h3 id="assTitulo">Assinatura do cliente</h3><div class="modal-sub" id="assSub"></div></div>
+      <button class="modal-close" id="assFechar"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="termo" id="assTermo"></div>
+    <div class="fld"><label>Quem está assinando</label><input type="text" id="assNome" placeholder="Nome de quem entrega/recebe o carro" autocomplete="off"></div>
+    <div class="ass-pad"><canvas id="assCanvas"></canvas><span class="ass-linha"></span></div>
+    <p class="ass-dica" id="assDica">Peça para o cliente assinar aqui com o dedo</p>
+    <div class="btn-row">
+      <button class="btn-ghost" id="assLimpar">Limpar</button>
+      <button class="entrar-btn" id="assConfirmar">Confirmar assinatura</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PÁGINA PÚBLICA DE ACOMPANHAMENTO ===== -->
+<div class="publico-wrap" id="publicoWrap"></div>
 
 <!-- ===== BARRA INFERIOR (celular) ===== -->
 <nav class="tabbar">
@@ -2569,51 +2780,99 @@ document.getElementById('corChips').addEventListener('click',function(e){
 });
 
 /* ================= MODELO (base FIPE mockada) ================= */
-var MODELOS=[
-  "Volkswagen Gol","Volkswagen Polo","Volkswagen Virtus","Volkswagen T-Cross","Volkswagen Nivus","Volkswagen Saveiro","Volkswagen Voyage","Volkswagen Taos","Volkswagen Amarok",
-  "Chevrolet Onix","Chevrolet Onix Plus","Chevrolet Tracker","Chevrolet Spin","Chevrolet S10","Chevrolet Montana","Chevrolet Equinox",
-  "Fiat Mobi","Fiat Argo","Fiat Cronos","Fiat Strada","Fiat Toro","Fiat Pulse","Fiat Fastback","Fiat Titano",
-  "Hyundai HB20","Hyundai HB20S","Hyundai Creta","Hyundai Tucson","Hyundai i30",
-  "Toyota Corolla","Toyota Corolla Cross","Toyota Hilux","Toyota Yaris","Toyota RAV4","Toyota SW4",
-  "Honda Civic","Honda City","Honda HR-V","Honda CR-V","Honda Fit","Honda WR-V",
-  "Renault Kwid","Renault Sandero","Renault Duster","Renault Logan","Renault Oroch",
-  "Nissan Kicks","Nissan Versa","Nissan Frontier","Nissan Sentra",
-  "Jeep Renegade","Jeep Compass","Jeep Commander",
-  "Ford Ka","Ford EcoSport","Ford Ranger","Ford Territory","Ford Bronco Sport",
-  "Peugeot 208","Peugeot 2008","Peugeot 3008",
-  "Citroën C3","Citroën C4 Cactus","Citroën Basalt",
-  "Kia Sportage","Kia Bongo",
-  "Mitsubishi L200 Triton","Mitsubishi Outlander",
-  "RAM 2500","RAM Rampage",
-  "BYD Dolphin","BYD Song Plus","BYD Yuan Plus",
-  "Chery Tiggo 5x","Chery Tiggo 7","Caoa Chery Tiggo 8"
-];
+var FIPE_TXT="Acura|M:Integra,Legend,Nsx\nAdly|O:Atv,Jaguar,RT\nAgrale|M:City|K:Marru\u00e1|O:Dakar,Elefant,Elefantre,Force,Junior,Sst,Super,Sxt,Tchau\nAlfa Romeo|M:145,147,155,156,164,166,2300,Spider\nAM Gen|M:Hummer\nAmazonas|O:AME-110,AME-150,AME-250,AME-LX\nAprilia|P:Sonic|O:AREA-51,Classic,Leonardo,Moto,Pegaso,RS,RX,Rally,Rsv Mille,SR,Scarabeo,Sxr\nAsia Motors|M:AM-825,Hi-Topic,Jipe Rocsta|G:Topic,Towner\nAston Martin|M:DB12,DB9,DBX707,Dbs,Dbx,Rapide,Vanquish,Vantage,Virage\nAtala|G:Master|O:Califfone,Skegia\nAudi|M:100,80,A1,A3,A4,A5,A6,A7,A8,Allroad,Avant,E-TRON,Q6 E-TRON,R8,RS,RS3,RS4,RS5,RS6,RS7 Sportback,S3,S4,S5,S6,S7,S8,SQ5,SQ6 Sportback,SQ8 Sportback,TT,Ttrs,Tts|S:Q3,Q5,Q7,Q8\nAvelloz|O:AZ\nBaby|M:Buggy\nBajaj|O:Champion,Classic,Dominar,Pulsar\nBEE|O:Bee,Monaco\nBenelli|O:Tnt,Tre\nBeta|O:MX-50\nBimota|O:DB4,DB5R,DB6 Delirio,DB6R Delirio,DB7,Mantra,SBR8,Tesi\nBMW|M:116iA,118i,118iA,120i,120iA,125i,130i,130iA,135iA,218i Gran,220i,225i Active,316,316i,318Ti,318i,318iA,318iS,320i,320iA,323Ci,323CiA,323Ti Compact,323TiA Compact,323i,323iA,325i,325iA,328i,328iA,330Ci,330CiA,330e,330i,330iA,335i,335iA,420i,428i,430i,435iA,520i,525i,528i,528iA,530e,530i,535i,535iA,540i,540iA,540iTA,545iA,550iA,640i Gran,645Ci,645iA,650Ci,650i Gran,650iA,730i,730iA,735i,740i,740iA,740iL Ila,740iLA Protection,745Le,745iA,750i,750iA,750iL,750iLA,760iL,840Ci,840CiA,850CSi,850Ci Cia,850i,I3,I4,I5,I7,I8,M1,M140i,M2,M235i,M240i,M3,M340i,M4,M440i,M5,M6,M760Li,M8 Gran,M850i,Z3,Z4,Z8,iX|S:X1,X2,X3,X4,X5,X6,X7\nBrandy|O:Elegant,Fosti,Pista,Turbo,Zanella\nBrava|O:YB\nBRM|M:Buggy\nBRP|O:can-am\nBuell|O:1125CR,1125R,Firebolt,Lightning,Ulysses XB12X\nBueno|O:Jbr\nBugre|M:Buggy\nBull|O:BM-S,BM-T180,Caf\u00e9 Racer,Ciclo,Eko,Gtr,Khrisma,Krc,Maxx KRC50,Now,Spirit\nbyCristo|O:Triciclo Star\nBYD|P:Dolphin|M:D1,Han,King,Seal,Sealion,Tan,eT3|S:Atto,Song,Song Plus,Yuan,Yuan Plus|K:Shark\nCAB Motors|M:Stark\nCadillac|M:Deville Eldorado,Seville\nCagiva|O:Canyon,Elefant,Gran Canyon,Mito,Navigator,Planet,Roadster,V-RAPTOR,W-16\nCaloi|O:Mobilete,Mondo\nCaoa Changan|M:AVATR11,CS75,UNI-T\nCaoa Chery|M:Arrizo,Icar|S:Tiggo\nCaoa Chery/Chery|M:Arrizo,Celer,Cielo,Face,QQ,S-18|S:Tiggo\nCBT Jipe|M:Javali\nCfmoto|O:CL,Ibex\nChana|M:Family|G:Utility|K:Cargo\nChangan|K:Mini\nChery|M:Arrizo 6|S:Tiggo 5X,Tiggo 7,Tiggo 8\nChevrolet|P:Agile,Celta,Chevette,Corsa,Onix,Prisma,Sonic,Spark|M:Astra,Bolt,Bonanza,Calibra,Camaro,Caprice,Caravan,Cavalier,Classic,Cobalt,Corvette,Cruze,Ipanema,Joy,Kadett,Lumina,Malibu,Marajo,Meriva,Monza,Omega,Onix Plus,Opala,Saturn,Silverado,Suburban,Suprema,Syclone,Tigra,Vectra,Veraneio|S:Blazer,Captiva,Equinox,Tracker,Trailblazer|G:Spacevan,Spin,Trafic,Zafira|K:A-10,A-20,C-10,C-20,Chevy,Cheynne,D-10,D-20,Montana,S10,S10 Cabine Dupla,SS10,Sierra,Sonoma\nChrysler|M:300,Caravan,Cirrus Lxi,Grand Caravan,LE Baron,Neon,PT Cruiser,Sebring,Stratus,Town,Vision\nCitro\u00ebn|P:C3|M:AIRCROSS7,AX,BX,C4,C4 Lounge,C4 Picasso,C5,C6,C8,DS3,DS4,DS5,Evasion,Grand,XM,Xantia,Xsara,ZX,\u00cb-Jumpy Cargo|S:Aircross,Basalt,C3 Aircross,C4 Cactus|G:Berlingo,Jumper,Jumpy\nCross Lander|M:CL-244,CL-330\nD2D Motors|M:Buggy\nDaelim|O:Altino,Message,VC,VF,VS,VT,VX\nDaewoo|M:Espero,Lanos,Leganza,Nubira,Prince Ace,Racer,Super Salon,Tico\nDafra|O:Adxtg,Apache,Cityclass,Citycom,Cruisym,Fiddle,Horizon,Joyride,Kansas,Laser,Maxsym,NH,Next,Nhx,Riva,Roadwin,Smart,Speed,Super,Zig\nDaihatsu|M:Applause,Charade,Cuore,Feroza,Gran Move,Terios|G:Move\nDayang|O:DY100-31,DY110-20,DY125 Sprint,DY125-18,DY125-36A,DY125-37,DY125-5,DY125-52,DY150-12,DY150-28,DY150-58 Eagle,DY200,DY250,DY50,Thor\nDayun|O:DY110-6,DY125-8,DY125T-10,DY150-7,DY150-9,DY150GY,DY150ZH,DY200ZH,DY250-2\nDenza|M:B5\nDerbi|O:Atlantis,Gpr,Predator,Red Bullet,Replicas,Senda\nDfsk|G:EC31,EC35\nDodge|M:Avenger,Intrepid,Stealth|S:Durango,Journey|K:Dakota,Ram\nDucati|O:1098,1198,1199,1299 Panigale,749,848,959 Panigale,996,998,999,999R Xerox,Desert,Desmosedici,Diavel,Hypermotard,Hyperstrada,Monster,Multistrada,Panigale,SS,ST-2,ST-4,Scrambler,Sportclassic,Streetfighter,Super,Xdiavel\nEffa|M:M-100|G:V25|K:K01,K02,Plutus,Start,Ulc,V21,V22\nEmme|P:Mirage|O:One\nEngesa|M:Engesa\nEnvemo|M:Camper|G:Master\nFerrari|M:12Cilinrdri,296,348,355,360,456,458 Speciale,488,550 Maranello,575M Maranello,612 Scaglietti,812,849 Testarossa,Amalfi,California,F12,F430,F458,F599,F8,FF,GTC4 Lusso,Portofino,Purosangue,Roma,SF\nFever|M:Nextem FN1000|O:FR110,FR150 Frigo,FR250\nFiat|P:500,Argo,Cinquecento,Mobi,Palio,Uno|M:147,500e,Brava,Bravo,Cronos,Duna,E-Scudo,Elba,Freemont,Grand Siena,Idea,Linea,Marea,Oggi,Panorama,Premio,Punto,Siena,Stilo,Tempra,Tipo|S:Fastback,Fastback Abarth,Pulse,Pulse Abarth|G:Doblo,Ducato,Ducato-10,Ducato-15,Ducato-8,Fiorino,Scudo|K:Strada,Titano,Toro\nFibravan|M:Buggy\nFord|P:Fiesta|M:Aspire,Belina,Club,Contour,Corcel,Crown Victoria,Del Rey,Escort,F-100,F-150,Focus,Furglaine,Fusion,Ka,Mondeo,Mustang,Probe,Royale,Taurus,Thunderbird,Verona,Versailles,Windstar|S:Bronco,Bronco Sport,Ecosport,Edge,Expedition,Explorer,Territory|G:Aerostar Mini-Van,E-TRANSIT,Ibiza,Transit|K:Courier,F-1000,F-250,Maverick,Pampa,Ranger,Ranger Raptor\nFoton|M:Aumark,Etoano Pro,Eview,Minitruck,Tunland|G:Ewonder\nFOX|O:150T-3 Adventure,250T-10\nFusco Motosegura|O:Carga,Wit\nFyber|M:Buggy\nFYM|O:FY100-10A,FY125-19,FY125-20 Sachs,FY125EY-2,FY125Y-3,FY150-3,FY150T-18,FY250\nGAC|M:Aion,GS3,GS4,Hyptec\nGarinni|O:GR08T4,GR125S,GR125ST,GR125T3,GR125U,GR125Z,GR150P GR150PI,GR150ST,GR150T3 GR150TI,GR150U,GR250T3\nGas Gas|O:EC,MC,Pampera,TX,Txt\nGeely|M:EC7,EX2,EX5,GC2\nGreat Wall|M:Hover\nGreen|O:Easy,Runner,Safari,Sport\nGurgel|M:BR-800 Supermini,Carajas\nGWM|M:Ora,Poer,Tank,Wey|S:Haval\nHafei|G:Towner\nHaobao|O:HB,HB110-3,HB125-9 Fearfulspeed,HB150,HB150-T\nHaojue|G:Master|O:Burgman,Chopper,DK,DL,DR,Lindy,NK,Nex,VR\nHarley-Davidson|O:Blackline,Breakout,Cvo,Deuce,Dyna,EG,Electra Glide,Fat,Flhtcu Ultra,Flhtcui Ultra,Heritage,Low Rider,Night,Nightster,Pan America,Road,Softail,Sportster,Springer Screaming,Street,Switchback,Ultra,V-ROD,XL,XR\nHartford|O:Legion\nHero|O:Ankur,Puch,Stream\nHisun|O:Forge,Tactic\nHitech Electric|M:E-Work,E.co|G:Delivery\nHonda|P:Fit|M:Accord,City,Civic,Prelude|S:CR-V,HR-V,Passport,WR-V,ZR-V|G:Odyssey|O:Adv,America Classic,Biz,CB,CB1300 Super,CG,CH,CR,Cbr,Cbx,Crf,Ctx,Dominator,Elite,Forza,Gold,Lead,Magna,NC,NX,NX-4 Falcon,Nxr,Pcx,Pop,SH,Sahara,Shadow,Super,Trx,VT,Valkyrie,Vfr,Vtx,X-ADV,XL,XR,Xlr,Xlx,Xre\nHusaberg|O:FE\nHusqvarna|O:701,CR,FC,FE,Husqy,Norden,SM,Smr,Svartpilen,TC,TE,Vitpilen,WR,Wre\nHyundai|P:Atos Prime,HB20,HB20X,I20|M:Accent,Azera,Elantra,Equus,Excel,Galloper,Genesis,HB20S,I30,Ioniq,Matrix,Palisade Signature,Porter,Santa,Scoupe,Sonata,Terracan,Trajet,Veloster,Veracruz,i30cw|S:Creta,Grand Santa,Kona,Tucson,ix35|G:H1 Starex,H100,HR\nIndian|O:Chief,Chieftain,Roadmaster,Scout\nIros|O:Action,Brave,Matrix,Moving,One,Vintage,Warrior\nIsuzu|M:Amigo,Hombre,Rodeo\nIveco|G:Daily\nJAC|M:E-J7,E-JT3.5,E-JV,E-JV12,E-JV5.5,E-JV7L,Hunter,Iev,J2,J3,J5,J6,T40,T5,T50,T6,T60,T8,T80,V260,e-JS1,e-JS4\nJaguar|M:Daimler,E-Pace,F-Pace,F-Type,I-Pace,S-Type,X-Type,XE,XF,XFR-S Supercharged,XJ,XJ-12,XJ-6,XJ-8,XJS-C,XK-8,XKR-S,Xfr Supercharged,Xjr,Xjs,Xkr\nJeep|S:Cherokee,Commander,Compass,Grand Cherokee,Renegade,Wrangler|K:Gladiator\nJetour|M:S06,T1,T2\nJiapeng Volcano|O:JP\nJinbei|G:Topic,Vkn\nJohnnypag|O:Barhog,Prostreet,Spyder\nJonny|O:Atlantic,Hype,Jonny,Meet,Naked,Orbit,Pegasus,Quick,Racer,TR,Texas\nJPX|K:Jipe Montez,Picape Montez\nKahena|O:125,250\nKasinski|P:Mirage|O:Comet,Cruise,Crz,Ero,Flash,F\u00faria,GF,GV,Magik,Midas,Motokar,Prima,RX,Seta,Soft,Super,TN,Way,Win\nKawasaki|O:Avajet,CONCOURS14,D-TRACKER,ER-5,ER-6N,Eliminator,KX,KZ,Klx,Maxi,Ninja,Versys,Versys-X,Voyager,Vulcan,Z-800,ZX-14,Zzr\nKia Motors|P:Picanto,Soul|M:Besta,Cadenza,Carens,Cerato,Clarus,EV5 Land,EV9,Grand Carnival,Magentis,Mohave,Niro,Opirus,Optima,Quoris,Rio,Sephia,Shuma,Stinger|S:Sorento,Sportage,Stonic|G:Bongo,Carnival|K:Ceres\nKTM|O:1190,690 Enduro,890,990,Adventure,Duke,EXC-F,Exc,LC4,SC,SX,SX-F,Super Adventure,Superduke,Supermoto,Sxc\nKymco|O:AK,Agility,Djw,Downtown,M\u00b4boy,People,Zing\nL'Aquila|P:Palio|O:Akros,Ergon,Nix\nLada|M:Laika,Niva,Samara\nLamborghini|M:Aventador,Gallardo,Huracan,Revuelto|S:Urus\nLand Rover|M:Def,Defe,Disc,Discov,Discovery3,Discovery4,Freelander2,New Range|S:Defender,Discovery,Freelander,Range Rover\nLandum|O:Moto Truck\nLavrale|O:Quattor\nLeapmotor|M:B10|K:C10\nLerivo|O:Formig\u00e3o\nLeva|O:EG1,ES1\nLexus|M:CT200h,ES-300,ES-330,ES-350,ES300h,GS,IS-250,IS-300,LS,LS-460L,NX-200t,NX-300,NX-300h,NX-350h,NX-450h+,RX,RX-350,RX-450h,RX-500h,RZ-500e,SC,UX-250h,UX-300h\nLifan|M:320,530,620 Talent,Foison,X60,X80|O:Cargo\nLobini|G:H1\nLon-V|O:Deluxe,E Retr\u00f4,LY\nLotus|M:Elan,Esprit\nMagr\u00e3o Triciclos|O:MT7 Chopper\nMahindra|S:Suv|K:PIK-UP,Scorpio\nMalaguti|O:Ciak Master,Spider Maxgt\nMaserati|M:222,228,3200,430,Ghibli,Grancabrio,Gransport,Granturismo,MC20,Quattroporte,Shamal,Spyder|S:Levante\nMazda|M:323,626,929,MX-3,MX-5,Millenia,Mpv,Navajo,Proteg\u00e9,RX|K:B-2500,B2200\nMclaren|M:540C,570S,600LT,720S,750S,765LT,Artura,GT,Gts\nMercedes-Benz|M:190-E,230-E,260-E,300-D,300-E,300-SE,300-SL,300-TE,500-E,500-SEC,500-SEL,560-SEL,A-35,A-45,C-180,C-200,C-220 Classic,C-230,C-240,C-250,C-280,C-300,C-320,C-350,C-36,C-43,C-450,C-55,C-63,CL-500,CL-600,CL-63,CL-65,CLA-180,CLA-200,CLA-250,CLA-35,CLA-45,CLK-230,CLK-320,CLK-350 Avant,CLK-430,CLK-500,CLK-55,CLS-350,CLS-400,CLS-450,CLS-500,CLS-53,CLS-55 Kompressor,CLS-63,Classe,Classic,Clc,E-190,E-200 Classic,E-220 Classic,E-230,E-240,E-250,E-280,E-300,E-320,E-350,E-400,E-420,E-43,E-430,E-500,E-53,E-55,E-63,Eqa,Eqb,Eqc,Eqe,G-55 Kompressor,G-63,GL-350,GL-500,GL-63,GLC-300,GLC-43,GLC-63,GLE-350,GLE-400,GLE-43,GLE-450,GLE-53,GLE-63,GLK-220,GLK-280,GLK-300,GLS-350,GLS-450,GLS-500,GLS-63,GT,ML-230,ML-320,ML-350,ML-430,ML-500,ML-55,ML-63,S-320,S-400,S-420 Classic,S-500,S-500L,S-55,S-560L,S-600,S-63,S-65,SE-500,SL-280 Classic,SL-320,SL-350,SL-400,SL-500,SL-55,SL-600,SL-63,SL-65,SLC-300,SLC-43,SLK-200 Kompressor,SLK-230,SLK-250,SLK-300,SLK-320,SLK-350,SLK-55,SLS-63|S:Eqs,Gla,Glb,Glc|G:Esprinter,Sprin,Sprinter,Vito|K:180-D\nMercury|M:Mystique,Sable\nMG|M:550,Cyberster,MG6,S5\nMini|M:Aceman,Cooper,One\nMitsubishi|P:Mirage|M:3000,ASX-S,Airtrek,Colt,Diamant,Eclipse,Expo,Galant,Grandis,Lancer,Space|S:Asx,Eclipse Cross,Montero,Outlander,Pajero|G:L300|K:L200,L200 Triton,Triton\nMiura|K:Picape BG-Truck\nMiza|O:Drago,Easy,Fast,Skema,Vite\nMob\u00edlli|O:GW12,GW12B\nMoto Guzzi|O:California,Quota,V11\nMotocar|O:MCA-200,MCA-250,MCF-200,MCF-250,MTX-150\nMotomorini|O:Calibro,Seiemmezzo,X-CAPE\nMotorino|O:Bacio,Bellavita,Cappuccino,Cappuccino150cc,Custom,Lambreta,Star,Velocette,Velvet,Vitesse,Volti\nMRX|O:230R\nMv Agusta|O:Brutale,F3,F4,F4-1000,Rivale\nMVK|P:Fox|O:Big Force,Black,Brx,Dual,Fenix,GO,Halley,Jurasic,MA,Simba,Sport,Spyder,Street,Super,Xrt\nNeta|M:Aya\nNissan|P:March|M:350Z,AX,Altima,GT-R,Infinit,Kait,King-Cab,Leaf,Livina,Maxima,Micra,NX,Primera,Quest,SX,Sentra,Stanza,Terrano,Tiida,Versa,ZX|S:Kicks,Murano,Pathfinder,X-TRAIL,Xterra|K:D-21,Frontier\nNIU|O:Nqi,Uqi\nOmoda|M:E5\nOrca|O:AX,JC,QM\nPegassi|O:BR\nPeugeot|P:206,207,208|M:106,205,306,307,308,405,406,407,408,504,505,508,605,607,806,807,E-Expert Cargo,Rcz,e-2008,e-208|S:2008,3008,5008 Griffe|G:Boxer,Expert,Partner|K:Hoggar|O:Buxy,Elyseo,Scoot,Speedake,Speedfight,Squab,Trekker,Vivacity,Zenith\nPiaggio|O:Ap\u00e9,Berverly,Beverly,E-Cargo,E-Passenger,Liberty,Liberty150,MP3,Nrg,Runner,Vespa,Zip\nPlymouth|M:Gran Voyager,Sundance\nPolaris|K:Ranger|O:General,Rzr,Sportsman,Xvr Xpedition\nPontiac|M:Trans-AM,Trans-Sport\nPorsche|M:718,911,928,968,Boxster,Cayene Black,Cayman,Panamera,Taycan|S:Cayenne,Macan\nRAM|K:1500,2500,3500,Classic,Dakota,Rampage\nRegal Raptor|O:Black,Fenix,Ghost,Spyder\nRely|M:Link\nRenault|P:Clio,Kwid,Sandero,Twingo|M:19,21,Boreal,Express,Fluence,Koleos E-Tech,Laguna,Logan,Megane,Safrane,Sc\u00e9nic,Stepway,Symbol,Zoe|S:Captur,Duster,Kardian|G:Kangoo,Kangoo Express,Master,Trafic|K:Duster Oroch,Oroch\nRiguete|O:TRC-01\nRolls-Royce|M:Cullinan,Dawn,Ghost,Phantom,Wraith\nRover|M:Mini Cooper\nRoyal Enfield|O:Bullet,Classic,Continental,Guerrilla,Himalayan,Hunter,Interceptor,Meteor,Scram,Shotgun,Super Meteor\nSaab|K:9000\nSanyang|O:Enjoy,Husky,Passing\nSaturn|M:SL-2\nSBM|O:150,250,400,600,Denver,Flash,Iron,Storm,Titanium\nSeat|P:Cordoba,Ibiza|M:Inca\nSeres|M:Seres\nShineray|M:SY1020,SY6370,SY6390,Tlux|G:X30|K:Dtruck|O:50-Q,Bolt,Free,Iron,Jef,PT-02,PT-03,PT-04 Pro,Retro,SE-1,SE-2,SHE-S,Shi,Sun,Super Smart,Titanium,Urban,Worker,XY\nSiamoto|O:Scross\nsmart|M:Fortwo\nSsangyong|M:Actyon,Chairman,Istana,Korando,Kyron,Musso,Rexton,Tivoli,Xlv\nSubaru|M:Impreza,Legacy,Svx,Vivio,XV|S:Forester,Outback,Tribeca\nSundown|P:Palio|O:Akros,Ergon,Fifty,Future,Hunter,Max,Pgo Speed,Stx,Super Fifty,Vblade,Web\nSuper Soco|O:Change Urban,Cux,TC,Tsx\nSuzuki|M:Baleno,Ignis,SX4,Samurai,Sidekick,Swift,Wagon,e-Vitara|S:Grand Vitara,Jimny,S-CROSS,Vitara|G:Super Carry|O:AN,Address,Boulevard,Burgman,DL,DR,DR-Z400E,EN,Freewind,GS,GSX-8R,GSX-8S,GSX-R,GSX-S,Gladius,Gsr,Gsx,Inazuma,Intruder,Katana,LT,Lets,Marauder,RF,RM,Rmx,SV650,Savage,TL,VX\nSWM|O:Shi\nTAC|M:Stark\nTargos|O:Trimoto\nTiger|O:Trciclo,Triciclo\nToyota|P:Etios,Yaris|M:Avalon,Camry,Celica,Corolla,Corona,MR-2,Paseo,Previa,Prius,Supra|S:Corolla Cross,Hilux SW4,Land Cruiser,RAV4,SW4,bZ4X|G:Hiace|K:Hilux,T-100\nTraxx|O:CJ,Dunna,JH,JL,JS,Sky,Work\nTriumph|S:Tracker|O:Adventurer,Bonneville,Daytona,Legend,Rocket,Scrambler,Speed,Sprint,Street,TT,Thruxton,Thunderbird,Tiger,Trident,Trophy\nTroller|M:Pantanal,RF Esport,T-4\nVentane Motors|O:Milano,Roma,Vtx,Wind\nVento|K:Triton|O:Rebellian,Vthunder\nVespa|O:946 Edi\u00e7\u00e3o,Gts,Gtv,Primavera,Sprint,Sxl,Vxl\nVolkswagen|P:Crossfox,Fox,Gol,Gol Trend,Polo,Polo Track,Up!|M:Apolo,Bora,Corrado,Eos Cab,Fusca,Golf,Jetta,Jetta Variant,Logus,New Beetle,Parati,Passat,Passat Variant,Pointer,Quantum,Santana,Spacecross,Spacefox,Virtus,Voyage|S:Nivus,T-Cross,Taos,Tera,Tiguan,Touareg|G:Caravelle,Delivery Express,Eurovan,Kombi|K:Amarok,Grand Saveiro,Saveiro\nVoltz|O:EV01,EV1,Evs\nVolvo|M:440,460,850,940,960,C30,C40,C70,EC40,EX30,EX40,EX90 Twin,S40,S60,S70,S80,S90,V40,V50,V60,V70,XC\nWake|M:Cross,Street,Way\nWalk|M:Buggy Walk\nWatts|O:W-Trail,W125,W160S,W2,WS120\nWuyang|O:Jet+,Mind X50q,WY\nYamaha|O:750 Virago,Aerox Connected,Axis,BW,Crypton,DT,FZ15,FZ25,FZ6,Fazer,Fluo,Fzr,Jog,MT-01,MT-03,MT-07,MT-09,Majesty,Neo,Neos Connected,Nmax,RD,Rdz,Royal,T115 Crypton,TT-R,Tdm,Tdr,Tmax,Trx,V-MAX,WR,XJ,XJ6,XT,XV,Xjr,Xmax,Xtz,Xvs,YS,YZ,Ybr,Yfm,Yfs,Yfz,Yzf,ZR\nZeekr|M:001,7X Flagship\nZontes|O:GK";
+
+/* ================= BASE FIPE (marcas, modelos e porte) ================= */
+var PORTE_COD={P:'Pequeno',M:'Médio',S:'SUV',G:'Grande',K:'Pickup',O:'Moto'};
+var FIPE=(function(){
+  var lista=[];
+  FIPE_TXT.split('\n').forEach(function(linha){
+    var partes=linha.split('|'),marca=partes[0];
+    partes.slice(1).forEach(function(grupo){
+      var cod=grupo.charAt(0),porte=PORTE_COD[cod]||'Médio';
+      grupo.slice(2).split(',').forEach(function(modelo){
+        if(!modelo)return;
+        lista.push({marca:marca,modelo:modelo,porte:porte,
+          busca:semAcento((marca+' '+modelo).toLowerCase())});
+      });
+    });
+  });
+  return lista;
+})();
+function semAcento(s){
+  return String(s).normalize?String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,''):String(s);
+}
+function buscarModelos(q,limite){
+  q=semAcento(String(q||'').trim().toLowerCase());
+  if(q.length<2)return [];
+  var termos=q.split(/\s+/),lim=limite||10;
+  function varrer(ts){
+    var ini=[],meio=[];
+    for(var i=0;i<FIPE.length;i++){
+      var f=FIPE[i];
+      if(!ts.every(function(t){return f.busca.indexOf(t)>-1}))continue;
+      (semAcento(f.modelo.toLowerCase()).indexOf(ts[0])===0?ini:meio).push(f);
+      if(ini.length>=lim)break;
+    }
+    return ini.concat(meio);
+  }
+  var r=varrer(termos);
+  /* "cg 160" não existe como modelo base: cai para o primeiro termo */
+  if(!r.length&&termos.length>1)r=varrer([termos[0]]);
+  return r.slice(0,lim);
+}
+function fipePorNome(marca,modelo){
+  var a=semAcento(String(marca||'').toLowerCase()),b=semAcento(String(modelo||'').toLowerCase());
+  for(var i=0;i<FIPE.length;i++){
+    var f=FIPE[i];
+    if(semAcento(f.modelo.toLowerCase())===b&&(!a||semAcento(f.marca.toLowerCase())===a))return f;
+  }
+  return null;
+}
+
+/* ---------- autocomplete de modelo ---------- */
 var modeloInput=document.getElementById('modeloInput'),modeloSuggest=document.getElementById('modeloSuggest');
+var marcaSelecionada='',modeloSelecionado='';
 modeloInput.addEventListener('input',function(){
-  var q=modeloInput.value.trim().toLowerCase();
-  if(q.length<2){modeloSuggest.classList.remove('show');return}
-  var achou=MODELOS.filter(function(m){return m.toLowerCase().indexOf(q)>-1}).slice(0,8);
+  marcaSelecionada='';modeloSelecionado='';
+  var achou=buscarModelos(modeloInput.value,10);
   if(!achou.length){modeloSuggest.classList.remove('show');return}
-  modeloSuggest.innerHTML=achou.map(function(m){
-    var marca=m.split(' ')[0],resto=m.slice(marca.length+1);
-    return '<div class="sug-item" data-m="'+m+'"><b>'+resto+'</b><span>'+marca+'</span></div>';
+  modeloSuggest.innerHTML=achou.map(function(f,i){
+    return '<div class="sug-item" data-fi="'+i+'"><b>'+esc(f.modelo)+'</b>'+
+      '<span>'+esc(f.marca)+' · '+esc(f.porte)+'</span></div>';
   }).join('');
+  modeloSuggest.dataset.res=JSON.stringify(achou);
   modeloSuggest.classList.add('show');
 });
 modeloSuggest.addEventListener('click',function(e){
   var it=e.target.closest('.sug-item');if(!it)return;
-  modeloInput.value=it.dataset.m;
+  var res=JSON.parse(modeloSuggest.dataset.res||'[]'),f=res[+it.dataset.fi];
+  if(!f)return;
+  aplicarModeloFipe(f);
   modeloSuggest.classList.remove('show');
 });
+function aplicarModeloFipe(f){
+  marcaSelecionada=f.marca;modeloSelecionado=f.modelo;
+  modeloInput.value=f.marca+' '+f.modelo;
+  var chips=document.getElementById('categoriaChips');
+  if(chips&&f.porte){
+    selecionarChip(chips,f.porte);
+    if(typeof reprecificarSelecionados==='function')reprecificarSelecionados();
+  }
+  toast('Porte aplicado',f.marca+' '+f.modelo+' · '+f.porte,'ok');
+}
 document.addEventListener('click',function(e){
   if(!e.target.closest('#modeloInput'))modeloSuggest.classList.remove('show');
 });
 document.getElementById('fipeUpdateBtn').addEventListener('click',function(e){
   e.preventDefault();
   var lbl=document.getElementById('fipeUpdateLbl');
-  lbl.textContent='Atualizando…';
-  setTimeout(function(){lbl.textContent=MODELOS.length+' modelos · atualizado agora'},900);
+  lbl.textContent='Verificando…';
+  setTimeout(function(){
+    lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · base FIPE embarcada';
+  },700);
 });
+
 
 /* ================= MODAL DE HISTÓRICO ================= */
 var histOverlay=document.getElementById('histOverlay');
@@ -2779,7 +3038,7 @@ function renderPatio(){
         '<span><span class="wa-dot" style="background:'+waColor+'"></span>entrou '+paraHM(c.entrada)+' · há '+noPatio+' min no pátio</span>'+
         '<span class="pcarro-slack '+slackCls+'">'+slackTxt+'</span>'+
       '</div>'+
-      (acao?'<div style="display:flex;gap:7px;margin-top:11px"><button class="btn-mini solid" data-acao="'+c.id+'" style="flex:1">'+acao+'</button><button class="btn-mini wa" data-wa="'+c.id+'">WhatsApp</button></div>':'')+
+      (acao?'<div style="display:flex;gap:7px;margin-top:11px"><button class="btn-mini solid" data-acao="'+c.id+'" style="flex:1">'+acao+'</button><button class="btn-mini wa" data-wa="'+c.id+'">WhatsApp</button><button class="btn-mini" data-link="'+c.id+'">Link</button></div>':'')+
       '</div>';
   }).join('');
   if(typeof atualizarTemposDetalhe==='function')atualizarTemposDetalhe();
@@ -2819,6 +3078,18 @@ filaPatio.addEventListener('click',function(e){
   if(chip){
     var cp=PATIO.find(function(x){return x.id===+chip.dataset.id});
     pedirTexto('Número do prisma',cp.placa,cp.numeroPrisma,function(v){cp.numeroPrisma=v;salvar();renderPatio()});
+    return;
+  }
+  var bLink=e.target.closest('[data-link]');
+  if(bLink){
+    var alvo=PATIO.filter(function(x){return x.id===+bLink.dataset.link})[0];
+    if(alvo)confirmar({titulo:'Link de acompanhamento',
+      texto:'O cliente abre no celular e vê o status do carro sem precisar ligar.',
+      botoes:[
+        {txt:'Enviar no WhatsApp',classe:'entrar-btn',acao:function(){fecharConfirm();enviarLinkPublico(alvo)}},
+        {txt:'Copiar link',classe:'btn-ghost',acao:function(){fecharConfirm();copiarLinkPublico(alvo)}},
+        {txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm}
+      ]});
     return;
   }
   var bAcao=e.target.closest('[data-acao]');
@@ -3205,8 +3476,37 @@ function blocoVistoriaExtra(){
       '</div></div>'+
       '<div class="fld"><label>Quilometragem</label><input type="text" id="vistKm" inputmode="numeric" placeholder="Ex. 84350" value="'+esc(v.km||'')+'"></div>'+
     '</div>'+
-    '<div class="fld" style="margin-top:12px"><label>Observação da vistoria</label><textarea id="vistObs" placeholder="Ex. cliente ciente dos riscos no capô">'+esc(v.obs||'')+'</textarea></div>';
+    '<div class="fld" style="margin-top:12px"><label>Observação da vistoria</label><textarea id="vistObs" placeholder="Ex. cliente ciente dos riscos no capô">'+esc(v.obs||'')+'</textarea></div>'+
+    blocoAssinaturaVistoria(v);
 }
+function blocoAssinaturaVistoria(v){
+  if(vistoriaSomenteLeitura&&!v.assinaturaEntrada)return '';
+  return '<div class="card-lbl" style="margin-top:16px">Aceite do cliente</div>'+
+    (v.assinaturaEntrada
+      ? selo(v.assinaturaEntrada,'assinou a vistoria')+
+        (vistoriaSomenteLeitura?'':'<button class="btn-ghost" id="refazerAssVist" style="width:100%;margin-top:8px">Refazer assinatura</button>')
+      : '<p class="mini-note">A assinatura registra que o cliente viu as avarias antes do serviço. É a sua defesa se alguém disser depois que o risco não estava lá.</p>'+
+        '<button class="btn-ghost" id="assinarVistoria" style="width:100%">Colher assinatura do cliente</button>');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#assinarVistoria')&&!e.target.closest('#refazerAssVist'))return;
+  if(!vistoriaAlvo||vistoriaSomenteLeitura)return;
+  var c=vistoriaAlvo;
+  abrirAssinatura({
+    titulo:'Aceite da vistoria',
+    sub:'O cliente confirma o estado do veículo na entrada',
+    nome:(patioAtivo&&patioAtivo.cliente)||document.getElementById('nomeInput').value.trim()||'',
+    termo:termoVistoria({placa:(patioAtivo&&patioAtivo.placa)||document.getElementById('placaInput').value||'',avarias:c.avarias}),
+    onSalvar:function(ass){
+      c.assinaturaEntrada=ass;
+      salvar();
+      var box=document.getElementById('vistoriaExtra');
+      if(box)box.innerHTML=blocoVistoriaExtra();
+      atualizarResumoAvarias();
+      toast('Assinatura registrada',ass.nome,'ok');
+    }
+  });
+});
 
 document.addEventListener('click',function(e){
   var chk=e.target.closest('[data-chk]');
@@ -3808,7 +4108,8 @@ function confirmarEntrada(){
   var cor=document.querySelector('#corChips .chip.on'),
       corNome=cor&&cor.dataset.cor!=='outra'?cor.dataset.cor:(document.getElementById('corOutraInput').value.trim()||'Não informada');
   var veic=veiculoPorPlaca(placa);
-  var marca=modeloTxt.split(' ')[0]||'',modelo=modeloTxt.split(' ').slice(1).join(' ')||modeloTxt||'Não informado';
+  var marca=marcaSelecionada||modeloTxt.split(' ')[0]||'',
+      modelo=modeloSelecionado||modeloTxt.split(' ').slice(1).join(' ')||modeloTxt||'Não informado';
   if(!veic){
     veic={placa:placa,marca:marca,modelo:modelo,cor:corNome,categoria:cat,donos:[cli.id],criadoISO:isoAgora()};
     VEICULOS.push(veic);
@@ -3832,6 +4133,7 @@ function confirmarEntrada(){
     avarias:vistoriaAtual.avarias.slice(),semDefeito:vistoriaAtual.semDefeito,
     checklist:JSON.parse(JSON.stringify(vistoriaAtual.checklist)),
     combustivel:vistoriaAtual.combustivel,km:vistoriaAtual.km,vistoriaObs:vistoriaAtual.obs,
+    assinaturaEntrada:vistoriaAtual.assinaturaEntrada||null,
     fotos:fotosEntrada.map(function(src){return {tipo:'entrada',src:src,ts:isoAgora()}}),
     obs:document.getElementById('entradaObs').value.trim(),obsSaida:'',
     pagamentos:[],apontamentos:[{h:paraHM(minutosAgora()),t:'Veículo recebido no balcão'}]
@@ -4137,7 +4439,7 @@ function aplicarPlacaLida(placa){
       memo.classList.add('show');
       document.getElementById('placaInput').value=alvoPlaca;
       if(typeof renderFotosEntrada==='function')renderFotosEntrada();
-      toast('Veículo novo','Preencha nome, telefone e modelo para cadastrar.','ok');
+      toast('Veículo novo','Digite o modelo — o porte e o preço vêm da FIPE automaticamente.','ok');
       setTimeout(function(){
         var n=document.getElementById('nomeInput');
         n.scrollIntoView({behavior:'smooth',block:'center'});
@@ -4176,6 +4478,264 @@ function digitarPlacaManual(){
 }
 
 scanBtn.addEventListener('click',abrirCamera);
+
+
+/* ================= ASSINATURA DO CLIENTE ================= */
+var assCanvas=null,assCtx=null,assVazia=true,assAoSalvar=null,assUltimo=null;
+
+function abrirAssinatura(opts){
+  opts=opts||{};
+  assAoSalvar=opts.onSalvar||null;
+  document.getElementById('assTitulo').textContent=opts.titulo||'Assinatura do cliente';
+  document.getElementById('assSub').textContent=opts.sub||'Assine com o dedo na área abaixo';
+  document.getElementById('assTermo').innerHTML=opts.termo||'';
+  document.getElementById('assNome').value=opts.nome||'';
+  document.getElementById('assOverlay').classList.add('show');
+  prepararCanvasAss();
+  setTimeout(prepararCanvasAss,60);   /* reajusta depois que o modal assenta */
+}
+function fecharAssinatura(){
+  document.getElementById('assOverlay').classList.remove('show');
+  assAoSalvar=null;
+}
+function prepararCanvasAss(){
+  assCanvas=document.getElementById('assCanvas');
+  if(!assCanvas)return;
+  var caixa=assCanvas.parentElement.getBoundingClientRect();
+  var larg=Math.round(caixa.width)||420;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  assCanvas.width=Math.round(larg*dpr);
+  assCanvas.height=Math.round(190*dpr);
+  assCanvas.style.height='190px';
+  assCtx=assCanvas.getContext('2d');
+  if(!assCtx)return;
+  assCtx.scale(dpr,dpr);
+  assCtx.lineWidth=2.4;
+  assCtx.lineCap='round';
+  assCtx.lineJoin='round';
+  assCtx.strokeStyle='#0B1F35';
+  assVazia=true;
+  atualizarBotoesAss();
+}
+function pontoAss(e){
+  var r=assCanvas.getBoundingClientRect();
+  var t=(e.touches&&e.touches[0])||e;
+  return {x:t.clientX-r.left,y:t.clientY-r.top};
+}
+function iniciarTraco(e){
+  e.preventDefault();
+  assUltimo=pontoAss(e);
+  assVazia=false;
+  assCtx.beginPath();
+  assCtx.moveTo(assUltimo.x,assUltimo.y);
+  assCtx.lineTo(assUltimo.x+0.1,assUltimo.y+0.1);
+  assCtx.stroke();
+  atualizarBotoesAss();
+}
+function moverTraco(e){
+  if(!assUltimo)return;
+  e.preventDefault();
+  var p=pontoAss(e);
+  assCtx.beginPath();
+  assCtx.moveTo(assUltimo.x,assUltimo.y);
+  assCtx.lineTo(p.x,p.y);
+  assCtx.stroke();
+  assUltimo=p;
+}
+function encerrarTraco(){assUltimo=null}
+function ligarCanvasAss(){
+  var cv=document.getElementById('assCanvas');
+  ['mousedown','touchstart'].forEach(function(ev){cv.addEventListener(ev,iniciarTraco,{passive:false})});
+  ['mousemove','touchmove'].forEach(function(ev){cv.addEventListener(ev,moverTraco,{passive:false})});
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(ev){cv.addEventListener(ev,encerrarTraco)});
+}
+ligarCanvasAss();
+function atualizarBotoesAss(){
+  var b=document.getElementById('assConfirmar');
+  b.disabled=assVazia;
+  b.style.opacity=assVazia?'.45':'1';
+  document.getElementById('assDica').textContent=assVazia
+    ? 'Peça para o cliente assinar aqui com o dedo'
+    : 'Pronto. Confira o nome antes de confirmar.';
+}
+document.getElementById('assLimpar').addEventListener('click',function(){
+  if(!assCtx)return;
+  assCtx.clearRect(0,0,assCanvas.width,assCanvas.height);
+  assVazia=true;atualizarBotoesAss();
+});
+document.getElementById('assFechar').addEventListener('click',fecharAssinatura);
+document.getElementById('assOverlay').addEventListener('click',function(e){
+  if(e.target===this)fecharAssinatura();
+});
+document.getElementById('assConfirmar').addEventListener('click',function(){
+  if(assVazia){toast('Falta assinar','Peça para o cliente assinar na área branca.','warn');return}
+  var nome=document.getElementById('assNome').value.trim();
+  if(!nome){toast('Falta o nome','Escreva quem está assinando.','warn');return}
+  if(!assCanvas)prepararCanvasAss();
+  var dados={
+    img:assCanvas?assCanvas.toDataURL('image/png'):'',
+    nome:nome,
+    ts:isoAgora(),
+    quando:dataBR(isoAgora())+' às '+paraHM(minutosAgora())
+  };
+  var cb=assAoSalvar;
+  fecharAssinatura();
+  if(cb)cb(dados);
+});
+
+function selo(ass,rotulo){
+  if(!ass)return '';
+  return '<div class="ass-selo"><img src="'+ass.img+'" alt="assinatura">'+
+    '<div class="ass-selo-tx"><b>'+esc(ass.nome)+'</b><span>'+esc(rotulo+' · '+ass.quando)+'</span></div></div>';
+}
+
+/* ---------- termos ---------- */
+function termoVistoria(c){
+  var n=(c.avarias||[]).length;
+  return '<p>Declaro que acompanhei a vistoria do veículo <b>'+esc(c.placa||'')+'</b> e que '+
+    (n===0?'<b>nenhuma avaria</b> foi encontrada no momento da entrada'
+      :(n===1?'a <b>avaria</b> registrada abaixo já existia antes da entrada'
+             :'as <b>'+n+' avarias</b> registradas abaixo já existiam antes da entrada'))+
+    '.</p>'+(n?'<ul class="termo-lista">'+c.avarias.map(function(a){
+      return '<li>'+esc(tipoAvaria(a.tipo).l+' · '+a.severidade+(a.desc?' — '+a.desc:''))+'</li>';
+    }).join('')+'</ul>':'');
+}
+function termoEntrega(c){
+  return '<p>Declaro que <b>recebi o veículo '+esc(c.placa||'')+'</b>, conferi o estado da lataria e o serviço executado, '+
+    'e que <b>não há divergência</b> em relação à vistoria feita na entrada.</p>'+
+    '<p class="termo-valor">Total da OS: <b>'+fmtBRL(totalOS(c))+'</b>'+
+    (saldoOS(c)>0.004?' · saldo em aberto: <b>'+fmtBRL(saldoOS(c))+'</b>':' · quitado')+'</p>';
+}
+
+
+/* ================= LINK PÚBLICO DE ACOMPANHAMENTO ================= */
+function b64url(s){
+  return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function deB64url(s){
+  s=String(s).replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';
+  return decodeURIComponent(escape(atob(s)));
+}
+function snapshotOS(c){
+  return {
+    n:c.numero,
+    c:String(c.apelido||c.cliente||'').split(' ')[0],
+    p:c.placa,
+    m:((c.marca?c.marca+' ':'')+(c.modelo||'')).trim(),
+    s:c.status,
+    e:isoDia()+'T'+paraHM(c.entrada)+':00',
+    v:isoDia()+'T'+paraHM(c.previsao)+':00',
+    sv:(c.servicos||[]).map(function(x){return x.nome}),
+    l:DB.config.nome,
+    t:DB.config.tel||''
+  };
+}
+function linkPublico(c){
+  var base=location.href.split('#')[0];
+  return base+'#t='+b64url(JSON.stringify(snapshotOS(c)));
+}
+function enviarLinkPublico(c){
+  if(!c.tel){toast('Sem telefone','Cadastre o telefone do cliente para enviar o link.','warn');return}
+  var url=linkPublico(c);
+  var msg='Olá '+String(c.cliente||'').split(' ')[0]+'! Acompanhe o serviço do seu '+
+    (c.modelo||'veículo')+' ('+c.placa+') por aqui:\n'+url+
+    '\n\nQualquer dúvida é só responder esta mensagem. '+DB.config.nome;
+  abrirWhatsApp(c.tel,msg);
+}
+function copiarLinkPublico(c){
+  var url=linkPublico(c);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){
+      toast('Link copiado','Cole onde quiser enviar.','ok');
+    }).catch(function(){mostrarLinkManual(url)});
+  }else mostrarLinkManual(url);
+}
+function mostrarLinkManual(url){
+  abrirModal({titulo:'Link de acompanhamento',sub:'Toque e segure para copiar',
+    html:'<textarea readonly style="width:100%;min-height:120px;font:500 12px/1.5 var(--f-mono)">'+esc(url)+'</textarea>',
+    botoes:[{txt:'Fechar',classe:'entrar-btn',acao:fecharModal}]});
+}
+
+/* ---------- página do cliente ---------- */
+var PASSOS_PUB=[
+  {k:'aguardando',t:'Recebido',d:'Seu veículo foi registrado e está na fila.'},
+  {k:'lavando',t:'Em lavagem',d:'A equipe está trabalhando no seu carro agora.'},
+  {k:'secando',t:'Secagem e acabamento',d:'Últimos detalhes antes da conferência.'},
+  {k:'pronto',t:'Pronto para retirada',d:'Pode vir buscar — está tudo certo.'}
+];
+function abrirModoPublico(payload){
+  var d;
+  try{d=JSON.parse(deB64url(payload))}catch(e){return false}
+  if(!d||!d.p)return false;
+
+  document.body.classList.add('modo-publico');
+  var alvo=document.getElementById('publicoWrap');
+  alvo.classList.add('show');
+
+  function desenhar(){
+    var agora=new Date();
+    var ini=new Date(d.e),fim=new Date(d.v);
+    var total=Math.max(1,(fim-ini)/60000);
+    var passado=(agora-ini)/60000;
+    var idx=Math.max(0,PASSOS_PUB.map(function(x){return x.k}).indexOf(d.s));
+    var pc=Math.max(4,Math.min(100,Math.round(passado/total*100)));
+    if(d.s==='pronto')pc=100;
+    var faltam=Math.round((fim-agora)/60000);
+    var atrasado=faltam<0&&d.s!=='pronto';
+
+    alvo.innerHTML=
+      '<div class="pub-card">'+
+        '<div class="pub-topo">'+
+          '<span class="pub-marca">'+esc(d.l||'Lava jato')+'</span>'+
+          '<span class="pub-os">OS '+esc(String(d.n))+'</span>'+
+        '</div>'+
+        '<h1>Olá'+(d.c?', '+esc(d.c):'')+'</h1>'+
+        '<p class="pub-veic">'+esc(d.m||'Seu veículo')+' · <b>'+esc(d.p)+'</b></p>'+
+
+        '<div class="pub-status '+(d.s==='pronto'?'ok':(atrasado?'warn':''))+'">'+
+          '<b>'+esc(PASSOS_PUB[idx].t)+'</b>'+
+          '<span>'+esc(PASSOS_PUB[idx].d)+'</span>'+
+        '</div>'+
+
+        '<div class="pub-prog"><i style="width:'+pc+'%"></i></div>'+
+        '<div class="pub-passos">'+PASSOS_PUB.map(function(p,i){
+          return '<span class="'+(i<idx?'feito':(i===idx?'agora':''))+'">'+esc(p.t)+'</span>';
+        }).join('')+'</div>'+
+
+        '<div class="pub-tempo">'+
+          (d.s==='pronto'
+            ? '<b>Pronto</b><span>pode vir buscar</span>'
+            : (atrasado
+                ? '<b>Passou da previsão</b><span>estamos finalizando, obrigado pela paciência</span>'
+                : '<b>~'+faltam+' min</b><span>previsão de conclusão às '+pad2(new Date(d.v).getHours())+':'+pad2(new Date(d.v).getMinutes())+'</span>'))+
+        '</div>'+
+
+        (d.sv&&d.sv.length?'<div class="pub-svc"><span class="pub-lbl">Serviços</span>'+
+          d.sv.map(function(s){return '<div>'+esc(s)+'</div>'}).join('')+'</div>':'')+
+
+        '<div class="pub-acoes">'+
+          '<button class="entrar-btn" id="pubAtualizar">Atualizar</button>'+
+          (d.t?'<button class="btn-ghost" id="pubFalar">Falar no WhatsApp</button>':'')+
+        '</div>'+
+        '<p class="pub-nota">Esta página mostra a previsão registrada na entrada do veículo. '+
+          'Para confirmar antes de sair de casa, fale com a gente.</p>'+
+      '</div>';
+
+    var bt=document.getElementById('pubAtualizar');
+    if(bt)bt.addEventListener('click',function(){
+      this.textContent='Atualizando…';
+      setTimeout(desenhar,450);
+    });
+    var bf=document.getElementById('pubFalar');
+    if(bf)bf.addEventListener('click',function(){
+      abrirWhatsApp(d.t,'Olá! Queria saber do meu carro '+d.p+' (OS '+d.n+').');
+    });
+  }
+  desenhar();
+  setInterval(desenhar,60000);
+  return true;
+}
 
 
 /* ================= EXTRAS DA OS (box, lavador, desconto) ================= */
@@ -4276,7 +4836,14 @@ function renderSaidaExtras(){
     '<div class="card-lbl" style="margin-top:14px">Avaliação do cliente</div>'+
     '<div class="chips" id="avaliacaoChips">'+[1,2,3,4,5].map(function(n){
       return '<span class="chip'+(c.avaliacao===n?' on':'')+'" data-nota="'+n+'">'+n+' ★</span>';
-    }).join('')+'</div>';
+    }).join('')+'</div>'+
+    '<div class="card-lbl" style="margin-top:16px">Assinaturas</div>'+
+    (c.assinaturaEntrada?selo(c.assinaturaEntrada,'aceite da vistoria na entrada')
+      :'<p class="mini-note">Sem assinatura de entrada nesta OS.</p>')+
+    (c.assinaturaSaida
+      ? selo(c.assinaturaSaida,'recebimento do veículo')+
+        '<button class="btn-ghost" id="refazerAssSaida" style="width:100%;margin-top:8px">Refazer assinatura de entrega</button>'
+      : '<button class="btn-ghost" id="assinarSaida" style="width:100%;margin-top:8px">Colher assinatura de entrega</button>');
 
   document.getElementById('qualChecklist').addEventListener('click',function(e){
     var ch=e.target.closest('[data-qual]');if(!ch)return;
@@ -4287,6 +4854,25 @@ function renderSaidaExtras(){
   document.getElementById('avaliacaoChips').addEventListener('click',function(e){
     var ch=e.target.closest('[data-nota]');if(!ch)return;
     c.avaliacao=+ch.dataset.nota;salvar();renderSaidaExtras();
+  });
+  ['assinarSaida','refazerAssSaida'].forEach(function(id){
+    var b=document.getElementById(id);
+    if(b)b.addEventListener('click',function(){colherAssinaturaSaida(c)});
+  });
+}
+function colherAssinaturaSaida(c,depois){
+  abrirAssinatura({
+    titulo:'Recebimento do veículo',
+    sub:'O cliente confirma que recebeu o carro conferido',
+    nome:c.cliente||'',
+    termo:termoEntrega(c),
+    onSalvar:function(ass){
+      c.assinaturaSaida=ass;
+      c.apontamentos.push({h:paraHM(minutosAgora()),t:'Recebimento assinado por '+ass.nome});
+      salvar();renderSaidaExtras();
+      toast('Entrega assinada',ass.nome,'ok');
+      if(depois)depois();
+    }
   });
 }
 document.getElementById('entregarVeiculoBtn').addEventListener('click',function(){
@@ -4309,6 +4895,27 @@ document.addEventListener('click',function(e){
 function finalizarEntrega(){
   var c=patioAtivo;if(!c)return;
   var total=totalOS(c),pago=totalPago(c),falta=total-pago;
+
+  if(!c.assinaturaSaida){
+    confirmar({
+      titulo:'Entregar sem assinatura?',
+      texto:'A assinatura de recebimento é o que protege você se o cliente reclamar depois de um dano que não foi seu. Leva dez segundos.',
+      botoes:[
+        {txt:'Colher assinatura',classe:'entrar-btn',acao:function(){
+          fecharConfirm();
+          colherAssinaturaSaida(c,function(){finalizarEntrega()});
+        }},
+        {txt:'Entregar mesmo assim',classe:'btn-ghost',acao:function(){
+          fecharConfirm();
+          c.assinaturaSaida={dispensada:true};
+          c.apontamentos.push({h:paraHM(minutosAgora()),t:'Entregue sem assinatura do cliente'});
+          finalizarEntrega();
+        }},
+        {txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm}
+      ]});
+    return;
+  }
+  if(c.assinaturaSaida&&c.assinaturaSaida.dispensada)c.assinaturaSaida=null;
 
   function concluir(){
     c.status='entregue';
@@ -4406,7 +5013,11 @@ function verOS(o){
       '<div class="card-lbl" style="margin-top:14px">Vistoria de entrada</div>'+avs+
       (o.obs?'<p class="mini-note">Observação: '+esc(o.obs)+'</p>':'')+
       (o.obsSaida?'<p class="mini-note">Saída: '+esc(o.obsSaida)+'</p>':'')+
-      (o.avaliacao?'<p class="mini-note">Avaliação do cliente: '+o.avaliacao+' de 5</p>':''),
+      (o.avaliacao?'<p class="mini-note">Avaliação do cliente: '+o.avaliacao+' de 5</p>':'')+
+      (o.assinaturaEntrada||o.assinaturaSaida
+        ? '<div class="card-lbl" style="margin-top:14px">Assinaturas</div>'+
+          selo(o.assinaturaEntrada,'aceite da vistoria')+selo(o.assinaturaSaida,'recebimento do veículo')
+        : ''),
     botoes:[
       {txt:'Reimprimir',classe:'btn-ghost',acao:function(){imprimirTicket(o)}},
       {txt:'Repetir esses serviços',classe:'entrar-btn',acao:function(){
@@ -5806,10 +6417,32 @@ document.getElementById('limparDadosBtn').addEventListener('click',function(){
 
 
 /* ================= INDICADORES ================= */
-var periodoInd='30d';
+var indFiltro={periodo:'30d',ini:'',fim:'',porte:'',marca:'',servico:'',lavador:'',forma:'',busca:''};
+var DIAS_SEM=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+var DIAS_CURTO=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+var FAIXAS=[[7,9,'07-09'],[9,11,'09-11'],[11,13,'11-13'],[13,15,'13-15'],[15,17,'15-17'],[17,20,'17-20']];
 
-function dadosPeriodo(chave){
-  var p=periodoDe(chave),oss=osNoPeriodo(p.ini,p.fim);
+/* ---------- período e filtros ---------- */
+function periodoAtivo(){
+  if(indFiltro.periodo==='custom'&&indFiltro.ini&&indFiltro.fim){
+    var a=indFiltro.ini,b=indFiltro.fim;
+    return {ini:a<b?a:b,fim:a<b?b:a};
+  }
+  return periodoDe(indFiltro.periodo);
+}
+function passaFiltro(o){
+  if(indFiltro.porte&&o.categoria!==indFiltro.porte)return false;
+  if(indFiltro.marca&&(o.marca||'—')!==indFiltro.marca)return false;
+  if(indFiltro.lavador&&String(o.lavadorId||'0')!==indFiltro.lavador)return false;
+  if(indFiltro.servico&&!o.servicos.some(function(s){return s.nome===indFiltro.servico}))return false;
+  if(indFiltro.forma&&!o.pagamentos.some(function(p){return p.forma===indFiltro.forma}))return false;
+  return true;
+}
+function osFiltradas(p){return osNoPeriodo(p.ini,p.fim).filter(passaFiltro)}
+function temFiltro(){return !!(indFiltro.porte||indFiltro.marca||indFiltro.servico||indFiltro.lavador||indFiltro.forma)}
+
+function bloco(p){
+  var oss=osFiltradas(p);
   var receita=oss.reduce(function(a,o){return a+totalOS(o)},0);
   var custo=oss.reduce(function(a,o){return a+(o.custoInsumos!==undefined?o.custoInsumos:custoDaOS(o))},0);
   var comissao=oss.reduce(function(a,o){return a+(o.comissao!==undefined?o.comissao:comissaoDaOS(o))},0);
@@ -5817,43 +6450,135 @@ function dadosPeriodo(chave){
     ticket:oss.length?receita/oss.length:0,margem:receita-custo-comissao};
 }
 
-function renderIndicadores(){
-  document.getElementById('indPeriodoSeg').innerHTML=PERIODOS.map(function(x){
-    return '<button class="'+(periodoInd===x.k?'on':'')+'" data-pi="'+x.k+'">'+x.l+'</button>';
+/* ---------- helpers de desenho ---------- */
+function hbar(nome,valorTx,pc,sub,cor,attr){
+  return '<div class="hbar-row" data-busca="'+esc((nome+' '+(sub||'')).toLowerCase())+'"'+(attr||'')+'>'+
+    '<div class="hbar-nm"><b>'+esc(nome)+'</b><div class="hbar-track"><i class="hbar-fill" style="width:'+Math.max(1,pc)+'%;background:'+(cor||'var(--azul)')+'"></i></div></div>'+
+    '<div class="hbar-val">'+valorTx+'<small>'+esc(sub||'')+'</small></div></div>';
+}
+function rankHtml(itens,fmtVal,cor,vazio){
+  if(!itens.length)return '<div class="crm-empty">'+(vazio||'Sem dados no período com esses filtros.')+'</div>';
+  var max=Math.max.apply(null,itens.map(function(x){return x.valor}).concat([1]));
+  return itens.map(function(x){
+    return hbar(x.nome,fmtVal(x.valor),Math.round(x.valor/max*100),x.sub,cor,x.attr);
   }).join('');
+}
+function aplicarBuscaRankings(){
+  var q=(indFiltro.busca||'').trim().toLowerCase();
+  document.querySelectorAll('#view-indicadores [data-busca]').forEach(function(el){
+    if(!q){el.style.display='';return}
+    var alvo=el.dataset.busca;
+    el.style.display=q.split(' ').every(function(t){return alvo.indexOf(t)>-1})?'':'none';
+  });
+}
 
-  var d=dadosPeriodo(periodoInd),ant=dadosPeriodo0(periodoAnterior(d.p));
+/* ---------- orquestração ---------- */
+function renderIndicadores(){
+  renderIndFiltros();
+  var p=periodoAtivo(),d=bloco(p);
+  var pa=periodoAnterior(p),ant={oss:osNoPeriodo(pa.ini,pa.fim).filter(passaFiltro)};
+  ant.receita=ant.oss.reduce(function(a,o){return a+totalOS(o)},0);
+  ant.ticket=ant.oss.length?ant.receita/ant.oss.length:0;
+
+  renderIndVisao(d,ant);
+  renderIndVendas(d);
+  renderIndOperacao(d);
+  renderIndClientes(d);
+  renderIndVeiculos(d);
+  renderIndFinanceiro(d);
+  aplicarBuscaRankings();
+}
+
+function renderIndFiltros(){
+  var lista=PERIODOS.concat([{k:'custom',l:'Escolher'}]);
+  document.getElementById('indPeriodoSeg').innerHTML=lista.map(function(x){
+    return '<button class="'+(indFiltro.periodo===x.k?'on':'')+'" data-pi="'+x.k+'">'+x.l+'</button>';
+  }).join('');
+  document.getElementById('indDatas').style.display=indFiltro.periodo==='custom'?'grid':'none';
+
+  var todas=osEntregues();
+  function opcoes(id,rotulo,valores,sel){
+    var el=document.getElementById(id);
+    if(el.dataset.pronto===valores.join('|'))return;
+    el.dataset.pronto=valores.join('|');
+    el.innerHTML='<option value="">'+rotulo+'</option>'+valores.map(function(v){
+      return '<option value="'+esc(v.v)+'"'+(sel===v.v?' selected':'')+'>'+esc(v.l)+'</option>';
+    }).join('');
+    el.value=sel||'';
+  }
+  var marcas=[];todas.forEach(function(o){var m=o.marca||'—';if(marcas.indexOf(m)===-1)marcas.push(m)});
+  marcas.sort();
+  opcoes('fPorte','Todos os portes',CATEGORIAS.map(function(c){return {v:c,l:c}}),indFiltro.porte);
+  opcoes('fMarca','Todas as marcas',marcas.map(function(m){return {v:m,l:m}}),indFiltro.marca);
+  opcoes('fServico','Todos os serviços',SERVICOS.map(function(s){return {v:s.nome,l:s.nome}}),indFiltro.servico);
+  opcoes('fLavador','Toda a equipe',DB.equipe.map(function(e){return {v:String(e.id),l:e.nome}}).concat([{v:'0',l:'Sem lavador'}]),indFiltro.lavador);
+  opcoes('fForma','Todas as formas',FORMAS_PAGAMENTO.map(function(f){return {v:f,l:f}}),indFiltro.forma);
+
+  var p=periodoAtivo(),partes=[rotuloPeriodo(p)];
+  if(indFiltro.porte)partes.push('porte '+indFiltro.porte);
+  if(indFiltro.marca)partes.push('marca '+indFiltro.marca);
+  if(indFiltro.servico)partes.push('serviço '+indFiltro.servico);
+  if(indFiltro.lavador)partes.push('lavador '+((DB.equipe.find(function(e){return String(e.id)===indFiltro.lavador})||{nome:'sem lavador'}).nome));
+  if(indFiltro.forma)partes.push('pago em '+indFiltro.forma);
+  document.getElementById('indFiltroResumo').innerHTML=
+    '<span>'+esc(partes.join(' · '))+'</span>'+
+    (temFiltro()?'<button class="btn-mini" id="limparFiltros">Limpar recortes</button>':'');
+}
+
+document.getElementById('indPeriodoSeg').addEventListener('click',function(e){
+  var b=e.target.closest('[data-pi]');if(!b)return;
+  indFiltro.periodo=b.dataset.pi;
+  if(b.dataset.pi==='custom'&&!indFiltro.ini){
+    var p=periodoDe('30d');
+    indFiltro.ini=p.ini;indFiltro.fim=p.fim;
+    document.getElementById('indDataIni').value=p.ini;
+    document.getElementById('indDataFim').value=p.fim;
+  }
+  renderIndicadores();
+});
+['indDataIni','indDataFim'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',function(){
+    indFiltro.ini=document.getElementById('indDataIni').value;
+    indFiltro.fim=document.getElementById('indDataFim').value;
+    if(indFiltro.ini&&indFiltro.fim)renderIndicadores();
+  });
+});
+[['fPorte','porte'],['fMarca','marca'],['fServico','servico'],['fLavador','lavador'],['fForma','forma']].forEach(function(x){
+  document.getElementById(x[0]).addEventListener('change',function(){
+    indFiltro[x[1]]=this.value;renderIndicadores();
+  });
+});
+document.getElementById('fBusca').addEventListener('input',function(){
+  indFiltro.busca=this.value;aplicarBuscaRankings();
+});
+document.getElementById('indFiltroResumo').addEventListener('click',function(e){
+  if(!e.target.closest('#limparFiltros'))return;
+  indFiltro.porte=indFiltro.marca=indFiltro.servico=indFiltro.lavador=indFiltro.forma='';
+  ['fPorte','fMarca','fServico','fLavador','fForma'].forEach(function(id){document.getElementById(id).value=''});
+  renderIndicadores();
+});
+
+/* ================= VISÃO GERAL ================= */
+function renderIndVisao(d,ant){
   document.getElementById('indKpis').innerHTML=
     kpi('Faturamento','var(--teal)',fmtBRL(d.receita),rotuloPeriodo(d.p),variacao(d.receita,ant.receita))+
     kpi('OS entregues','var(--azul)',String(d.oss.length),'veículos',variacao(d.oss.length,ant.oss.length))+
     kpi('Ticket médio','var(--ok)',fmtBRL(d.ticket),'por veículo',variacao(d.ticket,ant.ticket))+
     kpi('Margem estimada','var(--alerta)',fmtBRL(d.margem),d.receita?Math.round(d.margem/d.receita*100)+'% da receita':'sem vendas');
-
   renderMeta();
+  renderTendencia();
   renderInsights(d);
-  renderIndVendas(d);
-  renderIndOperacao(d);
-  renderIndClientes(d);
-  renderIndFinanceiro(d);
 }
-function dadosPeriodo0(p){
-  var oss=osNoPeriodo(p.ini,p.fim),receita=oss.reduce(function(a,o){return a+totalOS(o)},0);
-  return {oss:oss,receita:receita,ticket:oss.length?receita/oss.length:0};
-}
-document.getElementById('indPeriodoSeg').addEventListener('click',function(e){
-  var b=e.target.closest('[data-pi]');if(!b)return;
-  periodoInd=b.dataset.pi;renderIndicadores();
-});
 
-/* ---------- meta do mês ---------- */
 function renderMeta(){
   var p=periodoDe('mes'),oss=osNoPeriodo(p.ini,p.fim);
   var receita=oss.reduce(function(a,o){return a+totalOS(o)},0);
   var meta=+DB.config.metaMes||0;
+  if(!meta){document.getElementById('indMeta').innerHTML='';return}
   var hoje=new Date(),diasMes=new Date(hoje.getFullYear(),hoje.getMonth()+1,0).getDate();
-  var ritmo=hoje.getDate()?receita/hoje.getDate()*diasMes:0;
-  var pc=meta?Math.min(100,Math.round(receita/meta*100)):0;
-  document.getElementById('indMeta').innerHTML=meta?
+  var ritmo=receita/Math.max(1,hoje.getDate())*diasMes;
+  var pc=Math.min(100,Math.round(receita/meta*100));
+  document.getElementById('indMeta').innerHTML=
     '<div class="chart"><div class="chart-head"><h4>Meta do mês</h4><span>'+pc+'% de '+fmtBRLcurto(meta)+'</span></div>'+
     '<div class="prog '+(pc>=100?'ok':(ritmo>=meta?'':'warn'))+'"><i style="width:'+pc+'%"></i></div>'+
     '<div class="stat-inline">'+
@@ -5861,75 +6586,121 @@ function renderMeta(){
       '<div><span class="v">'+fmtBRLcurto(Math.max(0,meta-receita))+'</span><span class="k">Falta</span></div>'+
       '<div><span class="v">'+fmtBRLcurto(ritmo)+'</span><span class="k">Projeção</span></div>'+
       '<div><span class="v">'+fmtBRLcurto(meta/diasMes)+'</span><span class="k">Meta/dia</span></div>'+
-    '</div></div>':'';
+    '</div>'+
+    '<p class="mini-note">'+(ritmo>=meta?'No ritmo atual a meta fecha com folga.':'No ritmo atual falta '+fmtBRLcurto(Math.max(0,meta-ritmo))+' para bater a meta. São '+Math.ceil(Math.max(0,meta-ritmo)/Math.max(1,receita/Math.max(1,oss.length)||1))+' carros a mais no mês.')+'</p></div>';
 }
 
-/* ---------- recomendações ---------- */
+function renderTendencia(){
+  var labels=[],valores=[],hoje=new Date();
+  for(var i=11;i>=0;i--){
+    var d=new Date(hoje.getFullYear(),hoje.getMonth()-i,1);
+    var ini=isoDia(d),fim=isoDia(new Date(d.getFullYear(),d.getMonth()+1,0));
+    var oss=osNoPeriodo(ini,fim).filter(passaFiltro);
+    labels.push(['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][d.getMonth()]);
+    valores.push(oss.reduce(function(a,o){return a+totalOS(o)},0));
+  }
+  var ativos=valores.filter(function(v){return v>0}).length;
+  var html=graficoBarras('Tendência dos últimos 12 meses',labels,valores,fmtBRLcurto);
+  var base3=valores.slice(-6,-3).reduce(function(a,b){return a+b},0);
+  if(ativos>=3&&base3>0){
+    var u3=valores.slice(-3).reduce(function(a,b){return a+b},0)/3,a3=base3/3;
+    var dir=u3>a3*1.05?'em crescimento':(u3<a3*0.95?'em queda':'estável');
+    var cor=u3>a3*1.05?'var(--ok)':(u3<a3*0.95?'var(--perigo)':'var(--fumaca)');
+    html=html.replace('</div></div>','</div><p class="mini-note" style="border-top:1px solid var(--linha);padding-top:10px;margin-top:6px">Média dos últimos 3 meses: <b style="color:'+cor+'">'+fmtBRL(u3)+'</b> — negócio '+dir+' contra o trimestre anterior ('+fmtBRL(a3)+').</p></div>');
+  }
+  else if(ativos>=2){
+    var med=valores.filter(function(v){return v>0}).reduce(function(a,b){return a+b},0)/ativos;
+    html=html.replace('</div></div>','</div><p class="mini-note" style="border-top:1px solid var(--linha);padding-top:10px;margin-top:6px">Média mensal de <b>'+fmtBRL(med)+'</b> em '+ativos+' meses com movimento. A partir de 6 meses de histórico o sistema passa a comparar trimestres.</p></div>');
+  }
+  document.getElementById('chartTendencia').innerHTML=html;
+}
+
 function renderInsights(d){
-  var ins=[],hoje=isoDia();
+  var ins=[];
+  function add(nivel,cor,t,p,nav){ins.push({nivel:nivel,cor:cor,t:t,p:p,nav:nav})}
 
+  /* --- operacional: hoje --- */
   var atrasados=PATIO.filter(atrasadoDe);
-  if(atrasados.length)ins.push({cor:'var(--perigo)',t:atrasados.length+' carro'+(atrasados.length>1?'s':'')+' atrasado no pátio',
-    p:atrasados.map(function(c){return c.placa}).join(' · ')+' — puxe para o começo da fila antes que o cliente ligue.',nav:'patio'});
-
-  if(!DB.caixaAtual&&PATIO.length)ins.push({cor:'var(--alerta)',t:'Caixa fechado com o pátio cheio',
-    p:'Abra o caixa para que os recebimentos de hoje entrem no fechamento.',nav:'caixa'});
-
+  if(atrasados.length)add('Operacional','var(--perigo)',atrasados.length+' carro'+(atrasados.length>1?'s':'')+' atrasado no pátio',
+    atrasados.map(function(c){return c.placa}).join(' · ')+' — puxe para o começo da fila antes que o cliente ligue.','patio');
   var prontos=PATIO.filter(function(c){return c.status==='pronto'});
-  if(prontos.length)ins.push({cor:'var(--ok)',t:prontos.length+' carro'+(prontos.length>1?'s':'')+' pronto aguardando retirada',
-    p:'Avise no WhatsApp e libere a vaga — pátio parado é dinheiro parado.',nav:'saida'});
-
-  var m=mapaRetornos();
-  if(m.atrasados.length)ins.push({cor:'var(--alerta)',t:m.atrasados.length+' cliente'+(m.atrasados.length>1?'s':'')+' sumindo',
-    p:m.atrasados.slice(0,3).map(function(x){return x.cliente.nome.split(' ')[0]+' ('+x.desde+'d)'}).join(', ')+' — uma mensagem hoje costuma trazer de volta.',nav:'retorno'});
-  if(m.revisao.filter(function(x){return x.vencido}).length)ins.push({cor:'var(--teal)',t:'Revisões de estética vencidas',
-    p:m.revisao.filter(function(x){return x.vencido}).length+' serviços de proteção/polimento passaram do prazo de revisão. É a venda mais fácil do mês.',nav:'retorno'});
-
+  if(prontos.length)add('Operacional','var(--ok)',prontos.length+' pronto aguardando retirada',
+    'Avise no WhatsApp e libere a vaga — pátio parado é dinheiro parado.','saida');
+  if(!DB.caixaAtual&&PATIO.length)add('Operacional','var(--alerta)','Caixa fechado com o pátio cheio',
+    'Abra o caixa para que os recebimentos de hoje entrem no fechamento.','caixa');
   var baixos=abaixoDoMinimo();
-  if(baixos.length)ins.push({cor:'var(--perigo)',t:'Estoque no limite: '+baixos.map(function(i){return i.nome}).join(', '),
-    p:'Reponha antes de faltar no meio do sábado.',nav:'estoque'});
-
-  var orcAbertos=DB.orcamentos.filter(function(o){return statusOrc(o)==='aberto'});
-  if(orcAbertos.length)ins.push({cor:'var(--azul)',t:orcAbertos.length+' orçamento'+(orcAbertos.length>1?'s':'')+' sem resposta',
-    p:fmtBRL(orcAbertos.reduce(function(a,o){return a+totalServicos(o)-(o.desconto||0)},0))+' parados. Um "conseguiu ver?" converte bem.',nav:'orcamento'});
-
+  if(baixos.length)add('Operacional','var(--perigo)','Estoque no limite: '+baixos.map(function(i){return i.nome}).join(', '),
+    'Reponha antes de faltar no meio do sábado.','estoque');
   var amanha=isoDia(somaDias(new Date(),1));
   var agAmanha=DB.agendamentos.filter(function(a){return a.data===amanha&&a.status==='marcado'});
-  if(agAmanha.length)ins.push({cor:'var(--azul)',t:agAmanha.length+' agendamento'+(agAmanha.length>1?'s':'')+' para amanhã',
-    p:'Confirme hoje — lembrete no dia anterior derruba a taxa de falta.',nav:'agenda'});
+  if(agAmanha.length)add('Operacional','var(--azul)',agAmanha.length+' agendamento para amanhã',
+    'Confirme hoje — lembrete no dia anterior derruba a taxa de falta.','agenda');
 
+  /* --- tático: semana/mês --- */
+  var m=mapaRetornos();
+  if(m.atrasados.length)add('Tático','var(--alerta)',m.atrasados.length+' cliente'+(m.atrasados.length>1?'s':'')+' sumindo',
+    m.atrasados.slice(0,3).map(function(x){return x.cliente.nome.split(' ')[0]+' ('+x.desde+'d)'}).join(', ')+' — uma mensagem hoje costuma trazer de volta.','retorno');
+  var venc=m.revisao.filter(function(x){return x.vencido});
+  if(venc.length)add('Tático','var(--teal)',venc.length+' revisão de estética vencida',
+    'Proteção e polimento passaram do prazo. É a venda mais fácil do mês.','retorno');
+  var orcAbertos=DB.orcamentos.filter(function(o){return statusOrc(o)==='aberto'});
+  if(orcAbertos.length)add('Tático','var(--azul)',orcAbertos.length+' orçamento sem resposta',
+    fmtBRL(orcAbertos.reduce(function(a,o){return a+totalServicos(o)-(o.desconto||0)},0))+' parados. Um "conseguiu ver?" converte bem.','orcamento');
   var fiado=osEntregues().filter(function(o){return o.fiado>0.004});
-  if(fiado.length)ins.push({cor:'var(--perigo)',t:fmtBRL(fiado.reduce(function(a,o){return a+o.fiado},0))+' em aberto',
-    p:fiado.length+' OS entregues sem quitar. Cobrança amigável no WhatsApp resolve a maioria.',nav:'indicadores'});
-
+  if(fiado.length)add('Tático','var(--perigo)',fmtBRL(fiado.reduce(function(a,o){return a+o.fiado},0))+' em aberto',
+    fiado.length+' OS entregues sem quitar. Cobrança amigável no WhatsApp resolve a maioria.','indicadores');
   if(DB.config.fidelidade.ativo){
     var premiados=CLIENTES.filter(function(c){return selosDoCliente(c).temPremio});
-    if(premiados.length)ins.push({cor:'var(--teal)',t:premiados.length+' cliente'+(premiados.length>1?'s':'')+' com prêmio liberado',
-      p:'Avisar que o prêmio está disponível é motivo para o cliente voltar essa semana.',nav:'clientes'});
+    if(premiados.length)add('Tático','var(--teal)',premiados.length+' cliente com prêmio liberado',
+      'Avisar que o prêmio está disponível é motivo para o cliente voltar essa semana.','clientes');
+  }
+  var h=movimentoPorHora(d.oss);
+  if(d.oss.length>=10){
+    var vazias=h.labels.filter(function(l,i){return h.valores[i]===0&&l>='08'&&l<='18'});
+    if(vazias.length)add('Tático','var(--fumaca)','Faixa ociosa às '+vazias[0]+'h',
+      'Nenhum carro entrou nesse horário no período. Promoção relâmpago ou agendamento com desconto preenche a janela.','agenda');
   }
 
-  var mix=mixServicos(d.oss);
-  if(mix.length>1&&d.oss.length>=5){
-    var soLavagem=d.oss.filter(function(o){return o.servicos.every(function(s){return grupoDe(servicoPorNome(s.nome)||s.nome)==='Lavagem'})}).length;
-    var pc=Math.round(soLavagem/d.oss.length*100);
-    if(pc>70)ins.push({cor:'var(--alerta)',t:pc+'% das OS são só lavagem',
-      p:'Oferecer cera, motor ou cristalização no balcão é o caminho mais rápido para subir o ticket médio.',nav:'indicadores'});
-  }
-
-  var horas=movimentoPorHora(d.oss);
+  /* --- estratégico: mês/trimestre --- */
   if(d.oss.length>=8){
-    var pior=horas.valores.indexOf(Math.min.apply(null,horas.valores.filter(function(v,i){return horas.labels[i]>='08'})));
-    if(pior>-1&&horas.valores[pior]===0)ins.push({cor:'var(--fumaca)',t:'Faixa ociosa às '+horas.labels[pior]+'h',
-      p:'Nenhum carro entrou nesse horário no período. Promoção relâmpago ou agendamento com desconto preenche essa janela.',nav:'agenda'});
+    var mix=mixServicos(d.oss);
+    var soLavagem=d.oss.filter(function(o){return o.servicos.every(function(s){return grupoDe(servicoPorNome(s.nome)||s.nome)==='Lavagem'})}).length;
+    var pcLav=Math.round(soLavagem/d.oss.length*100);
+    if(pcLav>65)add('Estratégico','var(--alerta)',pcLav+'% das OS são só lavagem',
+      'Você depende do serviço de menor margem. Cera, motor e cristalização no balcão sobem o ticket sem custo de aquisição.','indicadores');
+    var abc=curvaABC(d.oss);
+    if(abc.pcClientesA<=20&&abc.pcClientesA>0)add('Estratégico','var(--perigo)',
+      abc.qtdA+' cliente'+(abc.qtdA>1?'s':'')+' respondem por 80% da receita',
+      'Só '+abc.pcClientesA+'% da carteira. Perder um deles derruba o mês — vale ampliar a base antes de investir em ticket.','indicadores');
+    var marcas=agrupar(d.oss,function(o){return o.marca||'—'});
+    if(marcas.length){
+      var lider=marcas[0],pcM=Math.round(lider.valor/d.receita*100);
+      if(pcM>=30)add('Estratégico','var(--teal)',lider.nome+' representa '+pcM+'% da receita',
+        'Vale treinar a equipe e estocar insumo pensando nessa marca — e negociar parceria com concessionária ou oficina que atende esse público.','indicadores');
+    }
+    var margens=margemPorServico(d.oss).filter(function(x){return x.qtd>=2});
+    if(margens.length>=3){
+      var melhor=margens[0],pior=margens[margens.length-1];
+      if(melhor.margemPc-pior.margemPc>15)add('Estratégico','var(--ok)','"'+melhor.nome+'" é o que mais deixa dinheiro',
+        Math.round(melhor.margemPc)+'% de margem contra '+Math.round(pior.margemPc)+'% de "'+pior.nome+'". Empurrar o primeiro rende mais que vender volume do segundo.','indicadores');
+    }
+    var ret=retencao();
+    if(ret.total>=5&&ret.pc30<35)add('Estratégico','var(--perigo)','Só '+ret.pc30+'% voltam em 30 dias',
+      'Retenção baixa. Fidelidade ativa, lembrete programado e um serviço de assinatura mensal atacam isso direto.','clientes');
   }
 
-  if(!ins.length)ins.push({cor:'var(--ok)',t:'Tudo em ordem por aqui',
-    p:'Sem atraso, sem estoque no limite e sem cliente sumido. Bom momento para atacar upsell.',nav:'indicadores'});
+  if(!ins.length)add('Operacional','var(--ok)','Tudo em ordem por aqui',
+    'Sem atraso, sem estoque no limite e sem cliente sumido. Bom momento para atacar upsell.','indicadores');
 
-  document.getElementById('insightResumo').textContent=ins.length+' recomendaç'+(ins.length===1?'ão':'ões')+' com base no que já aconteceu';
-  document.getElementById('insightsList').innerHTML=ins.map(function(x){
-    return '<div class="insight-item" data-ins-nav="'+x.nav+'" style="cursor:pointer"><span class="im" style="background:'+x.cor+'"></span>'+
-      '<div><h4>'+esc(x.t)+'</h4><p>'+esc(x.p)+'</p></div></div>';
+  var porNivel={Operacional:[],'Tático':[],'Estratégico':[]};
+  ins.forEach(function(x){porNivel[x.nivel].push(x)});
+  document.getElementById('insightResumo').textContent=ins.length+' recomendaç'+(ins.length===1?'ão':'ões')+' — do que resolver hoje ao que decidir no trimestre';
+  document.getElementById('insightsList').innerHTML=Object.keys(porNivel).map(function(n){
+    if(!porNivel[n].length)return '';
+    return '<div class="nivel-lbl">'+n+'</div>'+porNivel[n].map(function(x){
+      return '<div class="insight-item" data-ins-nav="'+x.nav+'" style="cursor:pointer"><span class="im" style="background:'+x.cor+'"></span>'+
+        '<div><h4>'+esc(x.t)+'</h4><p>'+esc(x.p)+'</p></div></div>';
+    }).join('');
   }).join('');
   document.getElementById('insightsList').onclick=function(e){
     var it=e.target.closest('[data-ins-nav]');if(!it)return;
@@ -5937,7 +6708,17 @@ function renderInsights(d){
   };
 }
 
-/* ---------- vendas ---------- */
+/* ================= AGREGAÇÕES ================= */
+function agrupar(oss,chave){
+  var m={};
+  oss.forEach(function(o){
+    var k=chave(o)||'—';
+    m[k]=m[k]||{valor:0,qtd:0};
+    m[k].valor+=totalOS(o);m[k].qtd++;
+  });
+  return Object.keys(m).map(function(k){return {nome:k,valor:m[k].valor,qtd:m[k].qtd}})
+    .sort(function(a,b){return b.valor-a.valor});
+}
 function mixServicos(oss){
   var m={};
   oss.forEach(function(o){o.servicos.forEach(function(s){
@@ -5947,27 +6728,240 @@ function mixServicos(oss){
   return Object.keys(m).map(function(k){return {nome:k,qtd:m[k].qtd,valor:m[k].valor}})
     .sort(function(a,b){return b.valor-a.valor});
 }
+function margemPorServico(oss){
+  var m={};
+  oss.forEach(function(o){o.servicos.forEach(function(s){
+    var sv=servicoPorNome(s.nome),preco=+s.preco||0;
+    var custo=sv?custoFicha(sv):0,com=preco*((sv&&sv.comissao)||0)/100;
+    m[s.nome]=m[s.nome]||{qtd:0,receita:0,custo:0,com:0};
+    m[s.nome].qtd++;m[s.nome].receita+=preco;m[s.nome].custo+=custo;m[s.nome].com+=com;
+  })});
+  return Object.keys(m).map(function(k){
+    var x=m[k],margem=x.receita-x.custo-x.com;
+    return {nome:k,qtd:x.qtd,receita:x.receita,margem:margem,margemPc:x.receita?margem/x.receita*100:0};
+  }).sort(function(a,b){return b.margem-a.margem});
+}
+function paresServicos(oss){
+  var m={};
+  oss.forEach(function(o){
+    var nomes=o.servicos.map(function(s){return s.nome}).filter(function(v,i,a){return a.indexOf(v)===i}).sort();
+    for(var i=0;i<nomes.length;i++)for(var j=i+1;j<nomes.length;j++){
+      var k=nomes[i]+' + '+nomes[j];
+      m[k]=m[k]||{qtd:0,valor:0};
+      m[k].qtd++;m[k].valor+=totalOS(o);
+    }
+  });
+  return Object.keys(m).map(function(k){return {nome:k,qtd:m[k].qtd,valor:m[k].valor}})
+    .sort(function(a,b){return b.qtd-a.qtd});
+}
+function movimentoPorHora(oss){
+  var labels=[],valores=[];
+  for(var h=7;h<=19;h++){
+    labels.push(pad2(h));
+    valores.push(oss.filter(function(o){return Math.floor(o.entrada/60)===h}).length);
+  }
+  return {labels:labels,valores:valores};
+}
+function curvaABC(oss){
+  var porCliente={};
+  oss.forEach(function(o){
+    var k=o.clienteId||('anon'+o.id);
+    porCliente[k]=(porCliente[k]||0)+totalOS(o);
+  });
+  var vals=Object.keys(porCliente).map(function(k){return porCliente[k]}).sort(function(a,b){return b-a});
+  var total=vals.reduce(function(a,b){return a+b},0),acum=0,qtdA=0;
+  for(var i=0;i<vals.length;i++){acum+=vals[i];qtdA++;if(acum>=total*0.8)break}
+  return {total:total,clientes:vals.length,qtdA:qtdA,
+    pcClientesA:vals.length?Math.round(qtdA/vals.length*100):0,vals:vals};
+}
+function retencao(){
+  var primeiras=[],r30=0,r60=0,r90=0;
+  CLIENTES.forEach(function(c){
+    var v=visitasDoCliente(c.id);
+    if(v.length<1)return;
+    var prim=v[v.length-1],dPrim=new Date((prim.entregueISO||'').slice(0,10)+'T12:00:00');
+    if(diffDias(new Date(),dPrim)<30)return;
+    primeiras.push(c);
+    var voltas=v.slice(0,-1).map(function(o){return diffDias(new Date((o.entregueISO||'').slice(0,10)+'T12:00:00'),dPrim)});
+    if(voltas.some(function(d){return d<=30}))r30++;
+    if(voltas.some(function(d){return d<=60}))r60++;
+    if(voltas.some(function(d){return d<=90}))r90++;
+  });
+  var t=primeiras.length;
+  return {total:t,r30:r30,r60:r60,r90:r90,
+    pc30:t?Math.round(r30/t*100):0,pc60:t?Math.round(r60/t*100):0,pc90:t?Math.round(r90/t*100):0};
+}
+function consumoInsumos(oss){
+  var m={};
+  oss.forEach(function(o){o.servicos.forEach(function(s){
+    var sv=servicoPorNome(s.nome);if(!sv||!sv.ficha)return;
+    sv.ficha.forEach(function(f){
+      var ins=insumoPorId(f.insumoId);if(!ins)return;
+      m[ins.id]=m[ins.id]||{nome:ins.nome,un:ins.unidade,qtd:0,custo:0};
+      m[ins.id].qtd+=+f.qtd||0;
+      m[ins.id].custo+=(+f.qtd||0)*(+ins.custo||0);
+    });
+  })});
+  return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return b.custo-a.custo});
+}
+
+/* ================= VENDAS ================= */
 function renderIndVendas(d){
   var porDia=agruparPorDia(d.oss,d.p);
   document.getElementById('chartFaturamento').innerHTML=graficoBarras('Faturamento por dia',porDia.labels,porDia.valores,fmtBRLcurto);
 
-  var mix=mixServicos(d.oss),totalMix=mix.reduce(function(a,x){return a+x.valor},0);
-  document.getElementById('rankServicos').innerHTML=mix.length?mix.slice(0,10).map(function(x){
-    var pc=totalMix?Math.round(x.valor/totalMix*100):0;
-    return '<div class="hbar-row"><div class="hbar-nm"><b>'+esc(x.nome)+'</b><div class="hbar-track"><i class="hbar-fill" style="width:'+pc+'%"></i></div></div>'+
-      '<div class="hbar-val">'+fmtBRL(x.valor)+'<small>'+x.qtd+'x · '+pc+'%</small></div></div>';
-  }).join(''):'<div class="crm-empty">Nenhuma OS entregue no período.</div>';
+  var mix=mixServicos(d.oss);
+  document.getElementById('chartSvcQtd').innerHTML=mix.length
+    ? graficoBarras('Quantidade vendida por serviço',
+        mix.slice(0,8).map(function(x){return x.nome.length>11?x.nome.slice(0,10)+'…':x.nome}),
+        mix.slice(0,8).map(function(x){return x.qtd}),function(v){return v||''})
+    : '';
 
-  var cats={};
-  d.oss.forEach(function(o){cats[o.categoria]=(cats[o.categoria]||0)+totalOS(o)});
-  var chaves=Object.keys(cats).sort(function(a,b){return cats[b]-cats[a]});
-  document.getElementById('rankCategorias').innerHTML=chaves.length?chaves.map(function(k){
-    var pc=d.receita?Math.round(cats[k]/d.receita*100):0;
-    return '<div class="hbar-row"><div class="hbar-nm"><b>'+esc(k)+'</b><div class="hbar-track"><i class="hbar-fill" style="width:'+pc+'%;background:var(--teal)"></i></div></div>'+
-      '<div class="hbar-val">'+fmtBRL(cats[k])+'<small>'+pc+'%</small></div></div>';
-  }).join(''):'<div class="crm-empty">Sem dados.</div>';
+  var margens={};
+  margemPorServico(d.oss).forEach(function(x){margens[x.nome]=x});
+  var totalMix=mix.reduce(function(a,x){return a+x.valor},0);
+  document.getElementById('rankServicos').innerHTML=rankHtml(mix.slice(0,12).map(function(x){
+    var mg=margens[x.nome];
+    return {nome:x.nome,valor:x.valor,
+      sub:x.qtd+'x · '+(totalMix?Math.round(x.valor/totalMix*100):0)+'% · ticket '+fmtBRLcurto(x.valor/x.qtd)+
+        (mg&&mg.margemPc?' · margem '+Math.round(mg.margemPc)+'%':'')};
+  }),fmtBRL,'var(--azul)');
 
-  /* upsell: clientes que só fazem lavagem simples */
+  document.getElementById('rankCombos').innerHTML=rankHtml(paresServicos(d.oss).slice(0,8).map(function(x){
+    return {nome:x.nome,valor:x.qtd,sub:'ticket médio '+fmtBRLcurto(x.valor/x.qtd)};
+  }),function(v){return v+'x'},'var(--teal)','Nenhuma OS com dois serviços no período. Comece oferecendo cera junto da lavagem.');
+
+  var portes={};
+  d.oss.forEach(function(o){
+    var k=o.categoria||'—';
+    portes[k]=portes[k]||{soma:0,qtd:0};
+    portes[k].soma+=totalOS(o);portes[k].qtd++;
+  });
+  var itensPorte=CATEGORIAS.filter(function(c){return portes[c]}).map(function(c){
+    return {nome:c,valor:portes[c].soma/portes[c].qtd,sub:portes[c].qtd+' OS · '+fmtBRLcurto(portes[c].soma)+' no total'};
+  }).sort(function(a,b){return b.valor-a.valor});
+  document.getElementById('ticketPorte').innerHTML=rankHtml(itensPorte,fmtBRL,'var(--ok)');
+}
+
+/* ================= OPERAÇÃO ================= */
+function renderIndOperacao(d){
+  var h=movimentoPorHora(d.oss);
+  document.getElementById('chartHoras').innerHTML=graficoBarras('Entradas por hora do dia',h.labels,h.valores,function(v){return v||''});
+
+  var comTempo=d.oss.filter(function(o){return o.saidaMin!==undefined});
+  var tempoMedio=comTempo.length?comTempo.reduce(function(a,o){return a+Math.max(0,o.saidaMin-o.entrada)},0)/comTempo.length:0;
+  var noPrazo=comTempo.filter(function(o){return o.saidaMin<=o.previsao+(+DB.config.toleranciaMin||0)}).length;
+  var dias=Math.max(1,diffDias(new Date(d.p.fim+'T12:00:00'),new Date(d.p.ini+'T12:00:00'))+1);
+  var horasUteis=(paraMin(DB.config.fecha)-paraMin(DB.config.abre))/60*(+DB.config.boxes||1);
+  document.getElementById('operKpis').innerHTML=
+    kpi('Tempo médio','var(--azul)',Math.round(tempoMedio)+' min','da entrada à entrega')+
+    kpi('No prazo','var(--ok)',(comTempo.length?Math.round(noPrazo/comTempo.length*100):0)+'%',comTempo.length+' OS medidas')+
+    kpi('Carros por dia','var(--teal)',(d.oss.length/dias).toFixed(1),'média do período')+
+    kpi('Receita por hora de box','var(--alerta)',fmtBRL(horasUteis?d.receita/(dias*horasUteis):0),(+DB.config.boxes||1)+' box · '+DB.config.abre+'–'+DB.config.fecha);
+
+  /* mapa de calor dia x faixa */
+  var grade={},maxCel=0;
+  d.oss.forEach(function(o){
+    var dt=new Date((o.entregueISO||'').slice(0,10)+'T12:00:00'),dia=dt.getDay(),hr=Math.floor(o.entrada/60);
+    var fi=-1;FAIXAS.forEach(function(f,i){if(hr>=f[0]&&hr<f[1])fi=i});
+    if(fi<0)return;
+    var k=dia+'-'+fi;grade[k]=(grade[k]||0)+1;
+    if(grade[k]>maxCel)maxCel=grade[k];
+  });
+  document.getElementById('heatmap').innerHTML=
+    '<div class="heat"><div class="heat-row head"><span></span>'+FAIXAS.map(function(f){return '<span>'+f[2]+'</span>'}).join('')+'</div>'+
+    [1,2,3,4,5,6,0].map(function(dia){
+      return '<div class="heat-row"><span class="heat-dia">'+DIAS_CURTO[dia]+'</span>'+
+        FAIXAS.map(function(f,i){
+          var v=grade[dia+'-'+i]||0,op=maxCel?v/maxCel:0;
+          return '<span class="heat-cell'+(v?'':' vazio')+'" style="--o:'+op.toFixed(2)+'" title="'+DIAS_SEM[dia]+' '+f[2]+'h: '+v+' carros">'+(v||'')+'</span>';
+        }).join('')+'</div>';
+    }).join('')+'</div>'+
+    (maxCel?'<p class="mini-note">Pico: '+maxCel+' carros numa única faixa. As células vazias são as janelas para promoção e agendamento.</p>':'<div class="crm-empty">Sem OS suficientes para montar o mapa.</div>');
+
+  var porLav={};
+  d.oss.forEach(function(o){
+    var k=o.lavadorId||0;
+    porLav[k]=porLav[k]||{qtd:0,valor:0,tempo:0,n:0,com:0};
+    porLav[k].qtd++;porLav[k].valor+=totalOS(o);
+    porLav[k].com+=(o.comissao!==undefined?o.comissao:comissaoDaOS(o));
+    if(o.saidaMin!==undefined){porLav[k].tempo+=Math.max(0,o.saidaMin-o.entrada);porLav[k].n++}
+  });
+  document.getElementById('rankEquipe').innerHTML=rankHtml(Object.keys(porLav).map(function(k){
+    var e=+k?DB.equipe.find(function(x){return x.id===+k}):null,v=porLav[k];
+    return {nome:e?e.nome:'Sem lavador definido',valor:v.valor,
+      sub:v.qtd+' OS'+(v.n?' · '+Math.round(v.tempo/v.n)+' min por carro':'')+' · comissão '+fmtBRLcurto(v.com)};
+  }).sort(function(a,b){return b.valor-a.valor}),fmtBRL,'var(--ok)');
+
+  var dias7=[0,0,0,0,0,0,0],qtd7=[0,0,0,0,0,0,0];
+  d.oss.forEach(function(o){
+    var dt=new Date((o.entregueISO||'').slice(0,10)+'T12:00:00');
+    dias7[dt.getDay()]+=totalOS(o);qtd7[dt.getDay()]++;
+  });
+  document.getElementById('rankDiaSemana').innerHTML=rankHtml([1,2,3,4,5,6,0].map(function(i){
+    return {nome:DIAS_SEM[i],valor:dias7[i],sub:qtd7[i]+' OS'+(qtd7[i]?' · ticket '+fmtBRLcurto(dias7[i]/qtd7[i]):'')};
+  }),fmtBRLcurto,'var(--azul)');
+}
+
+/* ================= CLIENTES ================= */
+function renderIndClientes(d){
+  var ids={};d.oss.forEach(function(o){if(o.clienteId)ids[o.clienteId]=true});
+  var atendidos=Object.keys(ids).length;
+  var novos=CLIENTES.filter(function(c){
+    var v=visitasDoCliente(c.id);
+    return v.length&&(v[v.length-1].entregueISO||'').slice(0,10)>=d.p.ini;
+  }).length;
+  var m=mapaRetornos(),abc=curvaABC(d.oss);
+  document.getElementById('cliKpis').innerHTML=
+    kpi('Atendidos','var(--azul)',String(atendidos),'clientes no período')+
+    kpi('Novos','var(--ok)',String(novos),'primeira visita')+
+    kpi('Recorrentes','var(--teal)',(atendidos?Math.round((atendidos-novos)/atendidos*100):0)+'%',(atendidos-novos)+' voltaram')+
+    kpi('Em risco','var(--perigo)',String(m.atrasados.length),'passaram do ciclo');
+
+  var rank=CLIENTES.map(function(c){
+    var v=d.oss.filter(function(o){return o.clienteId===c.id});
+    return {c:c,qtd:v.length,total:v.reduce(function(a,o){return a+totalOS(o)},0)};
+  }).filter(function(x){return x.qtd}).sort(function(a,b){return b.total-a.total}).slice(0,15);
+  document.getElementById('rankClientes').innerHTML=rankHtml(rank.map(function(r,i){
+    return {nome:(i+1)+'. '+r.c.nome,valor:r.total,
+      sub:r.qtd+' visita'+(r.qtd>1?'s':'')+' · ticket '+fmtBRLcurto(r.total/r.qtd),
+      attr:' data-cli="'+r.c.id+'" style="cursor:pointer"'};
+  }),fmtBRL,'var(--teal)','Nenhum cliente atendido com esses filtros.');
+  document.getElementById('rankClientes').onclick=function(e){
+    var r=e.target.closest('[data-cli]');if(!r)return;
+    irPara('clientes');abrirClienteDetalhe(clientePorId(+r.dataset.cli));
+  };
+
+  document.getElementById('curvaABC').innerHTML=abc.clientes?
+    '<div class="stat-inline">'+
+      '<div><span class="v">'+abc.qtdA+'</span><span class="k">clientes = 80%</span></div>'+
+      '<div><span class="v">'+abc.pcClientesA+'%</span><span class="k">da carteira</span></div>'+
+      '<div><span class="v">'+abc.clientes+'</span><span class="k">clientes ativos</span></div>'+
+      '<div><span class="v">'+fmtBRLcurto(abc.total/abc.clientes)+'</span><span class="k">receita/cliente</span></div>'+
+    '</div>'+
+    '<div class="abc-bar"><i style="width:'+abc.pcClientesA+'%"></i></div>'+
+    '<p class="mini-note">'+(abc.pcClientesA<=20
+      ? 'Concentração alta: '+abc.pcClientesA+'% dos clientes trazem 80% do faturamento. Ampliar a base reduz risco mais do que subir preço.'
+      : 'Receita bem distribuída entre '+abc.clientes+' clientes. Perder um não compromete o mês — dá para investir em ticket com segurança.')+'</p>'
+    :'<div class="crm-empty">Sem clientes atendidos no período.</div>';
+
+  var ret=retencao();
+  document.getElementById('retencao').innerHTML=ret.total?
+    rankHtml([
+      {nome:'Voltaram em até 30 dias',valor:ret.pc30,sub:ret.r30+' de '+ret.total+' clientes'},
+      {nome:'Voltaram em até 60 dias',valor:ret.pc60,sub:ret.r60+' de '+ret.total+' clientes'},
+      {nome:'Voltaram em até 90 dias',valor:ret.pc90,sub:ret.r90+' de '+ret.total+' clientes'}
+    ],function(v){return v+'%'},'var(--ok)')+
+    '<p class="mini-note">'+(ret.pc30>=45?'Retenção saudável.':'Menos da metade volta no primeiro mês — fidelidade e lembrete programado atacam isso direto.')+'</p>'
+    :'<div class="crm-empty">Ainda sem histórico de 30 dias para medir retenção.</div>';
+
+  document.getElementById('churnLista').innerHTML=m.atrasados.length?m.atrasados.slice(0,10).map(function(x){
+    return '<div class="lrow" data-ret="'+x.cliente.id+'" style="--c:var(--perigo)" data-busca="'+esc((x.cliente.nome+' '+x.placa).toLowerCase())+'">'+
+      '<div class="lrow-ic">'+iniciais(x.cliente.nome)+'</div>'+
+      '<div class="lrow-tx"><b>'+esc(x.cliente.nome)+'</b><span>vinha a cada '+x.media+' dias · '+x.desde+' dias sem aparecer</span></div>'+
+      '<div class="lrow-val">'+fmtBRLcurto(gastoDoCliente(x.cliente.id))+'<small>histórico</small></div></div>';
+  }).join(''):'<div class="crm-empty">Nenhum cliente fora do ciclo. Base saudável.</div>';
+
   var alvos=[];
   CLIENTES.forEach(function(c){
     var vis=visitasDoCliente(c.id);
@@ -5978,106 +6972,16 @@ function renderIndVendas(d){
     if(faltando.length)alvos.push({c:c,vis:vis.length,falta:faltando[0],gasto:gastoDoCliente(c.id)});
   });
   alvos.sort(function(a,b){return b.gasto-a.gasto});
-  document.getElementById('upsellLista').innerHTML=alvos.length?alvos.slice(0,6).map(function(x){
-    return '<div class="lrow" data-upsell="'+x.c.id+'" style="--c:var(--teal)">'+
+  document.getElementById('upsellLista').innerHTML=alvos.length?alvos.slice(0,8).map(function(x){
+    return '<div class="lrow" data-cli2="'+x.c.id+'" style="--c:var(--teal);cursor:pointer" data-busca="'+esc((x.c.nome+' '+x.falta).toLowerCase())+'">'+
       '<div class="lrow-ic">'+iniciais(x.c.nome)+'</div>'+
       '<div class="lrow-tx"><b>'+esc(x.c.nome)+'</b><span>'+x.vis+' visitas · nunca fez '+esc(x.falta.toLowerCase())+'</span></div>'+
       '<div class="lrow-val">'+fmtBRLcurto(x.gasto)+'<small>já gastou</small></div></div>';
   }).join(''):'<div class="crm-empty">Ainda sem histórico suficiente para sugerir upsell.</div>';
   document.getElementById('upsellLista').onclick=function(e){
-    var r=e.target.closest('[data-upsell]');if(!r)return;
-    irPara('clientes');abrirClienteDetalhe(clientePorId(+r.dataset.upsell));
+    var r=e.target.closest('[data-cli2]');if(!r)return;
+    irPara('clientes');abrirClienteDetalhe(clientePorId(+r.dataset.cli2));
   };
-}
-
-/* ---------- operação ---------- */
-function movimentoPorHora(oss){
-  var labels=[],valores=[];
-  for(var h=7;h<=19;h++){
-    labels.push(pad2(h));
-    valores.push(oss.filter(function(o){return Math.floor(o.entrada/60)===h}).length);
-  }
-  return {labels:labels,valores:valores};
-}
-function renderIndOperacao(d){
-  var h=movimentoPorHora(d.oss);
-  document.getElementById('chartHoras').innerHTML=graficoBarras('Entradas por hora do dia',h.labels,h.valores,function(v){return v||''});
-
-  var comTempo=d.oss.filter(function(o){return o.saidaMin!==undefined});
-  var tempoMedio=comTempo.length?comTempo.reduce(function(a,o){return a+Math.max(0,o.saidaMin-o.entrada)},0)/comTempo.length:0;
-  var noPrazo=comTempo.filter(function(o){return o.saidaMin<=o.previsao+(+DB.config.toleranciaMin||0)}).length;
-  var prometido=d.oss.reduce(function(a,o){return a+(o.duracao||30)},0)/(d.oss.length||1);
-  document.getElementById('operKpis').innerHTML=
-    kpi('Tempo médio','var(--azul)',Math.round(tempoMedio)+' min','da entrada à entrega')+
-    kpi('No prazo','var(--ok)',(comTempo.length?Math.round(noPrazo/comTempo.length*100):0)+'%',comTempo.length+' OS medidas')+
-    kpi('Execução prevista','var(--teal)',Math.round(prometido)+' min','média do catálogo')+
-    kpi('Carros/dia','var(--alerta)',(d.oss.length/Math.max(1,diffDias(new Date(d.p.fim+'T12:00:00'),new Date(d.p.ini+'T12:00:00'))+1)).toFixed(1),'média do período');
-
-  var porLav={};
-  d.oss.forEach(function(o){
-    var k=o.lavadorId||0;
-    porLav[k]=porLav[k]||{qtd:0,valor:0,tempo:0,n:0};
-    porLav[k].qtd++;porLav[k].valor+=totalOS(o);
-    if(o.saidaMin!==undefined){porLav[k].tempo+=Math.max(0,o.saidaMin-o.entrada);porLav[k].n++}
-  });
-  var chaves=Object.keys(porLav).sort(function(a,b){return porLav[b].valor-porLav[a].valor});
-  document.getElementById('rankEquipe').innerHTML=chaves.length?chaves.map(function(k){
-    var e=+k?DB.equipe.find(function(x){return x.id===+k}):null;
-    var v=porLav[k],pc=d.receita?Math.round(v.valor/d.receita*100):0;
-    return '<div class="hbar-row"><div class="hbar-nm"><b>'+(e?esc(e.nome):'Sem lavador definido')+'</b>'+
-      '<div class="hbar-track"><i class="hbar-fill" style="width:'+pc+'%;background:var(--ok)"></i></div></div>'+
-      '<div class="hbar-val">'+fmtBRL(v.valor)+'<small>'+v.qtd+' OS'+(v.n?' · '+Math.round(v.tempo/v.n)+' min':'')+'</small></div></div>';
-  }).join(''):'<div class="crm-empty">Sem OS no período.</div>';
-
-  var dias=[0,0,0,0,0,0,0],qtdDias=[0,0,0,0,0,0,0];
-  d.oss.forEach(function(o){
-    var dt=new Date((o.entregueISO||'').slice(0,10)+'T12:00:00');
-    dias[dt.getDay()]+=totalOS(o);qtdDias[dt.getDay()]++;
-  });
-  var maxD=Math.max.apply(null,dias.concat([1]));
-  document.getElementById('rankDiaSemana').innerHTML=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'].map(function(n,i){
-    var pc=Math.round(dias[i]/maxD*100);
-    return '<div class="hbar-row"><div class="hbar-nm"><b>'+n+'</b><div class="hbar-track"><i class="hbar-fill" style="width:'+pc+'%"></i></div></div>'+
-      '<div class="hbar-val">'+fmtBRLcurto(dias[i])+'<small>'+qtdDias[i]+' OS</small></div></div>';
-  }).join('');
-}
-
-/* ---------- clientes ---------- */
-function renderIndClientes(d){
-  var ids={};d.oss.forEach(function(o){if(o.clienteId)ids[o.clienteId]=true});
-  var atendidos=Object.keys(ids).length;
-  var novos=CLIENTES.filter(function(c){
-    var v=visitasDoCliente(c.id);
-    return v.length&&(v[v.length-1].entregueISO||'').slice(0,10)>=d.p.ini;
-  }).length;
-  var recorrentes=atendidos-novos;
-  var m=mapaRetornos();
-  document.getElementById('cliKpis').innerHTML=
-    kpi('Atendidos','var(--azul)',String(atendidos),'clientes no período')+
-    kpi('Novos','var(--ok)',String(novos),'primeira visita')+
-    kpi('Recorrentes','var(--teal)',(atendidos?Math.round(recorrentes/atendidos*100):0)+'%',recorrentes+' voltaram')+
-    kpi('Em risco','var(--perigo)',String(m.atrasados.length),'passaram do ciclo');
-
-  var rank=CLIENTES.map(function(c){
-    var v=d.oss.filter(function(o){return o.clienteId===c.id});
-    return {c:c,qtd:v.length,total:v.reduce(function(a,o){return a+totalOS(o)},0)};
-  }).filter(function(x){return x.qtd}).sort(function(a,b){return b.total-a.total}).slice(0,8);
-  document.getElementById('rankClientes').innerHTML=rank.length?rank.map(function(r,i){
-    return '<div class="rank-row" data-cli="'+r.c.id+'" style="cursor:pointer"><div class="rank-pos">'+(i+1)+'</div>'+
-      '<div class="rank-nm"><b>'+esc(r.c.nome)+'</b><span>'+r.qtd+' visita'+(r.qtd>1?'s':'')+' no período</span></div>'+
-      '<div class="rank-val">'+fmtBRL(r.total)+'</div></div>';
-  }).join(''):'<div class="crm-empty">Sem clientes atendidos no período.</div>';
-  document.getElementById('rankClientes').onclick=function(e){
-    var r=e.target.closest('[data-cli]');if(!r)return;
-    irPara('clientes');abrirClienteDetalhe(clientePorId(+r.dataset.cli));
-  };
-
-  document.getElementById('churnLista').innerHTML=m.atrasados.length?m.atrasados.slice(0,8).map(function(x){
-    return '<div class="lrow" data-ret="'+x.cliente.id+'" style="--c:var(--perigo)">'+
-      '<div class="lrow-ic">'+iniciais(x.cliente.nome)+'</div>'+
-      '<div class="lrow-tx"><b>'+esc(x.cliente.nome)+'</b><span>vinha a cada '+x.media+' dias · '+x.desde+' dias sem aparecer</span></div>'+
-      '<div class="lrow-val">'+fmtBRLcurto(gastoDoCliente(x.cliente.id))+'<small>histórico</small></div></div>';
-  }).join(''):'<div class="crm-empty">Nenhum cliente fora do ciclo. Base saudável.</div>';
 
   if(DB.config.fidelidade.ativo){
     var premiados=CLIENTES.filter(function(c){return selosDoCliente(c).temPremio});
@@ -6092,7 +6996,44 @@ function renderIndClientes(d){
   }else document.getElementById('fidResumo').innerHTML='<div class="crm-empty">Programa de fidelidade desligado. Ative em Admin › Configurações.</div>';
 }
 
-/* ---------- financeiro ---------- */
+/* ================= VEÍCULOS ================= */
+function renderIndVeiculos(d){
+  var placas={};d.oss.forEach(function(o){placas[o.placa]=true});
+  var marcas=agrupar(d.oss,function(o){return o.marca||'—'});
+  var modelos=agrupar(d.oss,function(o){return ((o.marca?o.marca+' ':'')+(o.modelo||'—'))});
+  var portes=agrupar(d.oss,function(o){return o.categoria||'—'});
+  var pesados=d.oss.filter(function(o){return ['SUV','Pickup','Grande'].indexOf(o.categoria)>-1});
+
+  document.getElementById('veicKpis').innerHTML=
+    kpi('Veículos atendidos','var(--azul)',String(Object.keys(placas).length),'placas distintas')+
+    kpi('Marcas','var(--teal)',String(marcas.length),marcas.length?'líder: '+marcas[0].nome:'—')+
+    kpi('Porte dominante','var(--ok)',portes.length?portes[0].nome:'—',portes.length?portes[0].qtd+' OS':'—')+
+    kpi('Porte grande','var(--alerta)',(d.oss.length?Math.round(pesados.length/d.oss.length*100):0)+'%','SUV, pickup e grandes');
+
+  document.getElementById('chartPortes').innerHTML=portes.length
+    ? graficoBarras('Atendimentos por porte de veículo',
+        portes.map(function(x){return x.nome}),portes.map(function(x){return x.qtd}),function(v){return v||''})
+    : '';
+
+  document.getElementById('rankMarcas').innerHTML=rankHtml(marcas.slice(0,12).map(function(x){
+    return {nome:x.nome,valor:x.qtd,sub:fmtBRLcurto(x.valor)+' · ticket '+fmtBRLcurto(x.valor/x.qtd)};
+  }),function(v){return v+' OS'},'var(--teal)');
+
+  document.getElementById('rankModelos').innerHTML=rankHtml(modelos.slice(0,12).map(function(x){
+    return {nome:x.nome,valor:x.qtd,sub:fmtBRLcurto(x.valor)+' no período'};
+  }),function(v){return v+' OS'},'var(--azul)');
+
+  document.getElementById('rankPortes').innerHTML=rankHtml(portes.map(function(x){
+    return {nome:x.nome,valor:x.valor,sub:x.qtd+' OS · ticket '+fmtBRLcurto(x.valor/x.qtd)};
+  }),fmtBRL,'var(--ok)');
+
+  var cores=agrupar(d.oss,function(o){return o.cor||'—'});
+  document.getElementById('rankCores').innerHTML=rankHtml(cores.slice(0,10).map(function(x){
+    return {nome:x.nome,valor:x.qtd,sub:fmtBRLcurto(x.valor)+' no período'};
+  }),function(v){return v+' OS'},'var(--fumaca)');
+}
+
+/* ================= FINANCEIRO ================= */
 function renderIndFinanceiro(d){
   var recebido=d.oss.reduce(function(a,o){return a+totalPago(o)},0);
   var fiadoTotal=osEntregues().filter(function(o){return o.fiado>0.004});
@@ -6102,15 +7043,6 @@ function renderIndFinanceiro(d){
     kpi('Custo de insumos','var(--perigo)',fmtBRL(d.custo),d.receita?Math.round(d.custo/d.receita*100)+'% da receita':'—')+
     kpi('Comissões','var(--alerta)',fmtBRL(d.comissao),d.receita?Math.round(d.comissao/d.receita*100)+'% da receita':'—')+
     kpi('A receber','var(--azul)',fmtBRL(fiadoTotal.reduce(function(a,o){return a+o.fiado},0)),fiadoTotal.length+' OS em aberto');
-
-  var pf={};
-  d.oss.forEach(function(o){o.pagamentos.forEach(function(p){pf[p.forma]=(pf[p.forma]||0)+(+p.valor||0)})});
-  var ks=Object.keys(pf).sort(function(a,b){return pf[b]-pf[a]});
-  document.getElementById('rankFormas').innerHTML=ks.length?ks.map(function(k){
-    var pc=recebido?Math.round(pf[k]/recebido*100):0;
-    return '<div class="hbar-row"><div class="hbar-nm"><b>'+esc(k)+'</b><div class="hbar-track"><i class="hbar-fill" style="width:'+pc+'%"></i></div></div>'+
-      '<div class="hbar-val">'+fmtBRL(pf[k])+'<small>'+pc+'%</small></div></div>';
-  }).join(''):'<div class="crm-empty">Sem recebimentos no período.</div>';
 
   var caixasPer=DB.caixas.filter(function(c){return c.dataDia>=d.p.ini&&c.dataDia<=d.p.fim});
   var movs=[];caixasPer.forEach(function(c){movs=movs.concat(c.movimentos)});
@@ -6129,8 +7061,23 @@ function renderIndFinanceiro(d){
     '</div>'+
     '<p class="mini-note">Insumos saem da ficha técnica de cada serviço e comissões do percentual do catálogo. Quanto mais completo o Admin, mais fiel esse número.</p>';
 
+  document.getElementById('rankMargem').innerHTML=rankHtml(margemPorServico(d.oss).slice(0,12).map(function(x){
+    return {nome:x.nome,valor:x.margem,sub:x.qtd+'x · '+Math.round(x.margemPc)+'% de margem · receita '+fmtBRLcurto(x.receita)};
+  }),fmtBRL,'var(--ok)');
+
+  var ins=consumoInsumos(d.oss);
+  document.getElementById('rankInsumos').innerHTML=rankHtml(ins.map(function(x){
+    return {nome:x.nome,valor:x.custo,sub:x.qtd.toFixed(2).replace('.',',')+' '+x.un+' consumidos'};
+  }),fmtBRL,'#9B8CF5','Nenhum insumo com ficha técnica montada. Cadastre em Estoque para ver custo e margem reais.');
+
+  var pf={};
+  d.oss.forEach(function(o){o.pagamentos.forEach(function(p){pf[p.forma]=(pf[p.forma]||0)+(+p.valor||0)})});
+  document.getElementById('rankFormas').innerHTML=rankHtml(Object.keys(pf).map(function(k){
+    return {nome:k,valor:pf[k],sub:(recebido?Math.round(pf[k]/recebido*100):0)+'% do recebido'};
+  }).sort(function(a,b){return b.valor-a.valor}),fmtBRL,'var(--teal)');
+
   document.getElementById('receberBox').innerHTML=fiadoTotal.length?fiadoTotal.map(function(o){
-    return '<div class="osx" data-fiado="'+o.id+'" style="cursor:pointer"><span class="num">'+dataBR(o.entregueISO).slice(0,5)+'</span>'+
+    return '<div class="osx" data-fiado="'+o.id+'" style="cursor:pointer" data-busca="'+esc((o.cliente+' '+o.placa+' '+o.numero).toLowerCase())+'"><span class="num">'+dataBR(o.entregueISO).slice(0,5)+'</span>'+
       '<div class="tx"><b>'+esc(o.cliente)+'</b><span>OS '+o.numero+' · '+esc(o.placa)+'</span></div>'+
       '<span class="vl" style="color:var(--perigo)">'+fmtBRL(o.fiado)+'</span></div>';
   }).join(''):'<div class="crm-empty">Nada em aberto. Todas as OS foram quitadas.</div>';
@@ -6154,6 +7101,29 @@ function renderIndFinanceiro(d){
       ]});
   };
 }
+
+/* ================= EXPORTAR ================= */
+document.getElementById('indExportar').addEventListener('click',function(){
+  var p=periodoAtivo(),oss=osFiltradas(p);
+  if(!oss.length){toast('Nada para exportar','Nenhuma OS no período com esses filtros.','warn');return}
+  var linhas=[['OS','Data','Hora','Cliente','Telefone','Placa','Marca','Modelo','Cor','Porte','Servicos','Bruto','Desconto','Total','Pago','Formas','Lavador','Custo','Comissao','Margem'].join(';')];
+  oss.forEach(function(o){
+    var lav=o.lavadorId?(DB.equipe.find(function(e){return e.id===o.lavadorId})||{}).nome:'';
+    var custo=o.custoInsumos!==undefined?o.custoInsumos:custoDaOS(o);
+    var com=o.comissao!==undefined?o.comissao:comissaoDaOS(o);
+    function n(v){return (+v||0).toFixed(2).replace('.',',')}
+    linhas.push([o.numero,dataBR(o.entregueISO),horaDe(o.entregueISO),o.cliente,o.tel,o.placa,o.marca||'',o.modelo,o.cor||'',o.categoria,
+      o.servicos.map(function(s){return s.nome}).join(' + '),
+      n(totalServicos(o)),n(o.desconto),n(totalOS(o)),n(totalPago(o)),
+      o.pagamentos.map(function(x){return x.forma}).join(' + '),lav||'',
+      n(custo),n(com),n(totalOS(o)-custo-com)].join(';'));
+  });
+  var blob=new Blob(['\ufeff'+linhas.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='tjet-indicadores-'+p.ini+'_'+p.fim+'.csv';a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
+  toast('CSV gerado',oss.length+' OS com custo e margem por linha.','ok');
+});
 
 
 /* ================= NAVEGAÇÃO ENTRE MÓDULOS ================= */
@@ -6399,6 +7369,12 @@ document.getElementById('instalarBtn').addEventListener('click',function(){
   promptInstalar.prompt();
   promptInstalar.userChoice.then(function(){promptInstalar=null;this.style.display='none'}.bind(this));
 });
+
+/* ================= MODO PÚBLICO (link do cliente) ================= */
+(function(){
+  var m=(location.hash||'').match(/[#&]t=([A-Za-z0-9\-_]+)/);
+  if(m)abrirModoPublico(m[1]);
+})();
 
 /* ================= INICIALIZAÇÃO ================= */
 document.getElementById('scrSub').textContent=DB.config.nome;
