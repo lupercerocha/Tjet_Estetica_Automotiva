@@ -263,7 +263,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.5.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v2.5.1 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -299,6 +299,20 @@ a legenda secundária sai.
 Em telas muito estreitas (abaixo de 360 px) a faixa de indicadores volta a duas
 colunas, para o valor em reais não espremer.
 
+
+## Confirmar a versão
+
+Na tela inicial, ao lado da data, tem um selo pequeno: **v2.5.1**. É a forma mais
+rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
+na versão antiga.
+
+Tocando nele abre o diagnóstico completo sem sair da tela: versão e build, se a
+câmera está liberada, se o leitor de placa foi baixado, se a base de veículos
+carregou, e os erros da sessão. Os botões **Copiar** e **Forçar atualização**
+estão ali dentro.
+
+O selo fica bem apagado no dia a dia. **Se algum erro acontecer, ele muda para
+laranja** — é o único aviso de que vale a pena tocar ali.
 
 ## Tela inicial no celular
 

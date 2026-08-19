@@ -1062,6 +1062,7 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 .ass-selo-tx{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ass-selo-tx b{font:700 13px/1.2 var(--f-body);color:var(--tinta)}
 .ass-selo-tx span{font:500 10.5px/1.3 var(--f-mono);color:var(--texto3);letter-spacing:.2px}
+.ass-selo-tx .ass-terceiro{font:600 10.5px/1.3 var(--f-body);color:var(--teal);letter-spacing:0}
 
 /* ===== PÁGINA PÚBLICA ===== */
 .publico-wrap{display:none}
@@ -1195,6 +1196,20 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
   #view-home .metric b{font-size:1.15rem}
 }
 
+/* ===== SELO DE VERSÃO NA HOME ===== */
+.hello-linha{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:3px}
+.hello-linha p{margin:0}
+.versao-pill{
+  flex:none;border:1px solid var(--linha);background:transparent;color:var(--fumaca);
+  font-family:'JetBrains Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:.09em;
+  padding:4px 8px;border-radius:99px;cursor:pointer;opacity:.5;line-height:1;
+  transition:opacity .16s,border-color .16s,color .16s;
+}
+.versao-pill:hover{opacity:1;border-color:var(--teal);color:var(--teal)}
+.versao-pill:active{transform:scale(.94)}
+/* fica levemente mais visível quando há erro registrado */
+.versao-pill.alerta{opacity:1;border-color:var(--alerta);color:var(--alerta)}
+
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
    carro tem que estar no polegar — os indicadores viram uma faixa de consulta. */
@@ -1327,7 +1342,10 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
     <div class="view on" id="view-home">
       <div class="hello">
         <h2>Bom trabalho hoje</h2>
-        <p id="homeData">—</p>
+        <div class="hello-linha">
+          <p id="homeData">—</p>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.6.0</button>
+        </div>
       </div>
 
       <div class="metrics">
@@ -1426,7 +1444,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1615,7 +1633,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1650,7 +1668,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1665,7 +1683,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1679,7 +1697,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.6.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2417,7 +2435,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='2.5.0';
+var TJET_VERSAO='2.6.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2435,6 +2453,8 @@ function registrarErro(msg,onde){
   try{
     var b=document.getElementById('diagBadge');
     if(b){b.style.display='inline-flex';b.textContent=errosApp.length}
+    var p=document.getElementById('homeVersao');
+    if(p)p.classList.add('alerta');
   }catch(x){}
 }
 /* Executa um trecho isolado: se quebrar, registra e segue a vida. */
@@ -5104,9 +5124,11 @@ document.getElementById('assConfirmar').addEventListener('click',function(){
 });
 
 function selo(ass,rotulo){
-  if(!ass)return '';
+  if(!ass||!ass.img)return '';
   return '<div class="ass-selo"><img src="'+ass.img+'" alt="assinatura">'+
-    '<div class="ass-selo-tx"><b>'+esc(ass.nome)+'</b><span>'+esc(rotulo+' · '+ass.quando)+'</span></div></div>';
+    '<div class="ass-selo-tx"><b>'+esc(ass.nome)+'</b>'+
+    (ass.emNomeDe?'<span class="ass-terceiro">em nome de '+esc(ass.emNomeDe)+'</span>':'')+
+    '<span>'+esc(rotulo+' · '+ass.quando)+'</span></div></div>';
 }
 
 /* ---------- termos ---------- */
@@ -5121,7 +5143,11 @@ function termoVistoria(c){
     }).join('')+'</ul>':'');
 }
 function termoEntrega(c){
-  return '<p>Declaro que <b>recebi o veículo '+esc(c.placa||'')+'</b>, conferi o estado da lataria e o serviço executado, '+
+  var r=c.recebedor||{nome:c.cliente,relacao:'Titular'};
+  var terceiro=r.relacao&&r.relacao!=='Titular';
+  return '<p>Eu, <b>'+esc(r.nome||c.cliente||'')+'</b>'+
+    (terceiro?', na condição de <b>'+esc(r.relacao.toLowerCase())+'</b> e retirando em nome de <b>'+esc(c.cliente||'')+'</b>,':',')+
+    ' declaro que <b>recebi o veículo '+esc(c.placa||'')+'</b>, conferi o estado da lataria e o serviço executado, '+
     'e que <b>não há divergência</b> em relação à vistoria feita na entrada.</p>'+
     '<p class="termo-valor">Total da OS: <b>'+fmtBRL(totalOS(c))+'</b>'+
     (saldoOS(c)>0.004?' · saldo em aberto: <b>'+fmtBRL(saldoOS(c))+'</b>':' · quitado')+'</p>';
@@ -5357,13 +5383,15 @@ function renderSaidaExtras(){
     '<div class="chips" id="avaliacaoChips">'+[1,2,3,4,5].map(function(n){
       return '<span class="chip'+(c.avaliacao===n?' on':'')+'" data-nota="'+n+'">'+n+' ★</span>';
     }).join('')+'</div>'+
+    '<div class="card-lbl" style="margin-top:16px">Quem está recebendo</div>'+
+    blocoRecebedor(c)+
     '<div class="card-lbl" style="margin-top:16px">Assinaturas</div>'+
     (c.assinaturaEntrada?selo(c.assinaturaEntrada,'aceite da vistoria na entrada')
       :'<p class="mini-note">Sem assinatura de entrada nesta OS.</p>')+
     (c.assinaturaSaida
-      ? selo(c.assinaturaSaida,'recebimento do veículo')+
+      ? selo(c.assinaturaSaida,rotuloRecebimento(c))+
         '<button class="btn-ghost" id="refazerAssSaida" style="width:100%;margin-top:8px">Refazer assinatura de entrega</button>'
-      : '<button class="btn-ghost" id="assinarSaida" style="width:100%;margin-top:8px">Colher assinatura de entrega</button>');
+      : '<button class="entrar-btn" id="assinarSaida" style="width:100%;margin:10px 0 0">Assinar recebimento</button>');
 
   document.getElementById('qualChecklist').addEventListener('click',function(e){
     var ch=e.target.closest('[data-qual]');if(!ch)return;
@@ -5375,20 +5403,78 @@ function renderSaidaExtras(){
     var ch=e.target.closest('[data-nota]');if(!ch)return;
     c.avaliacao=+ch.dataset.nota;salvar();renderSaidaExtras();
   });
+  ligarRecebedor(c);
   ['assinarSaida','refazerAssSaida'].forEach(function(id){
     var b=document.getElementById(id);
     if(b)b.addEventListener('click',function(){colherAssinaturaSaida(c)});
   });
 }
+
+/* ---------- quem está recebendo ---------- */
+var RELACOES=['Titular','Cônjuge','Familiar','Motorista','Funcionário','Outro'];
+function recebedorDe(c){
+  if(!c.recebedor)c.recebedor={nome:c.cliente||'',relacao:'Titular'};
+  return c.recebedor;
+}
+function rotuloRecebimento(c){
+  var r=c.recebedor;
+  if(!r||r.relacao==='Titular')return 'recebimento do veículo';
+  return 'recebeu como '+r.relacao.toLowerCase();
+}
+function blocoRecebedor(c){
+  var r=recebedorDe(c);
+  return '<div class="chips" id="recebedorRel" style="margin-bottom:10px">'+
+      RELACOES.map(function(x){
+        return '<span class="chip'+(r.relacao===x?' on':'')+'" data-rel="'+x+'">'+x+'</span>';
+      }).join('')+'</div>'+
+    '<div class="fld"><label>Nome de quem retira o veículo</label>'+
+      '<input type="text" id="recebedorNome" value="'+esc(r.nome)+'" autocomplete="off" placeholder="Nome completo">'+
+      '<div class="hint">'+(r.relacao==='Titular'
+        ? 'Vem preenchido com o titular do cadastro. Se quem retira for outra pessoa, troque acima.'
+        : 'Retirando em nome de '+esc(c.cliente||'—')+'. Esse nome vai no termo e na assinatura.')+'</div></div>';
+}
+function ligarRecebedor(c){
+  var inp=document.getElementById('recebedorNome');
+  if(inp)inp.addEventListener('input',function(){
+    recebedorDe(c).nome=this.value;salvar();
+  });
+  var chips=document.getElementById('recebedorRel');
+  if(chips)chips.addEventListener('click',function(e){
+    var ch=e.target.closest('[data-rel]');if(!ch)return;
+    var r=recebedorDe(c),anterior=r.nome;
+    r.relacao=ch.dataset.rel;
+    if(r.relacao==='Titular')r.nome=c.cliente||'';
+    else if(anterior===c.cliente)r.nome='';
+    salvar();renderSaidaExtras();
+    if(r.relacao!=='Titular'&&!r.nome){
+      var el=document.getElementById('recebedorNome');
+      if(el)el.focus();
+    }
+  });
+}
+
 function colherAssinaturaSaida(c,depois){
+  var r=recebedorDe(c);
+  if(!String(r.nome||'').trim()){
+    toast('Falta quem recebe','Escreva o nome de quem está retirando o veículo.','warn');
+    var el=document.getElementById('recebedorNome');
+    if(el){el.focus();if(el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'})}
+    return;
+  }
   abrirAssinatura({
-    titulo:'Recebimento do veículo',
-    sub:'O cliente confirma que recebeu o carro conferido',
-    nome:c.cliente||'',
+    titulo:'Assinatura de recebimento',
+    sub:r.relacao==='Titular'
+      ? 'Peça para o cliente assinar na tela'
+      : r.relacao+' retirando em nome de '+(c.cliente||''),
+    nome:r.nome,
     termo:termoEntrega(c),
     onSalvar:function(ass){
+      ass.relacao=r.relacao;
+      ass.emNomeDe=r.relacao==='Titular'?null:(c.cliente||'');
+      c.recebedor.nome=ass.nome;
       c.assinaturaSaida=ass;
-      c.apontamentos.push({h:paraHM(minutosAgora()),t:'Recebimento assinado por '+ass.nome});
+      c.apontamentos.push({h:paraHM(minutosAgora()),
+        t:'Recebimento assinado por '+ass.nome+(ass.emNomeDe?' ('+r.relacao.toLowerCase()+', em nome de '+ass.emNomeDe+')':'')});
       salvar();renderSaidaExtras();
       toast('Entrega assinada',ass.nome,'ok');
       if(depois)depois();
@@ -5417,9 +5503,10 @@ function finalizarEntrega(){
   var total=totalOS(c),pago=totalPago(c),falta=total-pago;
 
   if(!c.assinaturaSaida){
+    var quem=(c.recebedor&&c.recebedor.nome)||c.cliente||'o cliente';
     confirmar({
       titulo:'Entregar sem assinatura?',
-      texto:'A assinatura de recebimento é o que protege você se o cliente reclamar depois de um dano que não foi seu. Leva dez segundos.',
+      texto:'A assinatura de '+quem+' é o que protege você se aparecer depois um dano que não foi seu. Leva dez segundos na tela do celular.',
       botoes:[
         {txt:'Colher assinatura',classe:'entrar-btn',acao:function(){
           fecharConfirm();
@@ -5534,9 +5621,11 @@ function verOS(o){
       (o.obs?'<p class="mini-note">Observação: '+esc(o.obs)+'</p>':'')+
       (o.obsSaida?'<p class="mini-note">Saída: '+esc(o.obsSaida)+'</p>':'')+
       (o.avaliacao?'<p class="mini-note">Avaliação do cliente: '+o.avaliacao+' de 5</p>':'')+
-      (o.assinaturaEntrada||o.assinaturaSaida
+      (o.recebedor&&o.recebedor.nome&&o.recebedor.relacao!=='Titular'
+        ? '<p class="mini-note">Retirado por '+esc(o.recebedor.nome)+' ('+esc(String(o.recebedor.relacao).toLowerCase())+')</p>':'')+
+      (o.assinaturaEntrada||(o.assinaturaSaida&&o.assinaturaSaida.img)
         ? '<div class="card-lbl" style="margin-top:14px">Assinaturas</div>'+
-          selo(o.assinaturaEntrada,'aceite da vistoria')+selo(o.assinaturaSaida,'recebimento do veículo')
+          selo(o.assinaturaEntrada,'aceite da vistoria')+selo(o.assinaturaSaida,rotuloRecebimento(o))
         : ''),
     botoes:[
       {txt:'Reimprimir',classe:'btn-ghost',acao:function(){imprimirTicket(o)}},
@@ -6885,14 +6974,16 @@ function renderDadosStats(){
     '</div>';
 }
 function renderDiagnostico(){
-  var box=document.getElementById('diagBox');if(!box)return;
+  var box=document.getElementById('diagBox');
+  if(box)box.innerHTML=htmlDiagnostico();
+}
+function htmlDiagnostico(){
   function linha(nome,ok,detalhe){
     return '<div class="diag-row"><span class="diag-dot '+(ok?'ok':'off')+'"></span>'+
       '<div><b>'+esc(nome)+'</b><span>'+esc(detalhe)+'</span></div></div>';
   }
   var sw=('serviceWorker' in navigator)&&navigator.serviceWorker.controller;
-  box.innerHTML=
-    linha('Versão instalada',true,'v'+TJET_VERSAO+' · build '+TJET_BUILD)+
+  return linha('Versão instalada',true,'v'+TJET_VERSAO+' · build '+TJET_BUILD)+
     linha('Câmera',!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
       location.protocol==='https:'||location.hostname==='localhost'
         ? 'disponível (HTTPS ok)' : 'bloqueada — a câmera exige HTTPS, abra pelo endereço publicado')+
@@ -6908,13 +6999,27 @@ function renderDiagnostico(){
       return '<div><b>'+esc(e.quando.slice(11,19))+'</b> '+esc(e.msg.slice(0,180))+'</div>';
     }).join('')+'</div>':'');
 }
-document.getElementById('atualizarAppBtn').addEventListener('click',function(){
-  confirmar({titulo:'Forçar atualização',
-    texto:'Limpa o cache do aparelho e recarrega buscando a versão mais recente. Seus dados não são apagados.',
-    botoes:[{txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm},
-      {txt:'Atualizar agora',classe:'entrar-btn',acao:forcarAtualizacao}]});
-});
-document.getElementById('copiarDiagBtn').addEventListener('click',function(){
+
+/* o selo de versão na home abre este resumo — confirmar a versão sem sair da tela */
+function abrirDiagnostico(){
+  abrirModal({
+    titulo:'T-Jet v'+TJET_VERSAO,
+    sub:'build '+TJET_BUILD,
+    html:htmlDiagnostico(),
+    botoes:[
+      {txt:'Copiar',classe:'btn-ghost',acao:function(){fecharModal();copiarDiagnostico()}},
+      {txt:'Forçar atualização',classe:'btn-ghost',acao:function(){
+        fecharModal();
+        confirmar({titulo:'Forçar atualização',
+          texto:'Limpa o cache do aparelho e recarrega buscando a versão mais recente. Seus dados não são apagados.',
+          botoes:[{txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm},
+            {txt:'Atualizar agora',classe:'entrar-btn',acao:forcarAtualizacao}]});
+      }},
+      {txt:'Fechar',classe:'entrar-btn',acao:fecharModal}
+    ]
+  });
+}
+function copiarDiagnostico(){
   var txt='T-Jet v'+TJET_VERSAO+' ('+TJET_BUILD+')\n'+
     'URL: '+location.href+'\nNavegador: '+navigator.userAgent+'\n'+
     'Camera: '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)+
@@ -6925,7 +7030,14 @@ document.getElementById('copiarDiagBtn').addEventListener('click',function(){
     navigator.clipboard.writeText(txt).then(function(){toast('Diagnóstico copiado','Cole na mensagem para eu analisar.','ok')})
       .catch(function(){mostrarLinkManual(txt)});
   }else mostrarLinkManual(txt);
+}
+document.getElementById('atualizarAppBtn').addEventListener('click',function(){
+  confirmar({titulo:'Forçar atualização',
+    texto:'Limpa o cache do aparelho e recarrega buscando a versão mais recente. Seus dados não são apagados.',
+    botoes:[{txt:'Cancelar',classe:'btn-ghost',acao:fecharConfirm},
+      {txt:'Atualizar agora',classe:'entrar-btn',acao:forcarAtualizacao}]});
 });
+document.getElementById('copiarDiagBtn').addEventListener('click',copiarDiagnostico);
 
 document.getElementById('exportarDadosBtn').addEventListener('click',function(){
   var blob=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'});
@@ -7984,6 +8096,11 @@ document.getElementById('instalarBtn').addEventListener('click',function(){
 /* ================= INICIALIZAÇÃO ================= */
 document.getElementById('scrSub').textContent=DB.config.nome;
 document.querySelectorAll('.versao-app').forEach(function(el){el.textContent='v'+TJET_VERSAO});
+var seloVersao=document.getElementById('homeVersao');
+if(seloVersao){
+  seloVersao.textContent='v'+TJET_VERSAO;
+  seloVersao.addEventListener('click',function(){seguro('diag',abrirDiagnostico)});
+}
 renderSvcCatalogo();
 renderFotosEntrada();
 atualizarResumoAvarias();
