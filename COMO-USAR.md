@@ -31,7 +31,23 @@ Os quatro precisam ficar **na mesma pasta**.
 
 ## Leitura de placa
 
-Toque em **Fotografar placa** → a câmera traseira abre com uma moldura.
+**A câmera abre sozinha assim que você entra na tela de Entrada.** Encaixe a placa
+na moldura e toque no botão redondo — dois toques a menos por carro.
+
+Se preferir digitar, o botão **Digitar a placa** fica logo abaixo do disparador.
+
+O sistema é cuidadoso com isso: só abre quando o formulário está vazio. Se você
+veio de um agendamento, de um orçamento ou já começou a preencher alguma coisa, a
+câmera não atropela o atendimento. Se você fechar a câmera, ela não reabre na
+volta imediata — só na próxima vez que você entrar na tela.
+
+Para desligar de vez: **Admin → Configurações → Atendimento → "Abrir a câmera ao
+entrar na tela"**.
+
+Se a permissão da câmera estiver negada no aparelho, a abertura automática
+simplesmente não acontece — nada de aviso no meio do caminho. Use o botão manual.
+
+Tocando em **Fotografar placa** a qualquer momento a câmera também abre.
 Encaixe a placa e toque no botão redondo.
 
 O que acontece por baixo:
@@ -247,7 +263,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.3.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v2.5.0 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -258,3 +274,56 @@ no diagnóstico.
 Erros também são capturados e listados em **Admin → Dados → Diagnóstico**, com
 horário e mensagem — em vez de o sistema simplesmente parar de responder sem
 explicação.
+
+
+## Layout no celular
+
+A tela inicial é montada em ordens diferentes conforme o aparelho.
+
+**No computador** (tela larga, com menu lateral) nada muda: cabe tudo na mesma
+altura, e os indicadores no topo funcionam como painel de controle.
+
+**No celular** a ordem se inverte, porque o polegar de quem está no balcão precisa
+alcançar o que se usa a cada carro:
+
+1. Saudação
+2. **Entrada · Pátio · Saída · Caixa** — quatro cartões grandes em 2×2
+3. Ponto de atenção
+4. Indicadores, em faixa compacta de quatro colunas
+5. Gestão, Negócio e Sistema
+
+Os quatro cartões de operação ficam com o dobro da área de toque de antes. Os
+indicadores continuam ali, só que como consulta rápida — o número segue visível,
+a legenda secundária sai.
+
+Em telas muito estreitas (abaixo de 360 px) a faixa de indicadores volta a duas
+colunas, para o valor em reais não espremer.
+
+
+## Tela inicial no celular
+
+No celular a ordem é outra: **Operação primeiro, indicadores depois.**
+
+```
+BOM TRABALHO HOJE
+┌───────────┬───────────┐
+│  ENTRADA  │   PÁTIO   │   ← cards grandes, 2 por linha
+├───────────┼───────────┤
+│   SAÍDA   │   CAIXA   │
+└───────────┴───────────┘
+  ponto de atenção agora
+  [ pátio ][ entreg ][ fatur ][ ticket ]   ← faixa fina
+  Gestão · Negócio · Sistema
+```
+
+Os quatro módulos que a equipe usa o dia inteiro ganharam ícone maior, nome
+legível e um fundo tingido com a cor de cada um. Os indicadores viraram uma faixa
+de leitura rápida no lugar de quatro blocos com números gigantes — a informação
+continua ali, só parou de ocupar meia tela para mostrar zero às oito da manhã.
+
+Os grupos Gestão, Negócio e Sistema ficaram mais discretos, para não disputar
+atenção com a operação.
+
+**No computador nada mudou** — a tela larga comporta os indicadores em destaque
+e é lá que você olha relatório. A troca de ordem e os tamanhos valem só abaixo de
+700px de largura.

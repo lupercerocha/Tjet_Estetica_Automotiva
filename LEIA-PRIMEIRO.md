@@ -9,7 +9,7 @@ as funções novas não estavam no arquivo que rodou aí.
 1. Suba **todos** os arquivos desta entrega para o GitHub Pages, substituindo os antigos.
 2. No celular, abra o T-Jet.
 3. Vá em **Admin → Dados → Forçar atualização**.
-4. Confirme no rodapé da tela inicial: deve aparecer **v2.3.0**.
+4. Confirme no rodapé da tela inicial: deve aparecer **v2.5.0**.
 
 Se o botão não existir na tela, você ainda está na versão velha. Nesse caso:
 

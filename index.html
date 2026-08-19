@@ -999,8 +999,16 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 .cam-shot::after{content:'';position:absolute;inset:6px;border-radius:50%;background:#fff}
 .cam-shot:active{transform:scale(.92)}
 .camwrap.lendo .cam-shot{opacity:.4;pointer-events:none}
-.cam-manual{border:0;background:none;color:rgba(255,255,255,.82);font:600 13px/1 var(--f-body);
-  text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:6px}
+.cam-manual{display:flex;align-items:center;justify-content:center;gap:8px;
+  border:1.5px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);
+  color:#fff;font:700 13.5px/1 var(--f-body);letter-spacing:.2px;
+  border-radius:13px;padding:13px 20px;cursor:pointer;backdrop-filter:blur(8px);
+  min-width:220px;transition:transform .12s,background .15s}
+.cam-manual::before{content:'';width:15px;height:15px;flex:none;
+  background:currentColor;-webkit-mask:var(--ico-teclado) center/contain no-repeat;
+  mask:var(--ico-teclado) center/contain no-repeat}
+.cam-manual:active{transform:scale(.96);background:rgba(255,255,255,.2)}
+:root{--ico-teclado:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Crect x='2' y='6' width='20' height='12' rx='2'/%3E%3Cpath d='M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8'/%3E%3C/svg%3E")}
 .cam-thumb{width:100%;border-radius:14px;margin-bottom:14px;display:block;max-height:190px;object-fit:cover}
 .placa-conf{display:flex;justify-content:center;margin-bottom:10px}
 .placa-conf input{width:100%;max-width:260px;text-align:center;font:800 30px/1 var(--f-mono);letter-spacing:5px;
@@ -1134,6 +1142,115 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .diag-erros b{color:var(--perigo)}
 .slot-opt.on{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}
 
+/* ===== CELULAR: operação em primeiro, indicadores como faixa ===== */
+@media (max-width:699px){
+  #view-home{display:flex;flex-direction:column}
+  #view-home .hello{order:1;margin-bottom:15px}
+  #view-home .hello h2{font-size:1.28rem}
+  #view-home .hello p{font-size:.82rem}
+  #view-home .grp-oper{order:2;margin-bottom:16px}
+  #view-home .insight{order:3;margin-bottom:16px;padding:13px 14px}
+  #view-home .insight-ic{width:32px;height:32px;border-radius:10px}
+  #view-home .insight b{font-size:.86rem}
+  #view-home .insight span{font-size:.75rem}
+  #view-home .metrics{order:4;margin-bottom:20px}
+  #view-home .grp{order:5}
+
+  /* indicadores viram uma faixa de leitura rápida, não um bloco de destaque */
+  #view-home .metrics{grid-template-columns:repeat(4,1fr);gap:6px}
+  #view-home .metric{padding:10px 7px 10px 9px;border-radius:12px}
+  #view-home .metric::after{width:2px}
+  #view-home .metric .lbl{font-size:.47rem;letter-spacing:.08em;margin-bottom:4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #view-home .metric b{font-size:1.05rem;line-height:1.05}
+  #view-home .metric .sub{display:none}
+
+  /* operação: o que a equipe toca o dia inteiro */
+  .grp-oper .grp-lbl{font-size:.63rem;margin-bottom:11px}
+  .grp-oper .mods{grid-template-columns:repeat(2,1fr);gap:12px}
+  .grp-oper .mod{
+    padding:22px 13px 18px;gap:12px;border-radius:18px;
+    background:linear-gradient(158deg,color-mix(in srgb,var(--m) 13%,var(--painel)),var(--painel) 68%);
+    border-color:color-mix(in srgb,var(--m) 32%,var(--linha));
+    box-shadow:0 4px 16px color-mix(in srgb,var(--m) 10%,transparent);
+  }
+  .grp-oper .mod:active{transform:scale(.96)}
+  .grp-oper .mod-ic{width:54px;height:54px;border-radius:16px}
+  .grp-oper .mod-ic svg{width:25px;height:25px}
+  .grp-oper .mod .nm{font-size:.96rem;line-height:1.15}
+  .grp-oper .mod .sub{font-size:.71rem;line-height:1.3}
+  .grp-oper .badge{top:11px;right:11px;min-width:22px;height:22px;font-size:.66rem}
+
+  /* demais grupos ficam discretos para não competir */
+  .grp:not(.grp-oper) .mod{padding:13px 8px 11px;gap:7px;border-radius:13px}
+  .grp:not(.grp-oper) .mod-ic{width:38px;height:38px;border-radius:11px}
+  .grp:not(.grp-oper) .mod-ic svg{width:18px;height:18px}
+  .grp:not(.grp-oper) .mod .nm{font-size:.68rem}
+  .grp:not(.grp-oper) .mod .sub{font-size:.58rem}
+  .grp:not(.grp-oper){margin-bottom:18px}
+}
+/* telas bem estreitas: 4 métricas numa linha ficariam ilegíveis */
+@media (max-width:340px){
+  #view-home .metrics{grid-template-columns:repeat(2,1fr)}
+  #view-home .metric b{font-size:1.15rem}
+}
+
+/* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
+   No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
+   carro tem que estar no polegar — os indicadores viram uma faixa de consulta. */
+@media (max-width:699px){
+
+  #view-home.on{display:flex;flex-direction:column}
+  #view-home .hello{order:1}
+  #view-home .grp:first-of-type{order:2}     /* Operação */
+  #view-home .insight{order:3}
+  #view-home .metrics{order:4}
+  #view-home .grp:not(:first-of-type){order:5}
+
+  /* saudação mais enxuta */
+  #view-home .hello h2{font-size:1.45rem;line-height:1.1}
+  #view-home .hello p{font-size:.78rem;margin-top:3px}
+  #view-home .hello{margin-bottom:14px}
+
+  /* --- OPERAÇÃO: cartões grandes, 2x2, área de toque generosa --- */
+  #view-home .grp:first-of-type{margin-bottom:16px}
+  #view-home .grp:first-of-type .mods{grid-template-columns:repeat(2,1fr);gap:11px}
+  #view-home .grp:first-of-type .mod{
+    padding:20px 12px 17px;border-radius:18px;gap:9px;
+    border-width:1.5px;background:color-mix(in srgb,var(--m) 7%,var(--painel))}
+  #view-home .grp:first-of-type .mod:active{transform:scale(.97)}
+  #view-home .grp:first-of-type .mod-ic{width:52px;height:52px;border-radius:16px}
+  #view-home .grp:first-of-type .mod-ic svg{width:25px;height:25px}
+  #view-home .grp:first-of-type .mod .nm{font-size:1rem;letter-spacing:-.01em}
+  #view-home .grp:first-of-type .mod .sub{font-size:.72rem;margin-top:1px}
+  #view-home .grp:first-of-type .badge{top:10px;right:10px;min-width:22px;height:22px;font-size:.7rem}
+  #view-home .grp:first-of-type .grp-lbl{font-size:.6rem}
+
+  /* --- INDICADORES: faixa compacta de consulta --- */
+  #view-home .metrics{grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 14px}
+  #view-home .metric{padding:9px 7px 10px;border-radius:12px;min-width:0}
+  #view-home .metric::after{width:2.5px}
+  #view-home .metric .lbl{font-size:.47rem;letter-spacing:.1em;margin-bottom:3px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #view-home .metric b{font-size:clamp(.8rem,3.9vw,1.12rem);line-height:1.05;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #view-home .metric .sub{display:none}
+
+  /* --- demais grupos: continuam compactos --- */
+  #view-home .grp:not(:first-of-type) .mods{grid-template-columns:repeat(3,1fr);gap:9px}
+  #view-home .grp:not(:first-of-type) .mod{padding:13px 8px 11px}
+
+  #view-home .insight{margin:0 0 14px;padding:13px 14px}
+  #view-home .insight b{font-size:.88rem}
+  #view-home .insight span{font-size:.75rem}
+}
+
+/* telas bem estreitas: 2x2 nos indicadores para o valor não espremer */
+@media (max-width:359px){
+  #view-home .metrics{grid-template-columns:repeat(2,1fr)}
+  #view-home .metric b{font-size:1.1rem}
+}
+
 </style>
 </head>
 <body>
@@ -1234,7 +1351,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
       </button>
 
-      <div class="grp">
+      <div class="grp grp-oper">
         <div class="grp-lbl">Operação</div>
         <div class="mods">
           <button class="mod" style="--m:var(--ok)" data-nav="entrada">
@@ -1309,7 +1426,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1498,7 +1615,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1533,7 +1650,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1548,7 +1665,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1562,7 +1679,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.3.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.5.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -1894,6 +2011,12 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           </div>
         </div>
         <div class="card">
+          <div class="card-lbl">Atendimento</div>
+          <div class="toggleline" style="margin-bottom:16px">
+            <div class="tx"><b>Abrir a câmera ao entrar na tela</b><span>A leitura da placa começa sozinha, sem um toque a mais</span></div>
+            <button class="switch" id="cfgCamAuto" aria-label="Câmera automática"></button>
+          </div>
+
           <div class="card-lbl">Programa de fidelidade</div>
           <div class="toggleline" style="margin-bottom:12px">
             <div class="tx"><b>Cartão fidelidade ativo</b><span>Conta lavagens e libera prêmio automático</span></div>
@@ -2294,7 +2417,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='2.3.0';
+var TJET_VERSAO='2.5.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -2592,7 +2715,7 @@ var CATALOGO_PADRAO=[
 var CFG_PADRAO={
   nome:'T-Jet Estética Automotiva',tel:'',
   metaMes:20000,metaCarros:18,
-  fidelidade:{ativo:true,aCada:10,premio:'Lavagem simples grátis'},
+  camAuto:true,fidelidade:{ativo:true,aCada:10,premio:'Lavagem simples grátis'},
   abre:'08:00',fecha:'18:00',boxes:3,toleranciaMin:10,
   msg:{
     entrada:'Olá {cliente}! Seu {veiculo} ({placa}) entrou no {lavajato} 🚗💧\nServiços: {servicos}\nTotal: {total}\nPrevisão de entrega: {hora}\n\nAvisamos por aqui assim que estiver pronto!',
@@ -2624,6 +2747,7 @@ function carregarDB(){
     var d=JSON.parse(raw),vazia=baseVazia();
     Object.keys(vazia).forEach(function(k){if(d[k]===undefined)d[k]=vazia[k]});
     Object.keys(vazia.config).forEach(function(k){if(d.config[k]===undefined)d.config[k]=vazia.config[k]});
+    if(typeof d.config.camAuto!=='boolean')d.config.camAuto=true;
     Object.keys(vazia.config.msg).forEach(function(k){if(!d.config.msg[k])d.config.msg[k]=vazia.config.msg[k]});
     Object.keys(vazia.seq).forEach(function(k){if(d.seq[k]===undefined)d.seq[k]=vazia.seq[k]});
     return d;
@@ -3924,7 +4048,7 @@ function abrirClienteDetalhe(c){
   if(wa)wa.addEventListener('click',function(){abrirWhatsApp(c.tel,montarMsg(DB.config.msg.retorno,{cliente:c.nome,apelido:c.apelido,modelo:(veics[0]&&veics[0].modelo)||'carro',servicos:[]}))});
   document.getElementById('clEditar').addEventListener('click',function(){formCliente(c)});
   document.getElementById('clEntrada').addEventListener('click',function(){
-    clienteOverlay.classList.remove('show');irPara('entrada');selecionarCliente(c);
+    clienteOverlay.classList.remove('show');pularCamAuto=true;irPara('entrada');selecionarCliente(c);
   });
   document.getElementById('clAgendar').addEventListener('click',function(){clienteOverlay.classList.remove('show');formAgendamento(null,c)});
   document.getElementById('clOrcar').addEventListener('click',function(){clienteOverlay.classList.remove('show');formOrcamento(null,c)});
@@ -4559,8 +4683,11 @@ var camOverlay=document.getElementById('camOverlay'),
     camStatus=document.getElementById('camStatus'),
     camDica=document.getElementById('camDica');
 
-function abrirCamera(){
+/* auto=true quando o sistema abriu sozinho ao entrar na tela.
+   Nesse caso a falha é silenciosa: nada de modal por cima de quem só queria ver a tela. */
+function abrirCamera(auto){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    if(auto){pularCamAuto=true;return}
     toast('Câmera indisponível','Use "Digitar a placa". Abra o sistema por HTTPS para liberar a câmera.','warn');
     digitarPlacaManual();return;
   }
@@ -4573,6 +4700,11 @@ function abrirCamera(){
     return camVideo.play();
   }).catch(function(){
     fecharCamera();
+    if(auto){
+      pularCamAuto=true;
+      registrarErro('Câmera negada ou indisponível na abertura automática','camera');
+      return;
+    }
     toast('Não consegui abrir a câmera','Permita o acesso nas configurações do navegador ou digite a placa.','err');
     digitarPlacaManual();
   });
@@ -4584,16 +4716,20 @@ function fecharCamera(){
   if(camStream){camStream.getTracks().forEach(function(t){t.stop()});camStream=null}
   camVideo.srcObject=null;
 }
-document.getElementById('camFechar').addEventListener('click',fecharCamera);
+document.getElementById('camFechar').addEventListener('click',function(){
+  pularCamAuto=true;fecharCamera();
+});
 document.getElementById('camTrocar').addEventListener('click',function(){
   camModo=camModo==='environment'?'user':'environment';
   if(camStream){camStream.getTracks().forEach(function(t){t.stop()})}
-  abrirCamera();
+  abrirCamera(false);
 });
 document.getElementById('camManual').addEventListener('click',function(){
-  fecharCamera();digitarPlacaManual();
+  pularCamAuto=true;fecharCamera();digitarPlacaManual();
 });
-camOverlay.addEventListener('click',function(e){if(e.target===camOverlay)fecharCamera()});
+camOverlay.addEventListener('click',function(e){
+  if(e.target===camOverlay){pularCamAuto=true;fecharCamera()}
+});
 
 /* ---------- captura + OCR ---------- */
 document.getElementById('camShot').addEventListener('click',function(){
@@ -4826,6 +4962,42 @@ function cadastroRapido(placa){
     if(n)n.focus();
   },90);
 }
+
+/* ================= ABERTURA AUTOMÁTICA DA CÂMERA ================= */
+var pularCamAuto=false;
+
+function formEntradaVazio(){
+  function v(id){var el=document.getElementById(id);return el?el.value.trim():''}
+  return !v('placaInput')&&!v('nomeInput')&&!v('telInput')&&!v('modeloInput')&&
+    (typeof selecionados==='undefined'||!selecionados.length);
+}
+/* Abre a câmera assim que a tela de entrada aparece — menos um toque no balcão.
+   Só quando o formulário está limpo, para não atropelar um atendimento em andamento. */
+function talvezAbrirCamera(){
+  if(pularCamAuto){pularCamAuto=false;return}
+  if(camAberta||!DB.config.camAuto)return;
+  if(!formEntradaVazio())return;
+  if(!document.getElementById('view-entrada').classList.contains('on'))return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    dicaSemCamera();return;
+  }
+  function seguir(){
+    setTimeout(function(){
+      if(document.getElementById('view-entrada').classList.contains('on')&&formEntradaVazio())abrirCamera(true);
+    },300);
+  }
+  if(navigator.permissions&&navigator.permissions.query){
+    navigator.permissions.query({name:'camera'})
+      .then(function(p){p.state==='denied'?dicaSemCamera():seguir()})
+      .catch(seguir);
+  }else seguir();
+}
+function dicaSemCamera(){
+  var el=document.getElementById('placaInput');
+  if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+/* voltar da câmera sem ler não deve reabrir em loop */
+function suspenderCamAuto(){pularCamAuto=true}
 
 
 /* ================= ASSINATURA DO CLIENTE ================= */
@@ -5375,7 +5547,8 @@ function verOS(o){
   });
 }
 function repetirOS(o){
-  irPara('entrada');
+  pularCamAuto=true;irPara('entrada');
+
   var cli=clientePorId(o.clienteId);
   limparFormEntrada();
   if(cli)selecionarCliente(cli);
@@ -5991,7 +6164,8 @@ function abrirAgendamento(a){
 }
 function agendamentoParaEntrada(a){
   a.status='compareceu';salvar();
-  irPara('entrada');limparFormEntrada();
+  pularCamAuto=true;irPara('entrada');limparFormEntrada();
+
   var cli=a.clienteId?clientePorId(a.clienteId):CLIENTES.find(function(c){return c.nome.toLowerCase()===a.cliente.toLowerCase()});
   if(cli)selecionarCliente(cli);
   else{nomeInput.value=a.cliente;telInput.value=a.tel?formataTel(a.tel):''}
@@ -6155,7 +6329,8 @@ function abrirOrcamento(o){
   });
 }
 function orcamentoParaEntrada(o){
-  irPara('entrada');limparFormEntrada();
+  pularCamAuto=true;irPara('entrada');limparFormEntrada();
+
   var cli=o.clienteId?clientePorId(o.clienteId):null;
   if(cli)selecionarCliente(cli);
   else{nomeInput.value=o.cliente;telInput.value=o.tel?formataTel(o.tel):''}
@@ -6655,6 +6830,7 @@ function carregarConfigForm(){
   document.getElementById('cfgTel').value=c.tel?formataTel(c.tel):'';
   document.getElementById('cfgMetaMes').value=String(c.metaMes||0).replace('.',',');
   document.getElementById('cfgMetaCarros').value=c.metaCarros||0;
+  document.getElementById('cfgCamAuto').classList.toggle('on',c.camAuto!==false);
   document.getElementById('cfgFidSwitch').classList.toggle('on',!!c.fidelidade.ativo);
   document.getElementById('cfgFidAcada').value=c.fidelidade.aCada;
   document.getElementById('cfgFidPremio').value=c.fidelidade.premio;
@@ -6667,13 +6843,16 @@ function carregarConfigForm(){
   document.getElementById('cfgMsgEntrega').value=c.msg.entrega;
   document.getElementById('cfgMsgRetorno').value=c.msg.retorno;
 }
-document.getElementById('cfgFidSwitch').addEventListener('click',function(){this.classList.toggle('on')});
+['cfgFidSwitch','cfgCamAuto'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(){this.classList.toggle('on')});
+});
 document.getElementById('salvarConfigBtn').addEventListener('click',function(){
   var c=DB.config;
   c.nome=document.getElementById('cfgNome').value.trim()||'T-Jet';
   c.tel=soNumeros(document.getElementById('cfgTel').value);
   c.metaMes=parseValor(document.getElementById('cfgMetaMes').value);
   c.metaCarros=+document.getElementById('cfgMetaCarros').value||0;
+  c.camAuto=document.getElementById('cfgCamAuto').classList.contains('on');
   c.fidelidade.ativo=document.getElementById('cfgFidSwitch').classList.contains('on');
   c.fidelidade.aCada=+document.getElementById('cfgFidAcada').value||10;
   c.fidelidade.premio=document.getElementById('cfgFidPremio').value.trim();
@@ -7540,7 +7719,7 @@ function aoTrocarTela(id){
   if(id==='clientes')renderClientesLista(document.getElementById('clienteBuscaInput').value);
   if(id==='patio')renderPatio();
   if(id==='home')renderHome();
-  if(id==='entrada'){renderSvcCatalogo();renderSlots();renderFotosEntrada()}
+  if(id==='entrada'){renderSvcCatalogo();renderSlots();renderFotosEntrada();seguro('camAuto',talvezAbrirCamera)}
   fecharMenu();
 }
 
