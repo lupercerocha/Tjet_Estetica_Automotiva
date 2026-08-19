@@ -42,10 +42,37 @@ O que acontece por baixo:
 5. Valida contra o padrão antigo (`ABC1234`) e o Mercosul (`ABC1D23`);
 6. Mostra a placa para você confirmar — dá para corrigir na mão antes de seguir.
 
-Confirmando:
-- **Placa cadastrada** → carrega cliente, veículo, cor, porte, histórico e
-  observações, e pula direto para a escolha dos serviços;
-- **Placa nova** → abre o cadastro com a placa preenchida e o foco no nome.
+### As duas coisas que podem dar errado são diferentes
+
+O sistema nunca mistura *"não consegui ler"* com *"não tem cadastro"*:
+
+- **Não consegui ler a placa** — falha da foto. Aparece o aviso com a orientação
+  (aproximar, evitar reflexo, manter reta) e, na segunda tentativa, o sistema
+  sugere digitar. Nada foi consultado no cadastro ainda.
+- **Placa sem cadastro** — a leitura funcionou. O sistema mostra a placa lida com
+  o aviso *"Placa sem cadastro — a leitura funcionou, este veículo é que ainda não
+  está no sistema"* e abre o **cadastro rápido**.
+
+Quando a placa já existe, o cartão mostra **"Já é cliente"** com veículo, cor e
+dono, e ao confirmar carrega tudo e pula direto para a escolha dos serviços.
+
+### Cadastro rápido
+
+Abre com a placa já preenchida e pede só três coisas: **nome, WhatsApp e
+observações**. Salvou, o sistema devolve você para a entrada com os campos
+preenchidos e o cursor no modelo.
+
+O botão **"+ Completar cadastro (endereço)"** expande o endereço. Digite o CEP e
+rua, bairro, cidade e UF vêm sozinhos — o cursor pula para o número. Se você
+trocar o CEP, os campos que vieram automaticamente são substituídos; o que você
+digitou à mão nunca é sobrescrito.
+
+A busca usa o **ViaCEP** e, se ele estiver fora do ar, cai automaticamente para o
+**BrasilAPI**. Sem internet, o aviso diz para preencher à mão e o cadastro segue
+normal. CEP inexistente é informado sem preencher nada errado.
+
+O endereço aparece na ficha do cliente e entra na busca — procurar por um bairro
+lista todos os clientes daquela região.
 
 A foto da placa fica anexada à OS.
 

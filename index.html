@@ -1095,6 +1095,27 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .pub-acoes button{width:100%}
 .pub-nota{font:400 11px/1.5 var(--f-body);color:var(--texto3);text-align:center;margin:14px 0 0}
 
+/* ===== CEP E DIAGNÓSTICO DA PLACA ===== */
+.cep-row{position:relative;display:block}
+.cep-row input{width:100%;padding-right:96px}
+.cep-st{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font:600 9.5px/1 var(--f-mono);letter-spacing:.5px;text-transform:uppercase;
+  color:var(--texto3);pointer-events:none;white-space:nowrap}
+.cep-st.load{color:var(--azul)}
+.cep-st.ok{color:var(--ok)}
+.cep-st.err{color:var(--perigo)}
+.cep-st.load::before{content:'';display:inline-block;width:8px;height:8px;margin-right:5px;
+  border:1.6px solid currentColor;border-right-color:transparent;border-radius:50%;
+  vertical-align:-1px;animation:cepspin .7s linear infinite}
+@keyframes cepspin{to{transform:rotate(360deg)}}
+
+.dx{display:flex;flex-direction:column;gap:3px;border-radius:12px;padding:12px 14px;
+  border:1px solid var(--linha);background:var(--vidro);border-left:4px solid var(--fumaca)}
+.dx b{font:800 14px/1.25 var(--f-display);color:var(--tinta)}
+.dx span{font:400 12.2px/1.45 var(--f-body);color:var(--texto2)}
+.dx-ok{border-left-color:var(--ok)}
+.dx-novo{border-left-color:var(--teal)}
+
 </style>
 </head>
 <body>
@@ -1967,6 +1988,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
     </div>
     <div class="det-f wide" data-cf="obs" style="margin-top:8px"><span>Observação (visível à equipe no atendimento)</span><b id="clfObs"></b></div>
 
+    <div id="clEndereco"></div>
     <div id="clStats"></div>
     <div id="clFidelidade" style="margin-top:14px"></div>
 
@@ -2310,6 +2332,9 @@ function abrirModal(o){
       row.appendChild(bt);
     });
     foot.appendChild(row);
+  }
+  if(o.aoAbrir){
+    setTimeout(function(){try{o.aoAbrir()}catch(e){}},60);
   }
   appModal.classList.add('show');
   appModal.querySelector('.modal').scrollTop=0;
@@ -3650,7 +3675,8 @@ function textoBuscaCliente(c){
   return [c.nome,c.apelido,formataTel(c.tel),c.tel,c.obs,(c.tags||[]).join(' '),
     c.mensalista?'mensalista':'',veics.map(function(v){return v.placa+' '+v.modelo+' '+v.marca+' '+v.cor+' '+v.categoria}).join(' '),
     visitasDoCliente(c.id).length+' visitas',gastoDoCliente(c.id).toFixed(0),
-    (c.notasInternas||[]).map(function(n){return n.t}).join(' ')
+    (c.notasInternas||[]).map(function(n){return n.t}).join(' '),
+    c.endereco?enderecoLinha(c.endereco)+' '+(c.endereco.cep||''):''
   ].join(' ').toLowerCase();
 }
 
@@ -3690,7 +3716,7 @@ function renderClientesLista(filtro){
 /* ---------- formulário de cliente ---------- */
 function formCliente(c){
   var novo=!c;
-  c=c||{nome:'',apelido:'',tel:'',mensalista:false,obs:'',tags:[],origem:'',aniversario:''};
+  c=c||{nome:'',apelido:'',tel:'',mensalista:false,obs:'',tags:[],origem:'',aniversario:'',endereco:null};
   abrirModal({
     titulo:novo?'Novo cliente':'Editar cliente',
     sub:novo?'O básico já resolve — dá pra completar depois':'Ajuste os dados do cadastro',
@@ -3705,9 +3731,12 @@ function formCliente(c){
       '<div class="fld" style="margin-top:12px"><label>Observação visível à equipe</label>'+
         '<textarea id="fcObs" placeholder="Ex. não gosta de cera no painel">'+esc(c.obs||'')+'</textarea>'+
         '<div class="hint">Aparece no atendimento. Para informação administrativa use as notas internas.</div></div>'+
+      '<div class="card-lbl" style="margin-top:16px">Endereço</div>'+
+      blocoEndereco(c.endereco,'fc')+
       '<div class="fld" style="margin-top:12px"><label>Marcadores</label><div class="crm-tags" id="fcTags">'+
         TAGS_CRM.map(function(t){return '<div class="crm-tag-btn'+((c.tags||[]).indexOf(t)>-1?' on':'')+'" data-tag="'+t+'">'+t+'</div>'}).join('')+
       '</div></div>',
+    aoAbrir:function(){ligarCep('fc')},
     botoes:[
       {txt:'Cancelar',classe:'btn-ghost',acao:fecharModal},
       {txt:novo?'Cadastrar cliente':'Salvar alterações',classe:'entrar-btn',acao:function(){
@@ -3721,6 +3750,7 @@ function formCliente(c){
           origem:document.getElementById('fcOrigem').value.trim(),
           mensalista:document.getElementById('fcMensal').value==='1',
           obs:document.getElementById('fcObs').value.trim(),
+          endereco:lerEndereco('fc'),
           tags:Array.from(document.querySelectorAll('#fcTags .crm-tag-btn.on')).map(function(b){return b.dataset.tag})
         };
         if(novo){
@@ -3758,6 +3788,13 @@ function abrirClienteDetalhe(c){
   document.getElementById('clfTel').textContent=c.tel?formataTel(c.tel):'—';
   document.getElementById('clfMensalista').textContent=c.mensalista?'Sim':'Não';
   var obsEl=document.getElementById('clfObs');obsEl.textContent=c.obs||'—';obsEl.classList.toggle('vazio',!c.obs);
+  var endBox=document.getElementById('clEndereco');
+  if(endBox){
+    var linha=c.endereco?enderecoLinha(c.endereco):'';
+    endBox.innerHTML=linha
+      ? '<div class="det-f wide"><span>Endereço'+(c.endereco.cep?' · CEP '+esc(c.endereco.cep):'')+'</span><b>'+esc(linha)+'</b></div>'
+      : '<div class="det-f wide"><span>Endereço</span><b class="vazio">não cadastrado</b></div>';
+  }
 
   var freq=frequenciaCliente(c.id);
   document.getElementById('clStats').innerHTML=
@@ -4112,6 +4149,11 @@ function confirmarEntrada(){
       modelo=modeloSelecionado||modeloTxt.split(' ').slice(1).join(' ')||modeloTxt||'Não informado';
   if(!veic){
     veic={placa:placa,marca:marca,modelo:modelo,cor:corNome,categoria:cat,donos:[cli.id],criadoISO:isoAgora()};
+    if(typeof enderecoRapido!=='undefined'&&enderecoRapido){
+      if(enderecoRapido.obs&&!cli.obs)cli.obs=enderecoRapido.obs;
+      if(enderecoRapido.endereco&&!cli.endereco)cli.endereco=enderecoRapido.endereco;
+      enderecoRapido=null;
+    }
     VEICULOS.push(veic);
   }else{
     if(veic.donos.indexOf(cli.id)===-1)veic.donos.push(cli.id);
@@ -4180,9 +4222,124 @@ function imprimirTicket(os){
 }
 
 
+/* ================= ENDEREÇO POR CEP ================= */
+var cepCache={};
+
+function fmtCep(v){
+  var n=soNumeros(v).slice(0,8);
+  return n.length>5?n.slice(0,5)+'-'+n.slice(5):n;
+}
+function enderecoLinha(e){
+  if(!e||!e.logradouro&&!e.cidade)return '';
+  var p1=[e.logradouro,e.numero].filter(Boolean).join(', ');
+  var p2=[e.bairro,e.cidade&&(e.cidade+(e.uf?'/'+e.uf:''))].filter(Boolean).join(' · ');
+  return [p1,e.complemento,p2].filter(Boolean).join(' — ');
+}
+
+/* Consulta ViaCEP e, se falhar, BrasilAPI. Nenhuma das duas exige chave. */
+function buscarCep(cep){
+  var n=soNumeros(cep);
+  if(n.length!==8)return Promise.reject(new Error('curto'));
+  if(cepCache[n])return Promise.resolve(cepCache[n]);
+
+  function guardar(e){cepCache[n]=e;return e}
+  function viaCep(){
+    return fetch('https://viacep.com.br/ws/'+n+'/json/')
+      .then(function(r){if(!r.ok)throw new Error('http');return r.json()})
+      .then(function(d){
+        if(d.erro)throw new Error('inexistente');
+        return guardar({cep:fmtCep(n),logradouro:d.logradouro||'',bairro:d.bairro||'',
+          cidade:d.localidade||'',uf:d.uf||'',numero:'',complemento:''});
+      });
+  }
+  function brasilApi(){
+    return fetch('https://brasilapi.com.br/api/cep/v2/'+n)
+      .then(function(r){if(!r.ok)throw new Error('http');return r.json()})
+      .then(function(d){
+        return guardar({cep:fmtCep(n),logradouro:d.street||'',bairro:d.neighborhood||'',
+          cidade:d.city||'',uf:d.state||'',numero:'',complemento:''});
+      });
+  }
+  return viaCep().catch(function(e){
+    if(e&&e.message==='inexistente')throw e;
+    return brasilApi();
+  });
+}
+
+/* ---------- bloco de campos reaproveitável ---------- */
+function blocoEndereco(e,pref){
+  e=e||{};pref=pref||'end';
+  return '<div class="form-grid c2">'+
+      '<div class="fld"><label>CEP</label>'+
+        '<div class="cep-row"><input type="text" id="'+pref+'Cep" inputmode="numeric" maxlength="9" value="'+esc(e.cep||'')+'" placeholder="58000-000" autocomplete="postal-code">'+
+        '<span class="cep-st" id="'+pref+'CepSt"></span></div>'+
+        '<div class="hint">Digite o CEP que o resto vem sozinho.</div></div>'+
+      '<div class="fld"><label>Número</label><input type="text" id="'+pref+'Numero" inputmode="numeric" value="'+esc(e.numero||'')+'" placeholder="123"></div>'+
+    '</div>'+
+    '<div class="fld" style="margin-top:10px"><label>Rua</label><input type="text" id="'+pref+'Rua" value="'+esc(e.logradouro||'')+'" placeholder="Rua, avenida…"></div>'+
+    '<div class="form-grid c2" style="margin-top:10px">'+
+      '<div class="fld"><label>Complemento</label><input type="text" id="'+pref+'Compl" value="'+esc(e.complemento||'')+'" placeholder="Apto, bloco, referência"></div>'+
+      '<div class="fld"><label>Bairro</label><input type="text" id="'+pref+'Bairro" value="'+esc(e.bairro||'')+'"></div>'+
+    '</div>'+
+    '<div class="form-grid c2" style="margin-top:10px">'+
+      '<div class="fld"><label>Cidade</label><input type="text" id="'+pref+'Cidade" value="'+esc(e.cidade||'')+'"></div>'+
+      '<div class="fld"><label>UF</label><input type="text" id="'+pref+'Uf" maxlength="2" value="'+esc(e.uf||'')+'" style="text-transform:uppercase"></div>'+
+    '</div>';
+}
+
+function ligarCep(pref){
+  pref=pref||'end';
+  var inp=document.getElementById(pref+'Cep');
+  if(!inp||inp.dataset.ligado)return;
+  inp.dataset.ligado='1';
+  ['Rua','Bairro','Cidade','Uf','Numero','Compl'].forEach(function(campo){
+    var el=document.getElementById(pref+campo);
+    if(el)el.addEventListener('input',function(){this.dataset.auto=''});
+  });
+  var st=document.getElementById(pref+'CepSt');
+  function marcar(classe,txt){
+    if(!st)return;
+    st.className='cep-st '+(classe||'');
+    st.textContent=txt||'';
+  }
+  inp.addEventListener('input',function(){
+    var pos=this.value.length;
+    this.value=fmtCep(this.value);
+    if(pos<this.value.length)this.setSelectionRange(this.value.length,this.value.length);
+    var n=soNumeros(this.value);
+    if(n.length<8){marcar('','');return}
+    marcar('load','buscando…');
+    buscarCep(n).then(function(e){
+      marcar('ok','encontrado');
+      ['Rua','Bairro','Cidade','Uf'].forEach(function(campo,i){
+        var el=document.getElementById(pref+campo);
+        var v=[e.logradouro,e.bairro,e.cidade,e.uf][i];
+        if(!el||!v)return;
+        /* sobrescreve o que veio de outro CEP, mas nunca o que a pessoa digitou */
+        if(el.value.trim()&&el.dataset.auto!=='1')return;
+        el.value=v;el.dataset.auto='1';
+      });
+      var num=document.getElementById(pref+'Numero');
+      if(num&&!num.value.trim())setTimeout(function(){num.focus()},120);
+    }).catch(function(err){
+      if(err&&err.message==='inexistente')marcar('err','CEP não existe');
+      else marcar('err','sem conexão — preencha à mão');
+    });
+  });
+}
+
+function lerEndereco(pref){
+  pref=pref||'end';
+  function v(id){var el=document.getElementById(pref+id);return el?el.value.trim():''}
+  var e={cep:fmtCep(v('Cep')),logradouro:v('Rua'),numero:v('Numero'),
+    complemento:v('Compl'),bairro:v('Bairro'),cidade:v('Cidade'),uf:v('Uf').toUpperCase()};
+  return (e.cep||e.logradouro||e.cidade)?e:null;
+}
+
+
 /* ================= LEITURA REAL DE PLACA (câmera + OCR) ================= */
 var TESS_CDN='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
-var camStream=null,camModo='environment',camAberta=false,camOcupada=false,tessCarregando=null;
+var camStream=null,camModo='environment',camAberta=false,camOcupada=false,tessCarregando=null,tentativasOCR=0;
 var RX_ANTIGA=/^[A-Z]{3}[0-9]{4}$/,RX_MERCOSUL=/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
 var LETRA_DE={'0':'O','1':'I','2':'Z','4':'A','5':'S','6':'G','7':'T','8':'B','9':'G'};
 var DIGITO_DE={'O':'0','Q':'0','D':'0','U':'0','I':'1','L':'1','J':'1','Z':'2','A':'4','S':'5','G':'6','T':'7','B':'8','R':'8','E':'8'};
@@ -4376,10 +4533,15 @@ document.getElementById('camShot').addEventListener('click',function(){
     camOcupada=false;camOverlay.classList.remove('lendo');
     if(!melhor){
       camStatus.textContent='';
-      camDica.textContent='Não deu para ler. Aproxime, firme o celular e tente de novo.';
-      toast('Placa não reconhecida','Aproxime a câmera, evite reflexo e mantenha a placa reta.','warn');
+      tentativasOCR++;
+      camDica.textContent=tentativasOCR>=2
+        ? 'Ainda não deu. Se preferir, toque em "Digitar a placa" abaixo.'
+        : 'Não consegui LER a placa. Aproxime, firme o celular e evite reflexo.';
+      toast('Não consegui ler a placa',
+        'Isso é a leitura da foto, não o cadastro. Aproxime a câmera, evite reflexo e mantenha a placa reta.','warn');
       return;
     }
+    tentativasOCR=0;
     fecharCamera();
     confirmarPlacaLida(melhor.placa,fotoPlaca);
   }).catch(function(){
@@ -4392,16 +4554,19 @@ document.getElementById('camShot').addEventListener('click',function(){
 function confirmarPlacaLida(placa,foto){
   var v=veiculoPorPlaca(placa),conhecido=!!v;
   abrirModal({
-    titulo:'Placa lida',
-    sub:conhecido?'Veículo já cadastrado — confira antes de carregar':'Confira os caracteres antes de continuar',
+    titulo:'Li a placa',
+    sub:'Confira os caracteres antes de continuar',
     html:(foto?'<img src="'+foto+'" class="cam-thumb">':'')+
       '<div class="placa-conf"><input type="text" id="placaConfInput" maxlength="8" value="'+placaFmt(placa)+'" autocomplete="off" spellcheck="false"></div>'+
-      '<p class="mini-note" style="text-align:center">'+(conhecido
-        ? esc(v.marca+' '+v.modelo+' · '+v.cor+' · '+nomesDonos(v))
-        : 'Nenhum veículo com essa placa. Vou abrir o cadastro já preenchido.')+'</p>',
+      (conhecido
+        ? '<div class="dx dx-ok"><b>Já é cliente</b><span>'+esc(v.marca+' '+v.modelo+' · '+v.cor)+'</span>'+
+          '<span>'+esc(nomesDonos(v))+'</span></div>'
+        : '<div class="dx dx-novo"><b>Placa sem cadastro</b>'+
+          '<span>A leitura funcionou — este veículo é que ainda não está no sistema.</span>'+
+          '<span>Vou abrir o cadastro rápido com a placa já preenchida.</span></div>'),
     botoes:[
-      {txt:'Tentar de novo',classe:'btn-ghost',acao:function(){fecharModal();abrirCamera()}},
-      {txt:conhecido?'Carregar dados':'Cadastrar veículo',classe:'entrar-btn',acao:function(){
+      {txt:'Reler a placa',classe:'btn-ghost',acao:function(){fecharModal();abrirCamera()}},
+      {txt:conhecido?'Carregar dados':'Cadastrar agora',classe:'entrar-btn',acao:function(){
         var digitada=soLetrasNum(document.getElementById('placaConfInput').value);
         if(digitada.length!==7){toast('Placa incompleta','A placa precisa ter 7 caracteres.','warn');return}
         fecharModal();
@@ -4431,20 +4596,15 @@ function aplicarPlacaLida(placa){
       memo.classList.add('show');
       if(typeof renderFotosEntrada==='function')renderFotosEntrada();
       toast('Cliente reconhecido',dono.nome+' · '+v.modelo,'ok');
-      setTimeout(function(){document.getElementById('svcCatalogo').scrollIntoView({behavior:'smooth',block:'center'})},420);
+      setTimeout(function(){var sc=document.getElementById('svcCatalogo');if(sc&&sc.scrollIntoView)sc.scrollIntoView({behavior:'smooth',block:'center'})},420);
     }else{
       memo.innerHTML=
         '<div class="memo-row"><span>Placa</span><span class="hl">'+alvoPlaca+'</span></div>'+
-        '<div class="memo-row"><span>Cadastro</span><span>Veículo novo — preencha os dados abaixo</span></div>';
+        '<div class="memo-row"><span>Cadastro</span><span>Veículo novo neste sistema</span></div>';
       memo.classList.add('show');
       document.getElementById('placaInput').value=alvoPlaca;
       if(typeof renderFotosEntrada==='function')renderFotosEntrada();
-      toast('Veículo novo','Digite o modelo — o porte e o preço vêm da FIPE automaticamente.','ok');
-      setTimeout(function(){
-        var n=document.getElementById('nomeInput');
-        n.scrollIntoView({behavior:'smooth',block:'center'});
-        setTimeout(function(){n.focus()},320);
-      },420);
+      setTimeout(function(){cadastroRapido(alvoPlaca)},380);
     }
   });
 }
@@ -4478,6 +4638,84 @@ function digitarPlacaManual(){
 }
 
 scanBtn.addEventListener('click',abrirCamera);
+
+/* ================= CADASTRO RÁPIDO (placa sem cadastro) ================= */
+var enderecoRapido=null;
+function cadastroRapido(placa){
+  enderecoRapido=null;
+  var expandido=false;
+  abrirModal({
+    titulo:'Cadastro rápido',
+    sub:'Só o essencial. O resto dá para completar depois.',
+    html:'<div class="dx dx-novo" style="margin-bottom:14px"><b>Placa '+esc(placaFmt(placa))+'</b>'+
+        '<span>Primeira vez deste veículo aqui.</span></div>'+
+      '<div class="fld"><label>Nome do cliente</label>'+
+        '<input type="text" id="crNome" placeholder="Ex. Carlos Eduardo Silva" autocomplete="off"></div>'+
+      '<div class="fld" style="margin-top:10px"><label>WhatsApp</label>'+
+        '<input type="text" id="crTel" inputmode="tel" placeholder="(83) 9 9999-9999" autocomplete="off"></div>'+
+      '<div class="fld" style="margin-top:10px"><label>Observações</label>'+
+        '<textarea id="crObs" placeholder="Ex. não gosta de cera no painel, sempre pede atenção nas rodas"></textarea>'+
+        '<div class="hint">Aparece para a equipe toda vez que este cliente chegar.</div></div>'+
+      '<button class="btn-ghost" id="crCompletar" style="width:100%;margin-top:12px">'+
+        '+ Completar cadastro (endereço)</button>'+
+      '<div id="crEndereco" style="display:none;margin-top:14px">'+
+        '<div class="card-lbl">Endereço</div>'+blocoEndereco(null,'cr')+'</div>',
+    botoes:[
+      {txt:'Agora não',classe:'btn-ghost',acao:function(){
+        fecharModal();
+        toast('Sem problema','Preencha nome e telefone no formulário quando puder.','ok');
+        setTimeout(function(){
+          var n=document.getElementById('nomeInput');
+          if(n.scrollIntoView)n.scrollIntoView({behavior:'smooth',block:'center'});
+          setTimeout(function(){n.focus()},320);
+        },260);
+      }},
+      {txt:'Salvar e continuar',classe:'entrar-btn',acao:function(){
+        var nome=document.getElementById('crNome').value.trim();
+        if(!nome){toast('Falta o nome','Todo cliente precisa de um nome.','warn');return}
+        var telBruto=soNumeros(document.getElementById('crTel').value);
+        var tel=telBruto?('55'+telBruto.replace(/^55/,'')):'';
+        var obs=document.getElementById('crObs').value.trim();
+        var end=expandido?lerEndereco('cr'):null;
+
+        document.getElementById('nomeInput').value=nome;
+        document.getElementById('telInput').value=tel?formataTel(tel):'';
+        document.getElementById('placaInput').value=placaFmt(placa);
+        enderecoRapido={obs:obs,endereco:end};
+
+        memo.innerHTML=
+          '<div class="memo-row"><span>Cliente</span><span class="hl">'+esc(nome)+'</span></div>'+
+          '<div class="memo-row"><span>Placa</span><span>'+placaFmt(placa)+'</span></div>'+
+          (obs?'<div class="memo-row"><span>Observação</span><span>'+esc(obs)+'</span></div>':'')+
+          (end?'<div class="memo-row"><span>Endereço</span><span>'+esc(enderecoLinha(end))+'</span></div>':'');
+        memo.classList.add('show');
+        fecharModal();
+        toast('Cliente pronto','Agora escolha o modelo — o porte vem da FIPE.','ok');
+        setTimeout(function(){
+          var m=document.getElementById('modeloInput');
+          if(m.scrollIntoView)m.scrollIntoView({behavior:'smooth',block:'center'});
+          setTimeout(function(){m.focus()},320);
+        },300);
+      }}
+    ]
+  });
+  setTimeout(function(){
+    var bt=document.getElementById('crCompletar');
+    if(bt)bt.addEventListener('click',function(){
+      expandido=!expandido;
+      document.getElementById('crEndereco').style.display=expandido?'block':'none';
+      this.textContent=expandido?'− Esconder endereço':'+ Completar cadastro (endereço)';
+      if(expandido){
+        ligarCep('cr');
+        setTimeout(function(){document.getElementById('crCep').focus()},120);
+      }
+    });
+    var tel=document.getElementById('crTel');
+    if(tel)tel.addEventListener('input',function(){this.value=formataTel(this.value)});
+    var n=document.getElementById('crNome');
+    if(n)n.focus();
+  },90);
+}
 
 
 /* ================= ASSINATURA DO CLIENTE ================= */
