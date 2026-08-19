@@ -1015,6 +1015,8 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
   text-transform:uppercase;padding:14px 10px;border-radius:14px;border:2px solid var(--linha);
   background:var(--vidro);color:var(--tinta)}
 .placa-conf input:focus{outline:none;border-color:var(--teal)}
+.cam-recorte{width:100%;border-radius:12px;border:2px solid var(--teal);display:block;
+  background:#000;image-rendering:crisp-edges}
 
 /* ===== FILTROS DE INDICADORES ===== */
 .filtros-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-top:8px}
@@ -1282,6 +1284,16 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .svc-rodape span{font-size:.78rem;color:var(--fumaca)}
 .svc-rodape b{font-family:'Archivo',sans-serif;font-weight:900;font-style:italic;font-size:1.2rem;color:var(--teal)}
 
+/* ===== CARD DO PÁTIO: observação em destaque ===== */
+.pcarro-obs{display:flex;align-items:flex-start;gap:7px;margin-top:9px;padding:8px 10px;
+  border-radius:9px;background:color-mix(in srgb,var(--alerta) 13%,transparent);
+  border-left:3px solid var(--alerta);color:var(--alerta)}
+.pcarro-obs svg{flex:none;margin-top:1px}
+.pcarro-obs span{font:600 12px/1.4 var(--f-body);color:var(--texto);word-break:break-word}
+.pcarro-obs.av{background:color-mix(in srgb,var(--perigo) 12%,transparent);
+  border-left-color:var(--perigo);color:var(--perigo)}
+.pcarro-acoes{display:flex;gap:7px;margin-top:11px}
+
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
    carro tem que estar no polegar — os indicadores viram uma faixa de consulta. */
@@ -1416,7 +1428,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.7.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v2.9.0</button>
         </div>
       </div>
 
@@ -1516,7 +1528,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1713,7 +1725,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1748,7 +1760,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1763,7 +1775,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1777,7 +1789,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.7.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v2.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2295,6 +2307,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
     </div>
 
     <div class="status-btns" id="patioStatusBtns"></div>
+    <div id="osObs"></div>
     <div id="osExtras"></div>
 
     <div class="card-lbl" style="margin-top:14px">Serviços</div>
@@ -2515,7 +2528,7 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='2.7.0';
+var TJET_VERSAO='2.9.0';
 var TJET_BUILD='2026-08-19';
 var errosApp=[];
 
@@ -3357,39 +3370,37 @@ function renderPatio(){
   filaPatio.innerHTML=lista.map(function(c){
     var pos=PATIO.indexOf(c)+1,slack=slackDe(c),atrasado=atrasadoDe(c);
     var slackTxt,slackCls='';
-    if(c.status==='pronto'){slackTxt='Pronto — aguardando retirada'}
+    if(c.status==='pronto'){slackTxt='Aguardando retirada'}
     else if(atrasado){slackTxt='Atrasado '+Math.abs(relogioMin-c.previsao)+' min';slackCls='atraso'}
-    else if(slack<=15){slackTxt='Vencendo em '+Math.max(0,c.previsao-relogioMin)+' min';slackCls='risco'}
+    else if(slack<=15){slackTxt='Vence em '+Math.max(0,c.previsao-relogioMin)+' min';slackCls='risco'}
     else{slackTxt='Folga de '+slack+' min'}
-    var waColor=c.temWhatsapp===true?'var(--ok)':c.temWhatsapp===false?'var(--perigo)':'var(--fumaca)';
     var noPatio=Math.max(0,relogioMin-c.entrada),prog=progressoDe(c);
-    var lav=c.lavadorId?DB.equipe.find(function(x){return x.id===c.lavadorId}):null;
-    var acao=rotuloAcao(c.status);
+    var obs=String(c.obs||'').trim();
+    var pronto=c.status==='pronto';
+
     return '<div class="pcarro'+(atrasado?' atrasado':'')+'" data-id="'+c.id+'">'+
       '<div class="pcarro-top">'+
-        '<span class="drag-handle" title="Segure e arraste em qualquer ponto do card">'+
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="1.6"/><circle cx="16" cy="6" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>'+
-        '</span>'+
         '<div class="pcarro-ord">'+pos+'</div>'+
-        '<div class="pcarro-nm"><b>'+esc(c.cliente)+(c.apelido?' — "'+esc(c.apelido)+'"':'')+'</b><span>'+esc(c.placa)+' · '+esc(c.modelo)+' · '+esc(c.cor)+'</span></div>'+
+        '<div class="pcarro-nm"><b>'+esc(c.cliente)+'</b><span>'+esc(c.placa)+' · '+esc(c.modelo)+' · '+esc(c.cor)+'</span></div>'+
         '<span class="prisma-chip" data-id="'+c.id+'" title="Toque para trocar o número do prisma">Nº '+esc(c.numeroPrisma||'--')+'</span>'+
         '<span class="st-chip st-'+c.status+'">'+statusLbl(c.status)+'</span>'+
       '</div>'+
       '<div class="pcarro-svc">'+(c.servicos.length?c.servicos.map(function(s){return esc(s.nome)}).join(' + '):'Nenhum serviço lançado')+'</div>'+
-      '<div class="pcarro-meta">'+
-        '<span class="tag b">OS '+c.numero+'</span>'+
-        (c.box?'<span class="tag t">Box '+esc(c.box)+'</span>':'')+
-        (lav?'<span class="tag">'+esc(lav.nome.split(' ')[0])+'</span>':'<span class="tag y">Sem lavador</span>')+
-        (c.avarias&&c.avarias.length?'<span class="tag r">'+c.avarias.length+' avaria'+(c.avarias.length>1?'s':'')+'</span>':'')+
-        (c.prioridade?'<span class="tag r">Prioridade</span>':'')+
-        '<span class="tag g">'+fmtBRL(totalOS(c))+'</span>'+
-      '</div>'+
+      /* o pedido do cliente precisa estar na frente de quem lava, não escondido na OS */
+      (obs?'<div class="pcarro-obs"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span>'+esc(obs)+'</span></div>':'')+
+      (c.avarias&&c.avarias.length?'<div class="pcarro-obs av"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>'+c.avarias.length+' avaria'+(c.avarias.length>1?'s':'')+' registrada'+(c.avarias.length>1?'s':'')+' na entrada</span></div>':'')+
       '<div class="pcarro-bar '+slackCls+'"><i style="width:'+prog+'%"></i></div>'+
       '<div class="pcarro-bottom">'+
-        '<span><span class="wa-dot" style="background:'+waColor+'"></span>entrou '+paraHM(c.entrada)+' · há '+noPatio+' min no pátio</span>'+
+        '<span>entrou '+paraHM(c.entrada)+' · '+noPatio+' min · '+fmtBRL(totalOS(c))+'</span>'+
         '<span class="pcarro-slack '+slackCls+'">'+slackTxt+'</span>'+
       '</div>'+
-      (acao?'<div style="display:flex;gap:7px;margin-top:11px"><button class="btn-mini solid" data-acao="'+c.id+'" style="flex:1">'+acao+'</button><button class="btn-mini wa" data-wa="'+c.id+'">WhatsApp</button><button class="btn-mini" data-link="'+c.id+'">Link</button></div>':'')+
+      '<div class="pcarro-acoes">'+
+        (pronto
+          ? '<button class="btn-mini solid" data-entregar="'+c.id+'" style="flex:1">Entregar veículo</button>'
+          : '<button class="btn-mini solid" data-pronto="'+c.id+'" style="flex:1">Avisar que está pronto</button>')+
+        '<button class="btn-mini wa" data-wa="'+c.id+'">WhatsApp</button>'+
+        '<button class="btn-mini" data-link="'+c.id+'">Link</button>'+
+      '</div>'+
       '</div>';
   }).join('');
   if(typeof atualizarTemposDetalhe==='function')atualizarTemposDetalhe();
@@ -3454,6 +3465,16 @@ filaPatio.addEventListener('click',function(e){
       ]});
     return;
   }
+  var bPronto=e.target.closest('[data-pronto]');
+  if(bPronto){marcarProntoEAvisar(+bPronto.dataset.pronto);return}
+
+  var bEntregar=e.target.closest('[data-entregar]');
+  if(bEntregar){
+    var alvoE=PATIO.filter(function(x){return x.id===+bEntregar.dataset.entregar})[0];
+    if(alvoE){patioAtivo=alvoE;abrirDetalheCarro();abrirPainelSaida()}
+    return;
+  }
+
   var bAcao=e.target.closest('[data-acao]');
   if(bAcao){avancarStatus(+bAcao.dataset.acao);return}
   var bWa=e.target.closest('[data-wa]');
@@ -3471,6 +3492,18 @@ document.addEventListener('click',function(e){
   filtroPatio=f.dataset.fp;renderPatio();
 });
 
+/* Antes era preciso três toques (iniciar → secando → pronto) só para avisar o
+   cliente. Agora um toque marca pronto e já abre a mensagem. Os estágios
+   intermediários continuam disponíveis dentro da OS para quem quiser controlar. */
+function marcarProntoEAvisar(id){
+  var c=PATIO.find(function(x){return x.id===id});if(!c)return;
+  if(!c.inicioExec)c.inicioExec=c.entrada;
+  c.status='pronto';c.prontoEm=relogioMin;
+  c.apontamentos.push({h:paraHM(relogioMin),t:'Marcado como pronto e cliente avisado'});
+  salvar();renderPatio();
+  if(c.temWhatsapp!==false&&c.tel)abrirWhatsApp(c.tel,montarMsg(DB.config.msg.pronto,c));
+  else toast('Marcado como pronto',c.placa+' · sem WhatsApp cadastrado','ok');
+}
 function avancarStatus(id){
   var c=PATIO.find(function(x){return x.id===id});if(!c)return;
   if(c.status==='pronto'){patioAtivo=c;abrirDetalheCarro();abrirPainelSaida();return}
@@ -3517,7 +3550,7 @@ function abrirDetalheCarro(){
   renderFormasPagamento();
   renderPagLancamentos();
   renderApontamentos();
-  renderOsExtras();renderDescontoOS();renderSaidaExtras();
+  renderObsOS();renderOsExtras();renderDescontoOS();renderSaidaExtras();
   document.getElementById('saidaPanel').classList.remove('show');
   patioOverlay.classList.add('show');
 }
@@ -4775,7 +4808,7 @@ function lerEndereco(pref){
 /* ================= LEITURA REAL DE PLACA (câmera + OCR) ================= */
 var TESS_CDN='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
 var camStream=null,camModo='environment',camAberta=false,camOcupada=false,tessCarregando=null,tentativasOCR=0;
-var ultimaLeituraBruta='';   /* aparece no diagnóstico: distingue "não leu nada" de "leu errado" */
+var ultimaLeituraBruta='',ultimoRecorte='';   /* aparece no diagnóstico: distingue "não leu nada" de "leu errado" */
 var RX_ANTIGA=/^[A-Z]{3}[0-9]{4}$/,RX_MERCOSUL=/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
 var LETRA_DE={'0':'O','1':'I','2':'Z','4':'A','5':'S','6':'G','7':'T','8':'B','9':'G'};
 var DIGITO_DE={'O':'0','Q':'0','D':'0','U':'0','I':'1','L':'1','J':'1','Z':'2','A':'4','S':'5','G':'6','T':'7','B':'8','R':'8','E':'8'};
@@ -4840,7 +4873,7 @@ function limiarOtsu(img){
   return limiar;
 }
 function prepararCanvas(origem,binarizar,inverter){
-  var alvoW=1600,esc=alvoW/origem.width;
+  var alvoW=Math.min(1800,Math.max(1000,origem.width*4)),esc=alvoW/origem.width;
   var cv=document.createElement('canvas');
   cv.width=alvoW;cv.height=Math.round(origem.height*esc);
   var ctx=cv.getContext('2d');
@@ -4857,6 +4890,104 @@ function prepararCanvas(origem,binarizar,inverter){
   }
   ctx.putImageData(img,0,0);
   return cv;
+}
+
+/* A moldura que a pessoa vê é medida em pixels de TELA. O vídeo entra com
+   object-fit:cover, então ele é ampliado e cortado nas laterais. Sem converter
+   entre os dois sistemas, o recorte saía 3x mais largo que a moldura e a placa
+   virava um detalhe minúsculo — foi o motivo de "não enxerguei texto nenhum". */
+function regiaoDoGuia(){
+  var vw=camVideo.videoWidth,vh=camVideo.videoHeight;
+  var telaW=camVideo.clientWidth||vw,telaH=camVideo.clientHeight||vh;
+  var escala=Math.max(telaW/vw,telaH/vh);          /* object-fit: cover */
+  var offX=(vw*escala-telaW)/2,offY=(vh*escala-telaH)/2;
+  var mw=telaW*0.78,mh=mw/3;                        /* mesma medida do CSS .cam-guide i */
+  var mx=(telaW-mw)/2,my=(telaH-mh)/2;
+  var x=(mx+offX)/escala,y=(my+offY)/escala,w=mw/escala,h=mh/escala;
+  /* folga de 6% para não cortar a borda da placa se a mão tremer */
+  var fx=w*0.06,fy=h*0.10;
+  x=Math.max(0,x-fx);y=Math.max(0,y-fy);
+  w=Math.min(vw-x,w+fx*2);h=Math.min(vh-y,h+fy*2);
+  return {x:x,y:y,w:w,h:h};
+}
+
+/* Dentro da placa, a faixa azul "BRASIL" fica quase toda preta depois da
+   binarização e o fundo fica quase todo branco. A linha de caracteres é a única
+   com densidade de tinta intermediária — é assim que ela é encontrada. */
+function isolarCaracteres(origem){
+  var W=origem.width,H=origem.height;
+  if(!W||!H)return null;
+  var ctx=origem.getContext('2d'),img;
+  try{img=ctx.getImageData(0,0,W,H)}catch(e){return null}
+  var d=img.data,i,x,y;
+
+  var cinza=new Uint8Array(W*H),min=255,max=0;
+  for(i=0;i<W*H;i++){
+    var g=(d[i*4]*0.299+d[i*4+1]*0.587+d[i*4+2]*0.114)|0;
+    cinza[i]=g;if(g<min)min=g;if(g>max)max=g;
+  }
+  var faixa=Math.max(1,max-min);
+  var hist=new Array(256);for(i=0;i<256;i++)hist[i]=0;
+  for(i=0;i<W*H;i++){cinza[i]=((cinza[i]-min)/faixa*255)|0;hist[cinza[i]]++}
+  var total=W*H,soma=0;for(i=0;i<256;i++)soma+=i*hist[i];
+  var somaB=0,wB=0,melhor=0,lim=128;
+  for(i=0;i<256;i++){
+    wB+=hist[i];if(!wB)continue;
+    var wF=total-wB;if(!wF)break;
+    somaB+=i*hist[i];
+    var mB=somaB/wB,mF=(soma-somaB)/wF,e=wB*wF*(mB-mF)*(mB-mF);
+    if(e>melhor){melhor=e;lim=i}
+  }
+
+  var densLin=new Float32Array(H);
+  for(y=0;y<H;y++){
+    var n=0;
+    for(x=0;x<W;x++)if(cinza[y*W+x]<=lim)n++;
+    densLin[y]=n/W;
+  }
+  var banda=maiorBanda(densLin,0.07,0.62,Math.round(H*0.05));
+  if(!banda||banda[1]-banda[0]<H*0.12)return null;
+
+  var densCol=new Float32Array(W);
+  for(x=0;x<W;x++){
+    var m=0;
+    for(y=banda[0];y<banda[1];y++)if(cinza[y*W+x]<=lim)m++;
+    densCol[x]=m/Math.max(1,banda[1]-banda[0]);
+  }
+  var cx0=0,cx1=W;
+  for(x=0;x<W;x++)if(densCol[x]>0.05){cx0=x;break}
+  for(x=W-1;x>=0;x--)if(densCol[x]>0.05){cx1=x+1;break}
+  if(cx1-cx0<W*0.25){cx0=0;cx1=W}
+
+  var mgY=Math.round((banda[1]-banda[0])*0.20),mgX=Math.round((cx1-cx0)*0.02);
+  var y0=Math.max(0,banda[0]-mgY),y1=Math.min(H,banda[1]+mgY);
+  var x0=Math.max(0,cx0-mgX),x1=Math.min(W,cx1+mgX);
+  var lw=x1-x0,lh=y1-y0;
+  if(lw<40||lh<12)return null;
+  var prop=lw/lh;
+  if(prop<2||prop>12)return null;      /* placa não tem essa proporção: descarta */
+
+  var cv=document.createElement('canvas');
+  cv.width=lw;cv.height=lh;
+  cv.getContext('2d').drawImage(origem,x0,y0,lw,lh,0,0,lw,lh);
+  return cv;
+}
+function maiorBanda(perfil,minD,maxD,gap){
+  var n=perfil.length,faixas=[],ini=null,i;
+  for(i=0;i<=n;i++){
+    var ok=i<n&&perfil[i]>=minD&&perfil[i]<=maxD;
+    if(ok&&ini===null)ini=i;
+    else if(!ok&&ini!==null){faixas.push([ini,i]);ini=null}
+  }
+  if(!faixas.length)return null;
+  var unidas=[faixas[0]];
+  for(i=1;i<faixas.length;i++){
+    if(faixas[i][0]-unidas[unidas.length-1][1]<=gap)unidas[unidas.length-1][1]=faixas[i][1];
+    else unidas.push(faixas[i]);
+  }
+  var melhor=unidas[0];
+  unidas.forEach(function(f){if(f[1]-f[0]>melhor[1]-melhor[0])melhor=f});
+  return melhor;
 }
 
 /* ---------- Tesseract sob demanda ---------- */
@@ -4960,10 +5091,8 @@ document.getElementById('camShot').addEventListener('click',function(){
   camOcupada=true;camOverlay.classList.add('lendo');
   camStatus.textContent='Preparando o leitor…';
 
-  var vw=camVideo.videoWidth,vh=camVideo.videoHeight;
-  /* mesma proporção da moldura na tela: 78% da largura, 26% da altura, centralizada */
-  var rw=Math.round(vw*.78),rh=Math.round(vh*.26),
-      rx=Math.round((vw-rw)/2),ry=Math.round((vh-rh)/2);
+  var r=regiaoDoGuia();
+  var rw=Math.round(r.w),rh=Math.round(r.h),rx=Math.round(r.x),ry=Math.round(r.y);
 
   var recorte=document.createElement('canvas');
   recorte.width=rw;recorte.height=rh;
@@ -4975,12 +5104,20 @@ document.getElementById('camShot').addEventListener('click',function(){
   var fotoPlaca=completa.toDataURL('image/jpeg',.68);
 
   camStatus.textContent='Lendo a placa…';
+  /* o ganho real vem de isolar a linha de caracteres antes do OCR:
+     com a placa inteira o Tesseract se perde na faixa "BRASIL" e nas bordas */
+  var linha=isolarCaracteres(recorte);
+  ultimoRecorte=(linha||recorte).toDataURL('image/jpeg',.7);
+  var base=linha||recorte;
+  /* combinação escolhida por teste sobre fotos reais de placa:
+     psm 11 sobre a linha isolada foi o que devolveu a placa mais limpa */
   var variantes=[
-    {cv:prepararCanvas(recorte,true,false),psm:7},
-    {cv:prepararCanvas(recorte,false,false),psm:7},
-    {cv:prepararCanvas(recorte,true,false),psm:8},
-    {cv:prepararCanvas(recorte,true,true),psm:7}
+    {cv:prepararCanvas(base,true,false),psm:11},
+    {cv:prepararCanvas(base,false,false),psm:11},
+    {cv:prepararCanvas(base,false,false),psm:8},
+    {cv:prepararCanvas(base,true,false),psm:7}
   ];
+  if(!linha)variantes.push({cv:prepararCanvas(recorte,true,false),psm:11});
   var feitos=0;
   Promise.all(variantes.map(function(v){
     return lerTexto(v.cv,v.psm).then(function(t){
@@ -5009,13 +5146,9 @@ document.getElementById('camShot').addEventListener('click',function(){
         return;
       }
       var leuAlgo=textos.some(function(t){return String(t).replace(/[^A-Za-z0-9]/g,'').length>=4});
-      camDica.textContent=leuAlgo
-        ? 'Li caracteres mas não formaram uma placa válida. Aproxime e mantenha reta.'
-        : 'Não enxerguei texto nenhum. Aproxime até a placa preencher a moldura e melhore a luz.';
       registrarErro('OCR sem placa válida — '+ultimaLeituraBruta,'ocr');
-      toast('Não consegui ler a placa',
-        leuAlgo?'Li algo, mas não bateu com o formato de placa. Tente de novo mais perto.'
-               :'Nenhum texto foi detectado na foto. Aproxime mais e melhore a luz.','warn');
+      fecharCamera();
+      mostrarFalhaLeitura(leuAlgo,fotoPlaca);
       return;
     }
     tentativasOCR=0;
@@ -5229,6 +5362,28 @@ function dicaSemCamera(){
 }
 /* voltar da câmera sem ler não deve reabrir em loop */
 function suspenderCamAuto(){pularCamAuto=true}
+
+
+/* Quando a leitura falha, mostrar o pedaço que foi analisado responde na hora
+   a pergunta certa: o problema foi o enquadramento ou o reconhecimento? */
+function mostrarFalhaLeitura(leuAlgo,foto){
+  var achou=(ultimaLeituraBruta||'').replace(/v\d: /g,'').replace(/""/g,'').trim();
+  abrirModal({
+    titulo:'Não consegui ler a placa',
+    sub:leuAlgo?'Li caracteres, mas não formaram uma placa válida':'Nenhum texto foi reconhecido no recorte',
+    html:(ultimoRecorte?'<p class="mini-note">Este foi o trecho analisado:</p>'+
+        '<img src="'+ultimoRecorte+'" class="cam-recorte">':'')+
+      (achou&&leuAlgo?'<p class="mini-note">O leitor devolveu: <b>'+esc(achou.slice(0,90))+'</b></p>':'')+
+      '<div class="dx dx-novo" style="margin-top:12px"><b>'+
+        (ultimoRecorte?'A placa aparece inteira e nítida na imagem acima?':'Tente de novo mais perto')+'</b>'+
+        '<span>Se sim, o problema é o reconhecimento — digite a placa e siga.</span>'+
+        '<span>Se não, aproxime até a placa preencher a moldura e mantenha o celular reto.</span></div>',
+    botoes:[
+      {txt:'Tentar de novo',classe:'btn-ghost',acao:function(){fecharModal();abrirCamera(false)}},
+      {txt:'Digitar a placa',classe:'entrar-btn',acao:function(){fecharModal();digitarPlacaManual()}}
+    ]
+  });
+}
 
 
 /* ================= ASSINATURA DO CLIENTE ================= */
@@ -5498,6 +5653,17 @@ function abrirModoPublico(payload){
 /* ================= EXTRAS DA OS (box, lavador, desconto) ================= */
 var CHECK_QUALIDADE=['Vidros sem marca','Rodas e pneus','Painel e plásticos','Porta-malas','Soleiras e frisos','Sem água nas frestas','Aromatizado'];
 
+function renderObsOS(){
+  var c=patioAtivo,box=document.getElementById('osObs');if(!c||!box)return;
+  var obs=String(c.obs||'').trim();
+  box.innerHTML='<div class="card-lbl" style="margin-top:14px">Pedido do cliente</div>'+
+    '<div class="fld"><textarea id="osObsInput" placeholder="Ex. não colocar cheirinho, cuidado com o banco do motorista">'+esc(obs)+'</textarea>'+
+    '<div class="hint">Aparece em destaque no card do pátio, para quem está lavando.</div></div>';
+  document.getElementById('osObsInput').addEventListener('input',function(){
+    c.obs=this.value;salvar();
+  });
+  document.getElementById('osObsInput').addEventListener('blur',renderPatio);
+}
 function renderOsExtras(){
   var c=patioAtivo,box=document.getElementById('osExtras');if(!c||!box)return;
   var boxes=[];for(var i=1;i<=(+DB.config.boxes||3);i++)boxes.push(String(i));

@@ -283,7 +283,7 @@ Para mudar, toque no horário. As opções mostram:
 
 ## Quando algo não funciona
 
-A partir da v2.7.0 o sistema é à prova de dependência externa. Antes, se a
+A partir da v2.9.0 o sistema é à prova de dependência externa. Antes, se a
 biblioteca de arrastar não carregasse (internet instável, CDN bloqueado), **todo o
 resto do script morria junto** — câmera, busca de veículo, notas, indicadores.
 
@@ -322,7 +322,7 @@ colunas, para o valor em reais não espremer.
 
 ## Confirmar a versão
 
-Na tela inicial, ao lado da data, tem um selo pequeno: **v2.7.0**. É a forma mais
+Na tela inicial, ao lado da data, tem um selo pequeno: **v2.9.0**. É a forma mais
 rápida de saber se o cache foi limpo — se mostrar outro número, você ainda está
 na versão antiga.
 
@@ -363,7 +363,7 @@ e é lá que você olha relatório. A troca de ordem e os tamanhos valem só aba
 700px de largura.
 
 
-## Tela de entrada (v2.7.0)
+## Tela de entrada (v2.9.0)
 
 - **Placa** sobe sempre em maiúsculo, mesmo digitando em minúsculo.
 - **Modelo**: digite duas letras e escolha na lista. Marca, modelo e porte entram
@@ -380,3 +380,44 @@ e é lá que você olha relatório. A troca de ordem e os tamanhos valem só aba
 `{cliente}` agora traz **nome e sobrenome**. Se em alguma mensagem você preferir
 só o primeiro nome — mais informal —, use `{primeiro}`. Os dois funcionam, e você
 edita os textos em **Admin → Configurações → Mensagens**.
+
+
+## Pátio (v2.9.0)
+
+O card ficou com o essencial:
+
+```
+① Marina Souza                    Nº 01   [Aguardando]
+  PBX 4C71 · Civic · Prata
+  Lavagem completa + cera
+  ⚠ Não colocar cheirinho
+  ⚠ 1 avaria registrada na entrada
+  ▬▬▬▬▬▬▬▬░░░░░░░░
+  entrou 08:40 · 25 min · R$ 65,00        Folga de 20 min
+  [ Avisar que está pronto ]  [ WhatsApp ]  [ Link ]
+```
+
+Saíram do card: OS, box, lavador, prioridade e a alça de arraste — tudo continua
+na OS, a um toque no card. O que entrou foi o que faltava.
+
+### Pedido do cliente em destaque
+
+O que você escreve em **Observações** na entrada agora aparece no card, em
+amarelo, para quem está lavando. *"Não colocar cheirinho"* deixou de ficar
+enterrado dentro da OS.
+
+Avarias registradas na vistoria aparecem do mesmo jeito, em vermelho.
+
+Dá para corrigir ou completar o texto depois: abra a OS e edite em **Pedido do
+cliente** — o card atualiza na hora.
+
+### Um toque para avisar
+
+Antes eram três toques só para mandar a mensagem: *Iniciar lavagem* → *Marcar
+secando* → *Marcar pronto*. Agora o botão principal é **Avisar que está pronto**:
+marca a OS como pronta e abre o WhatsApp com a mensagem, de uma vez.
+
+Depois disso o botão vira **Entregar veículo** e leva direto ao fechamento.
+
+Os estágios *Lavando* e *Secando* continuam disponíveis dentro da OS, para quem
+quiser acompanhar tempo de execução por etapa — mas não travam mais o caminho.
