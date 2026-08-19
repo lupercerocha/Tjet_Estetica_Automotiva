@@ -101,7 +101,10 @@ h1,h2,h3{font-family:'Archivo',sans-serif;letter-spacing:-.02em;line-height:1.15
 .top{
   position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--fundo) 90%,transparent);
   backdrop-filter:blur(12px);border-bottom:1px solid var(--linha);
-  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  /* sem isso, o cabeçalho fica embaixo do notch/status bar do celular —
+     mesma técnica já usada na barra de baixo, agora espelhada em cima */
+  padding:calc(12px + env(safe-area-inset-top)) 18px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
 .top-brand{display:flex;align-items:center;gap:10px}
 @media(min-width:900px){.top-brand{display:none}}
@@ -1450,7 +1453,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.5</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.5.6</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1551,7 +1554,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.6</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1748,7 +1751,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.6</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1783,7 +1786,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.6</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1798,7 +1801,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.6</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1812,7 +1815,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.5</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.5.6</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2639,8 +2642,8 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.5.5';
-var TJET_BUILD='19/08/2026 17:55';   /* preenchido pelo patch.py na montagem, com data e hora reais */
+var TJET_VERSAO='3.5.6';
+var TJET_BUILD='19/08/2026 18:26';   /* preenchido pelo patch.py na montagem, com data e hora reais */
 var errosApp=[];
 
 /* Um erro solto no meio do script derrubava tudo que vinha depois.
