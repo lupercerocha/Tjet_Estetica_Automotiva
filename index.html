@@ -1405,6 +1405,51 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 }
 .pcarro-obs span{font-weight:500}
 
+/* ===== ARRASTAR E SOLTAR NO PÁTIO =====
+   O objetivo é o usuário VER o card sendo levado e os outros abrindo espaço,
+   em vez de tudo trocar de posição de uma vez. */
+
+/* No modo fallback (usado em boa parte dos celulares) existe um clone que
+   segue o dedo: esse ganha o visual de "card na mão". */
+.pcarro.arrastando{
+  opacity:.97 !important;
+  transform:scale(1.03) rotate(-.6deg);
+  box-shadow:0 22px 46px rgba(2,10,22,.5),0 0 0 1px color-mix(in srgb,var(--teal) 45%,transparent);
+  cursor:grabbing;
+  z-index:40;
+}
+/* O card que permanece na lista marca o lugar de destino: vira uma silhueta
+   tracejada que desliza junto com os outros, mostrando onde vai encaixar. */
+.pcarro.sortable-ghost{
+  opacity:1 !important;
+  background:color-mix(in srgb,var(--teal) 8%,transparent) !important;
+  border:1.5px dashed color-mix(in srgb,var(--teal) 60%,var(--linha)) !important;
+  border-left:3px solid color-mix(in srgb,var(--teal) 60%,var(--linha)) !important;
+  box-shadow:inset 0 0 22px color-mix(in srgb,var(--teal) 10%,transparent);
+}
+/* o conteúdo some quase por completo: o que importa ali é o vão, não repetir
+   a informação que já está sendo carregada na mão */
+.pcarro.sortable-ghost>*{opacity:.15;transition:opacity .2s}
+
+/* os cards que não estão sendo arrastados deslizam para ceder espaço */
+.reordenando .pcarro:not(.arrastando):not(.sortable-ghost){
+  transition:transform .26s cubic-bezier(.22,.68,0,1);
+}
+.pcarro{transition:transform .26s cubic-bezier(.22,.68,0,1),box-shadow .2s,opacity .2s}
+
+/* pulso rápido no card recém-solto: confirma onde ele parou */
+.pcarro.recem-movido{animation:assentou .9s cubic-bezier(.22,.68,0,1)}
+@keyframes assentou{
+  0%  {box-shadow:0 0 0 0 color-mix(in srgb,var(--teal) 55%,transparent)}
+  30% {box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 30%,transparent)}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+/* quem prefere menos movimento na tela não é obrigado a ver nada disso */
+@media(prefers-reduced-motion:reduce){
+  .pcarro,.pcarro.arrastando,.reordenando .pcarro{transition:none;transform:none}
+  .pcarro.recem-movido{animation:none}
+}
+
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
    carro tem que estar no polegar — os indicadores viram uma faixa de consulta. */
@@ -1539,7 +1584,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.8.1</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.9.0</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1640,7 +1685,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.8.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1836,7 +1881,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.8.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1871,7 +1916,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.8.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1886,7 +1931,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.8.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1900,7 +1945,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.8.1</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2727,8 +2772,8 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.8.1';
-var TJET_BUILD='20/08/2026 21:05';   /* preenchido pelo patch.py na montagem, com data e hora reais */
+var TJET_VERSAO='3.9.0';
+var TJET_BUILD='20/08/2026 21:14';   /* preenchido pelo patch.py na montagem, com data e hora reais */
 var errosApp=[];
 
 /* Um erro solto no meio do script derrubava tudo que vinha depois.
@@ -3765,14 +3810,32 @@ var arrastandoAgora=false,sortablePatio=null;
 function ligarArraste(){
   if(sortablePatio||typeof Sortable==='undefined')return false;
   sortablePatio=new Sortable(filaPatio,{
-    animation:180,delay:170,delayOnTouchOnly:true,touchStartThreshold:6,
+    /* animação mais longa e com curva de saída suave: dá tempo de o olho
+       acompanhar os outros cards abrindo espaço e se acomodando */
+    animation:260,
+    easing:'cubic-bezier(.22,.68,0,1)',
+    delay:170,delayOnTouchOnly:true,touchStartThreshold:6,
     filter:'button,.prisma-chip',preventOnFilter:false,
     ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'arrastando',
-    onStart:function(){arrastandoAgora=true},
-    onEnd:function(){
+    /* o marcador some enquanto arrasta: sem ele o Sortable não consegue
+       animar a troca de posição de forma contínua */
+    forceFallback:false,
+    onStart:function(){
+      arrastandoAgora=true;
+      filaPatio.classList.add('reordenando');
+    },
+    onEnd:function(evt){
       var novaOrdem=Array.from(filaPatio.children).map(function(el){return +el.dataset.id});
       PATIO.sort(function(a,b){return novaOrdem.indexOf(a.id)-novaOrdem.indexOf(b.id)});
-      modoAuto=false;salvar();renderPatio();
+      modoAuto=false;salvar();
+      filaPatio.classList.remove('reordenando');
+
+      /* Antes o renderPatio() aqui reconstruía a lista inteira no mesmo
+         instante, apagando a animação da biblioteca — daí a sensação seca.
+         Agora só atualizamos os números da ordem, sem recriar os cards, e
+         damos um realce rápido no que foi movido. */
+      atualizarOrdemVisual();
+      if(evt&&evt.item)destacarMovido(evt.item);
       setTimeout(function(){arrastandoAgora=false},80);
     }
   });
@@ -3865,6 +3928,25 @@ function avancarStatus(id){
   }
   salvar();renderPatio();
   toast(statusLbl(prox),c.placa+' · '+c.modelo,'ok');
+}
+
+/* ---------- reordenação sem recriar os cards ----------
+   Recriar a lista inteira depois de soltar cancelava a animação da
+   biblioteca. Aqui só os números da ordem são corrigidos, no próprio DOM
+   que já está na tela — os cards continuam onde a animação os deixou. */
+function atualizarOrdemVisual(){
+  var cards=filaPatio.children;
+  for(var i=0;i<cards.length;i++){
+    var num=cards[i].querySelector('.pcarro-ord');
+    if(num)num.textContent=i+1;
+  }
+}
+function destacarMovido(card){
+  if(!card)return;
+  card.classList.remove('recem-movido');
+  void card.offsetWidth;            /* reinicia a animação se mover de novo */
+  card.classList.add('recem-movido');
+  setTimeout(function(){card.classList.remove('recem-movido')},900);
 }
 
 
