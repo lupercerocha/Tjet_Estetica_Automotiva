@@ -1,7 +1,7 @@
 /* T-Jet Sistema — service worker
    O index.html NUNCA sai do cache quando há rede: cache velho servindo
    versão antiga foi a causa de "a função nova não aparece". */
-var VERSAO = '3.6.0';
+var VERSAO = '3.7.1';
 var CACHE  = 'tjet-' + VERSAO;
 var LOCAIS = ['./', './index.html', './config.js', './manifest.json', './favicon.ico', './favicon.svg',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'];

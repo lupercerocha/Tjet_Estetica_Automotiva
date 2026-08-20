@@ -1262,29 +1262,6 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 /* fica levemente mais visível quando há erro registrado */
 .versao-pill.alerta{opacity:1;border-color:var(--alerta);color:var(--alerta)}
 
-/* ===== GRADE DE CORES ===== */
-.cor-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:7px;
-  padding:9px;background:var(--vidro);border:1px solid var(--linha);border-radius:12px}
-.cor-quad{
-  aspect-ratio:1;border-radius:9px;background:var(--cq,#333);cursor:pointer;
-  border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
-  transition:transform .13s,border-color .13s;position:relative;
-}
-.cor-quad:active{transform:scale(.9)}
-.cor-quad.on{border-color:var(--teal);transform:scale(1.06)}
-.cor-quad.on::after{
-  content:'';position:absolute;inset:0;margin:auto;width:11px;height:6px;
-  border-left:2.4px solid #fff;border-bottom:2.4px solid #fff;transform:rotate(-45deg) translate(1px,-2px);
-  filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));
-}
-.cor-quad.outra{
-  background:var(--painel);border:1.5px dashed var(--linha);color:var(--fumaca);
-  display:flex;align-items:center;justify-content:center;font:700 17px/1 var(--f-body);box-shadow:none;
-}
-.cor-quad.outra.on{border-color:var(--teal);color:var(--teal)}
-.cor-quad.outra.on::after{display:none}
-.cor-nome{margin-top:7px;font:600 11px/1 var(--f-mono);letter-spacing:.06em;
-  text-transform:uppercase;color:var(--fumaca)}
 
 /* uma foto por vez: as próximas aparecem conforme forem tiradas */
 .photos.so-uma{grid-template-columns:1fr}
@@ -1345,6 +1322,61 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
    largo (como uma linha de filtros) empurrar essa coluna para fora da tela.
    min-width:0 devolve o controle da largura para o container, não o conteúdo. */
 .app-main{min-width:0}
+
+/* ===== ENTRADA: placa + categoria lado a lado, modelo em destaque, cor fora da caixa ===== */
+.cols-placa{grid-template-columns:.8fr 1.2fr}
+.placa-input-mini{
+  font-family:var(--f-mono) !important;font-weight:800 !important;font-size:1.05rem !important;
+  letter-spacing:1.5px;text-transform:uppercase;text-align:center;padding:10px 8px !important;
+}
+.placa-input-mini::placeholder{font-weight:600;letter-spacing:1px;opacity:.5}
+.cols-placa #categoriaChips{gap:6px}
+.cols-placa #categoriaChips .chip{padding:7px 10px;font-size:.74rem}
+
+.modelo-input-full{
+  font-size:1rem !important;font-weight:600 !important;
+  white-space:nowrap;overflow-x:auto;text-overflow:ellipsis;
+}
+.suggest-modelo .sug-item{
+  display:flex;align-items:center;gap:10px;padding:11px 13px;flex-wrap:nowrap;
+}
+.suggest-modelo .sug-item b{
+  font-size:.86rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex:1;min-width:0;color:var(--texto)
+}
+.suggest-modelo .sug-item .sug-porte{
+  flex:none;font-size:.62rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  padding:3px 7px;border-radius:6px;background:color-mix(in srgb,var(--teal) 16%,transparent);
+  color:var(--teal);white-space:nowrap;
+}
+
+/* cores: fora de qualquer retângulo, uma linha só, sem nome escrito */
+.cor-linha{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;overflow-x:auto;padding:3px 1px 6px}
+.cor-bola{
+  width:26px;height:26px;border-radius:50%;flex:none;cursor:pointer;
+  background:var(--cq,#333);border:2px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);transition:transform .13s,border-color .13s;
+}
+.cor-bola:active{transform:scale(.88)}
+.cor-bola.on{border-color:var(--teal);transform:scale(1.16);box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 30%,transparent)}
+.cor-bola.outra{
+  background:var(--painel2);border:1.5px dashed var(--linha);color:var(--fumaca);
+  display:flex;align-items:center;justify-content:center;font:700 14px/1 var(--f-body);
+}
+.cor-bola.outra.on{border-color:var(--teal);border-style:solid;color:var(--teal)}
+
+/* ===== CARD DE PONTOS DE ATENÇÃO: desligado por pedido do Allan =====
+   O código que alimenta esse card (renderInsights, homeInsightTit/Tx) continua
+   ativo e funcionando — só a exibição na home foi desligada. Pode voltar a
+   qualquer momento removendo esta regra. */
+#view-home .insight{display:none}
+
+/* ===== RODAPÉ "T-JET SISTEMA · v" NA HOME: removido só no celular =====
+   No desktop a versão continua visível no rodapé; no celular esse espaço já
+   é ocupado pelo selo de versão lá em cima, ao lado da data. */
+@media(max-width:699px){
+  #view-home .foot{display:none}
+}
 
 /* ===== CELULAR: OPERAÇÃO NA FRENTE, NÚMEROS ATRÁS =====
    No desktop a tela é larga e cabe tudo. No celular, o que o balcão usa a cada
@@ -1480,7 +1512,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.6.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.7.1</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1581,7 +1613,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.7.1</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1648,62 +1680,61 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <div class="card">
-        <div class="field">
-          <label>Placa</label>
-          <input type="text" id="placaInput" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
+        <div class="two-col cols-placa">
+          <div class="field" style="margin-bottom:0">
+            <label>Placa</label>
+            <input type="text" id="placaInput" class="placa-input-mini" autocapitalize="characters" spellcheck="false" placeholder="ABC 1D23" maxlength="8" autocomplete="off">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Categoria</label>
+            <div class="chips" id="categoriaChips">
+              <span class="chip on">Pequeno</span>
+              <span class="chip">Médio</span>
+              <span class="chip">Grande</span>
+              <span class="chip">Moto</span>
+              <span class="chip">SUV</span>
+              <span class="chip">Pickup</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:relative">
           <div class="suggest" id="placaSuggest"></div>
-          <div class="chips" id="veicPicker" style="display:none;margin-top:10px"></div>
-          <div class="vinculo-banner" id="vinculoBanner">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
-            <div class="tx"><b id="vinculoTitulo"></b><span id="vinculoSub"></span></div>
-            <button id="vinculoBtn"></button>
-          </div>
+        </div>
+        <div class="chips" id="veicPicker" style="display:none;margin-top:10px"></div>
+        <div class="vinculo-banner" id="vinculoBanner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+          <div class="tx"><b id="vinculoTitulo"></b><span id="vinculoSub"></span></div>
+          <button id="vinculoBtn"></button>
         </div>
 
-        <div class="field">
-          <label>Categoria do veículo</label>
-          <div class="chips" id="categoriaChips">
-            <span class="chip on">Pequeno</span>
-            <span class="chip">Médio</span>
-            <span class="chip">Grande</span>
-            <span class="chip">Moto</span>
-            <span class="chip">SUV</span>
-            <span class="chip">Pickup</span>
+        <div class="field" style="margin-top:16px">
+          <div class="field-label-row">
+            <label>Modelo</label>
+            <button class="visits-pill" id="fipeUpdateBtn" style="background:none;color:var(--fumaca)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
+              <span id="fipeUpdateLbl">Atualizar lista</span>
+            </button>
           </div>
+          <input type="text" id="modeloInput" class="modelo-input-full" placeholder="Digite 2 letras — ex. civic, hilux, tiggo 8" autocomplete="off">
+          <div class="suggest suggest-modelo" id="modeloSuggest"></div>
         </div>
 
-        <div class="two-col">
-          <div class="field" style="margin-bottom:0">
-            <div class="field-label-row">
-              <label>Modelo</label>
-              <button class="visits-pill" id="fipeUpdateBtn" style="background:none;color:var(--fumaca)">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
-                <span id="fipeUpdateLbl">Atualizar lista</span>
-              </button>
-            </div>
-            <input type="text" id="modeloInput" placeholder="Digite 2 letras — ex. civ, hilux, cg 160" autocomplete="off">
-            <div class="suggest" id="modeloSuggest"></div>
+        <div class="field" style="margin-bottom:0">
+          <label>Cor</label>
+          <div class="cor-linha" id="corChips">
+            <span class="cor-bola on" data-cor="Preto" title="Preto" style="--cq:#101317"></span>
+            <span class="cor-bola" data-cor="Branco" title="Branco" style="--cq:#E4E7EA"></span>
+            <span class="cor-bola" data-cor="Prata" title="Prata" style="--cq:#C7CDD3"></span>
+            <span class="cor-bola" data-cor="Cinza" title="Cinza" style="--cq:#7A7F85"></span>
+            <span class="cor-bola" data-cor="Vermelho" title="Vermelho" style="--cq:#B5342E"></span>
+            <span class="cor-bola" data-cor="Azul" title="Azul" style="--cq:#2B4D8C"></span>
+            <span class="cor-bola" data-cor="Verde" title="Verde" style="--cq:#2F7D4F"></span>
+            <span class="cor-bola" data-cor="Amarelo" title="Amarelo" style="--cq:#E4C13C"></span>
+            <span class="cor-bola" data-cor="Marrom" title="Marrom" style="--cq:#6B4A32"></span>
+            <span class="cor-bola outra" data-cor="outra" title="Outra cor">+</span>
           </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Cor</label>
-            <div class="cor-grade" id="corChips">
-              <span class="cor-quad on" data-cor="Preto" title="Preto" style="--cq:#101317"></span>
-              <span class="cor-quad" data-cor="Cinza" title="Cinza" style="--cq:#7A7F85"></span>
-              <span class="cor-quad" data-cor="Branco" title="Branco" style="--cq:#E4E7EA"></span>
-              <span class="cor-quad" data-cor="Prata" title="Prata" style="--cq:#C7CDD3"></span>
-              <span class="cor-quad" data-cor="Azul" title="Azul" style="--cq:#2B4D8C"></span>
-              <span class="cor-quad" data-cor="Vermelho" title="Vermelho" style="--cq:#B5342E"></span>
-              <span class="cor-quad" data-cor="Verde" title="Verde" style="--cq:#2F7D4F"></span>
-              <span class="cor-quad" data-cor="Laranja" title="Laranja" style="--cq:#D9772E"></span>
-              <span class="cor-quad" data-cor="Amarelo" title="Amarelo" style="--cq:#E4C13C"></span>
-              <span class="cor-quad" data-cor="Marrom" title="Marrom" style="--cq:#6B4A32"></span>
-              <span class="cor-quad" data-cor="Bege" title="Bege" style="--cq:#D8C6A8"></span>
-              <span class="cor-quad" data-cor="Vinho" title="Vinho" style="--cq:#6E1F2E"></span>
-              <span class="cor-quad outra" data-cor="outra" title="Outra cor">+</span>
-            </div>
-            <div class="cor-nome" id="corNomeAtual">Preto</div>
-            <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
-          </div>
+          <input type="text" id="corOutraInput" placeholder="Digite a cor" style="display:none;margin-top:8px">
         </div>
       </div>
 
@@ -1778,7 +1809,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.7.1</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1813,7 +1844,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.7.1</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1828,7 +1859,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.7.1</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1842,7 +1873,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.6.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.7.1</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2669,8 +2700,8 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.6.0';
-var TJET_BUILD='20/08/2026 16:27';   /* preenchido pelo patch.py na montagem, com data e hora reais */
+var TJET_VERSAO='3.7.1';
+var TJET_BUILD='20/08/2026 16:50';   /* preenchido pelo patch.py na montagem, com data e hora reais */
 var errosApp=[];
 
 /* Um erro solto no meio do script derrubava tudo que vinha depois.
@@ -3291,7 +3322,7 @@ function selecionarChip(container,nome){
   container.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c.textContent.trim()===nome)});
 }
 function selecionarCor(nome){
-  var quads=document.querySelectorAll('#corChips .cor-quad'),
+  var quads=document.querySelectorAll('#corChips .cor-bola'),
       outraInput=document.getElementById('corOutraInput'),
       rotulo=document.getElementById('corNomeAtual'),achou=null;
   quads.forEach(function(c){
@@ -3312,8 +3343,8 @@ document.getElementById('categoriaChips').querySelectorAll('.chip').forEach(func
   c.addEventListener('click',function(){selecionarChip(document.getElementById('categoriaChips'),c.textContent.trim())});
 });
 document.getElementById('corChips').addEventListener('click',function(e){
-  var quad=e.target.closest('.cor-quad');if(!quad)return;
-  document.querySelectorAll('#corChips .cor-quad').forEach(function(c){c.classList.remove('on')});
+  var quad=e.target.closest('.cor-bola');if(!quad)return;
+  document.querySelectorAll('#corChips .cor-bola').forEach(function(c){c.classList.remove('on')});
   quad.classList.add('on');
   var outraInput=document.getElementById('corOutraInput'),
       rotulo=document.getElementById('corNomeAtual');
@@ -3333,9 +3364,20 @@ document.getElementById('corOutraInput').addEventListener('input',function(){
 /* ================= MODELO (base FIPE mockada) ================= */
 var FIPE_TXT="Acura|M:Integra,Legend,Nsx\nAdly|O:Atv,Jaguar,RT\nAgrale|M:City|K:Marru\u00e1|O:Dakar,Elefant,Elefantre,Force,Junior,Sst,Super,Sxt,Tchau\nAlfa Romeo|M:145,147,155,156,164,166,2300,Spider\nAM Gen|M:Hummer\nAmazonas|O:AME-110,AME-150,AME-250,AME-LX\nAprilia|P:Sonic|O:AREA-51,Classic,Leonardo,Moto,Pegaso,RS,RX,Rally,Rsv Mille,SR,Scarabeo,Sxr\nAsia Motors|M:AM-825,Hi-Topic,Jipe Rocsta|G:Topic,Towner\nAston Martin|M:DB12,DB9,DBX707,Dbs,Dbx,Rapide,Vanquish,Vantage,Virage\nAtala|G:Master|O:Califfone,Skegia\nAudi|M:100,80,A1,A3,A4,A5,A6,A7,A8,Allroad,Avant,E-TRON,Q6 E-TRON,R8,RS,RS3,RS4,RS5,RS6,RS7 Sportback,S3,S4,S5,S6,S7,S8,SQ5,SQ6 Sportback,SQ8 Sportback,TT,Ttrs,Tts|S:Q3,Q5,Q7,Q8\nAvelloz|O:AZ\nBaby|M:Buggy\nBajaj|O:Champion,Classic,Dominar,Pulsar\nBEE|O:Bee,Monaco\nBenelli|O:Tnt,Tre\nBeta|O:MX-50\nBimota|O:DB4,DB5R,DB6 Delirio,DB6R Delirio,DB7,Mantra,SBR8,Tesi\nBMW|M:116iA,118i,118iA,120i,120iA,125i,130i,130iA,135iA,218i Gran,220i,225i Active,316,316i,318Ti,318i,318iA,318iS,320i,320iA,323Ci,323CiA,323Ti Compact,323TiA Compact,323i,323iA,325i,325iA,328i,328iA,330Ci,330CiA,330e,330i,330iA,335i,335iA,420i,428i,430i,435iA,520i,525i,528i,528iA,530e,530i,535i,535iA,540i,540iA,540iTA,545iA,550iA,640i Gran,645Ci,645iA,650Ci,650i Gran,650iA,730i,730iA,735i,740i,740iA,740iL Ila,740iLA Protection,745Le,745iA,750i,750iA,750iL,750iLA,760iL,840Ci,840CiA,850CSi,850Ci Cia,850i,I3,I4,I5,I7,I8,M1,M140i,M2,M235i,M240i,M3,M340i,M4,M440i,M5,M6,M760Li,M8 Gran,M850i,Z3,Z4,Z8,iX|S:X1,X2,X3,X4,X5,X6,X7\nBrandy|O:Elegant,Fosti,Pista,Turbo,Zanella\nBrava|O:YB\nBRM|M:Buggy\nBRP|O:can-am\nBuell|O:1125CR,1125R,Firebolt,Lightning,Ulysses XB12X\nBueno|O:Jbr\nBugre|M:Buggy\nBull|O:BM-S,BM-T180,Caf\u00e9 Racer,Ciclo,Eko,Gtr,Khrisma,Krc,Maxx KRC50,Now,Spirit\nbyCristo|O:Triciclo Star\nBYD|P:Dolphin|M:D1,Han,King,Seal,Sealion,Tan,eT3|S:Atto,Song,Song Plus,Yuan,Yuan Plus|K:Shark\nCAB Motors|M:Stark\nCadillac|M:Deville Eldorado,Seville\nCagiva|O:Canyon,Elefant,Gran Canyon,Mito,Navigator,Planet,Roadster,V-RAPTOR,W-16\nCaloi|O:Mobilete,Mondo\nCaoa Changan|M:AVATR11,CS75,UNI-T\nCaoa Chery|M:Arrizo,Icar|S:Tiggo\nCaoa Chery/Chery|M:Arrizo,Celer,Cielo,Face,QQ,S-18|S:Tiggo\nCBT Jipe|M:Javali\nCfmoto|O:CL,Ibex\nChana|M:Family|G:Utility|K:Cargo\nChangan|K:Mini\nChery|M:Arrizo 6|S:Tiggo 5X,Tiggo 7,Tiggo 8\nChevrolet|P:Agile,Celta,Chevette,Corsa,Onix,Prisma,Sonic,Spark|M:Astra,Bolt,Bonanza,Calibra,Camaro,Caprice,Caravan,Cavalier,Classic,Cobalt,Corvette,Cruze,Ipanema,Joy,Kadett,Lumina,Malibu,Marajo,Meriva,Monza,Omega,Onix Plus,Opala,Saturn,Silverado,Suburban,Suprema,Syclone,Tigra,Vectra,Veraneio|S:Blazer,Captiva,Equinox,Tracker,Trailblazer|G:Spacevan,Spin,Trafic,Zafira|K:A-10,A-20,C-10,C-20,Chevy,Cheynne,D-10,D-20,Montana,S10,S10 Cabine Dupla,SS10,Sierra,Sonoma\nChrysler|M:300,Caravan,Cirrus Lxi,Grand Caravan,LE Baron,Neon,PT Cruiser,Sebring,Stratus,Town,Vision\nCitro\u00ebn|P:C3|M:AIRCROSS7,AX,BX,C4,C4 Lounge,C4 Picasso,C5,C6,C8,DS3,DS4,DS5,Evasion,Grand,XM,Xantia,Xsara,ZX,\u00cb-Jumpy Cargo|S:Aircross,Basalt,C3 Aircross,C4 Cactus|G:Berlingo,Jumper,Jumpy\nCross Lander|M:CL-244,CL-330\nD2D Motors|M:Buggy\nDaelim|O:Altino,Message,VC,VF,VS,VT,VX\nDaewoo|M:Espero,Lanos,Leganza,Nubira,Prince Ace,Racer,Super Salon,Tico\nDafra|O:Adxtg,Apache,Cityclass,Citycom,Cruisym,Fiddle,Horizon,Joyride,Kansas,Laser,Maxsym,NH,Next,Nhx,Riva,Roadwin,Smart,Speed,Super,Zig\nDaihatsu|M:Applause,Charade,Cuore,Feroza,Gran Move,Terios|G:Move\nDayang|O:DY100-31,DY110-20,DY125 Sprint,DY125-18,DY125-36A,DY125-37,DY125-5,DY125-52,DY150-12,DY150-28,DY150-58 Eagle,DY200,DY250,DY50,Thor\nDayun|O:DY110-6,DY125-8,DY125T-10,DY150-7,DY150-9,DY150GY,DY150ZH,DY200ZH,DY250-2\nDenza|M:B5\nDerbi|O:Atlantis,Gpr,Predator,Red Bullet,Replicas,Senda\nDfsk|G:EC31,EC35\nDodge|M:Avenger,Intrepid,Stealth|S:Durango,Journey|K:Dakota,Ram\nDucati|O:1098,1198,1199,1299 Panigale,749,848,959 Panigale,996,998,999,999R Xerox,Desert,Desmosedici,Diavel,Hypermotard,Hyperstrada,Monster,Multistrada,Panigale,SS,ST-2,ST-4,Scrambler,Sportclassic,Streetfighter,Super,Xdiavel\nEffa|M:M-100|G:V25|K:K01,K02,Plutus,Start,Ulc,V21,V22\nEmme|P:Mirage|O:One\nEngesa|M:Engesa\nEnvemo|M:Camper|G:Master\nFerrari|M:12Cilinrdri,296,348,355,360,456,458 Speciale,488,550 Maranello,575M Maranello,612 Scaglietti,812,849 Testarossa,Amalfi,California,F12,F430,F458,F599,F8,FF,GTC4 Lusso,Portofino,Purosangue,Roma,SF\nFever|M:Nextem FN1000|O:FR110,FR150 Frigo,FR250\nFiat|P:500,Argo,Cinquecento,Mobi,Palio,Uno|M:147,500e,Brava,Bravo,Cronos,Duna,E-Scudo,Elba,Freemont,Grand Siena,Idea,Linea,Marea,Oggi,Panorama,Premio,Punto,Siena,Stilo,Tempra,Tipo|S:Fastback,Fastback Abarth,Pulse,Pulse Abarth|G:Doblo,Ducato,Ducato-10,Ducato-15,Ducato-8,Fiorino,Scudo|K:Strada,Titano,Toro\nFibravan|M:Buggy\nFord|P:Fiesta|M:Aspire,Belina,Club,Contour,Corcel,Crown Victoria,Del Rey,Escort,F-100,F-150,Focus,Furglaine,Fusion,Ka,Mondeo,Mustang,Probe,Royale,Taurus,Thunderbird,Verona,Versailles,Windstar|S:Bronco,Bronco Sport,Ecosport,Edge,Expedition,Explorer,Territory|G:Aerostar Mini-Van,E-TRANSIT,Ibiza,Transit|K:Courier,F-1000,F-250,Maverick,Pampa,Ranger,Ranger Raptor\nFoton|M:Aumark,Etoano Pro,Eview,Minitruck,Tunland|G:Ewonder\nFOX|O:150T-3 Adventure,250T-10\nFusco Motosegura|O:Carga,Wit\nFyber|M:Buggy\nFYM|O:FY100-10A,FY125-19,FY125-20 Sachs,FY125EY-2,FY125Y-3,FY150-3,FY150T-18,FY250\nGAC|M:Aion,GS3,GS4,Hyptec\nGarinni|O:GR08T4,GR125S,GR125ST,GR125T3,GR125U,GR125Z,GR150P GR150PI,GR150ST,GR150T3 GR150TI,GR150U,GR250T3\nGas Gas|O:EC,MC,Pampera,TX,Txt\nGeely|M:EC7,EX2,EX5,GC2\nGreat Wall|M:Hover\nGreen|O:Easy,Runner,Safari,Sport\nGurgel|M:BR-800 Supermini,Carajas\nGWM|M:Ora,Poer,Tank,Wey|S:Haval\nHafei|G:Towner\nHaobao|O:HB,HB110-3,HB125-9 Fearfulspeed,HB150,HB150-T\nHaojue|G:Master|O:Burgman,Chopper,DK,DL,DR,Lindy,NK,Nex,VR\nHarley-Davidson|O:Blackline,Breakout,Cvo,Deuce,Dyna,EG,Electra Glide,Fat,Flhtcu Ultra,Flhtcui Ultra,Heritage,Low Rider,Night,Nightster,Pan America,Road,Softail,Sportster,Springer Screaming,Street,Switchback,Ultra,V-ROD,XL,XR\nHartford|O:Legion\nHero|O:Ankur,Puch,Stream\nHisun|O:Forge,Tactic\nHitech Electric|M:E-Work,E.co|G:Delivery\nHonda|P:Fit|M:Accord,City,Civic,Prelude|S:CR-V,HR-V,Passport,WR-V,ZR-V|G:Odyssey|O:Adv,America Classic,Biz,CB,CB1300 Super,CG,CH,CR,Cbr,Cbx,Crf,Ctx,Dominator,Elite,Forza,Gold,Lead,Magna,NC,NX,NX-4 Falcon,Nxr,Pcx,Pop,SH,Sahara,Shadow,Super,Trx,VT,Valkyrie,Vfr,Vtx,X-ADV,XL,XR,Xlr,Xlx,Xre\nHusaberg|O:FE\nHusqvarna|O:701,CR,FC,FE,Husqy,Norden,SM,Smr,Svartpilen,TC,TE,Vitpilen,WR,Wre\nHyundai|P:Atos Prime,HB20,HB20X,I20|M:Accent,Azera,Elantra,Equus,Excel,Galloper,Genesis,HB20S,I30,Ioniq,Matrix,Palisade Signature,Porter,Santa,Scoupe,Sonata,Terracan,Trajet,Veloster,Veracruz,i30cw|S:Creta,Grand Santa,Kona,Tucson,ix35|G:H1 Starex,H100,HR\nIndian|O:Chief,Chieftain,Roadmaster,Scout\nIros|O:Action,Brave,Matrix,Moving,One,Vintage,Warrior\nIsuzu|M:Amigo,Hombre,Rodeo\nIveco|G:Daily\nJAC|M:E-J7,E-JT3.5,E-JV,E-JV12,E-JV5.5,E-JV7L,Hunter,Iev,J2,J3,J5,J6,T40,T5,T50,T6,T60,T8,T80,V260,e-JS1,e-JS4\nJaguar|M:Daimler,E-Pace,F-Pace,F-Type,I-Pace,S-Type,X-Type,XE,XF,XFR-S Supercharged,XJ,XJ-12,XJ-6,XJ-8,XJS-C,XK-8,XKR-S,Xfr Supercharged,Xjr,Xjs,Xkr\nJeep|S:Cherokee,Commander,Compass,Grand Cherokee,Renegade,Wrangler|K:Gladiator\nJetour|M:S06,T1,T2\nJiapeng Volcano|O:JP\nJinbei|G:Topic,Vkn\nJohnnypag|O:Barhog,Prostreet,Spyder\nJonny|O:Atlantic,Hype,Jonny,Meet,Naked,Orbit,Pegasus,Quick,Racer,TR,Texas\nJPX|K:Jipe Montez,Picape Montez\nKahena|O:125,250\nKasinski|P:Mirage|O:Comet,Cruise,Crz,Ero,Flash,F\u00faria,GF,GV,Magik,Midas,Motokar,Prima,RX,Seta,Soft,Super,TN,Way,Win\nKawasaki|O:Avajet,CONCOURS14,D-TRACKER,ER-5,ER-6N,Eliminator,KX,KZ,Klx,Maxi,Ninja,Versys,Versys-X,Voyager,Vulcan,Z-800,ZX-14,Zzr\nKia Motors|P:Picanto,Soul|M:Besta,Cadenza,Carens,Cerato,Clarus,EV5 Land,EV9,Grand Carnival,Magentis,Mohave,Niro,Opirus,Optima,Quoris,Rio,Sephia,Shuma,Stinger|S:Sorento,Sportage,Stonic|G:Bongo,Carnival|K:Ceres\nKTM|O:1190,690 Enduro,890,990,Adventure,Duke,EXC-F,Exc,LC4,SC,SX,SX-F,Super Adventure,Superduke,Supermoto,Sxc\nKymco|O:AK,Agility,Djw,Downtown,M\u00b4boy,People,Zing\nL'Aquila|P:Palio|O:Akros,Ergon,Nix\nLada|M:Laika,Niva,Samara\nLamborghini|M:Aventador,Gallardo,Huracan,Revuelto|S:Urus\nLand Rover|M:Def,Defe,Disc,Discov,Discovery3,Discovery4,Freelander2,New Range|S:Defender,Discovery,Freelander,Range Rover\nLandum|O:Moto Truck\nLavrale|O:Quattor\nLeapmotor|M:B10|K:C10\nLerivo|O:Formig\u00e3o\nLeva|O:EG1,ES1\nLexus|M:CT200h,ES-300,ES-330,ES-350,ES300h,GS,IS-250,IS-300,LS,LS-460L,NX-200t,NX-300,NX-300h,NX-350h,NX-450h+,RX,RX-350,RX-450h,RX-500h,RZ-500e,SC,UX-250h,UX-300h\nLifan|M:320,530,620 Talent,Foison,X60,X80|O:Cargo\nLobini|G:H1\nLon-V|O:Deluxe,E Retr\u00f4,LY\nLotus|M:Elan,Esprit\nMagr\u00e3o Triciclos|O:MT7 Chopper\nMahindra|S:Suv|K:PIK-UP,Scorpio\nMalaguti|O:Ciak Master,Spider Maxgt\nMaserati|M:222,228,3200,430,Ghibli,Grancabrio,Gransport,Granturismo,MC20,Quattroporte,Shamal,Spyder|S:Levante\nMazda|M:323,626,929,MX-3,MX-5,Millenia,Mpv,Navajo,Proteg\u00e9,RX|K:B-2500,B2200\nMclaren|M:540C,570S,600LT,720S,750S,765LT,Artura,GT,Gts\nMercedes-Benz|M:190-E,230-E,260-E,300-D,300-E,300-SE,300-SL,300-TE,500-E,500-SEC,500-SEL,560-SEL,A-35,A-45,C-180,C-200,C-220 Classic,C-230,C-240,C-250,C-280,C-300,C-320,C-350,C-36,C-43,C-450,C-55,C-63,CL-500,CL-600,CL-63,CL-65,CLA-180,CLA-200,CLA-250,CLA-35,CLA-45,CLK-230,CLK-320,CLK-350 Avant,CLK-430,CLK-500,CLK-55,CLS-350,CLS-400,CLS-450,CLS-500,CLS-53,CLS-55 Kompressor,CLS-63,Classe,Classic,Clc,E-190,E-200 Classic,E-220 Classic,E-230,E-240,E-250,E-280,E-300,E-320,E-350,E-400,E-420,E-43,E-430,E-500,E-53,E-55,E-63,Eqa,Eqb,Eqc,Eqe,G-55 Kompressor,G-63,GL-350,GL-500,GL-63,GLC-300,GLC-43,GLC-63,GLE-350,GLE-400,GLE-43,GLE-450,GLE-53,GLE-63,GLK-220,GLK-280,GLK-300,GLS-350,GLS-450,GLS-500,GLS-63,GT,ML-230,ML-320,ML-350,ML-430,ML-500,ML-55,ML-63,S-320,S-400,S-420 Classic,S-500,S-500L,S-55,S-560L,S-600,S-63,S-65,SE-500,SL-280 Classic,SL-320,SL-350,SL-400,SL-500,SL-55,SL-600,SL-63,SL-65,SLC-300,SLC-43,SLK-200 Kompressor,SLK-230,SLK-250,SLK-300,SLK-320,SLK-350,SLK-55,SLS-63|S:Eqs,Gla,Glb,Glc|G:Esprinter,Sprin,Sprinter,Vito|K:180-D\nMercury|M:Mystique,Sable\nMG|M:550,Cyberster,MG6,S5\nMini|M:Aceman,Cooper,One\nMitsubishi|P:Mirage|M:3000,ASX-S,Airtrek,Colt,Diamant,Eclipse,Expo,Galant,Grandis,Lancer,Space|S:Asx,Eclipse Cross,Montero,Outlander,Pajero|G:L300|K:L200,L200 Triton,Triton\nMiura|K:Picape BG-Truck\nMiza|O:Drago,Easy,Fast,Skema,Vite\nMob\u00edlli|O:GW12,GW12B\nMoto Guzzi|O:California,Quota,V11\nMotocar|O:MCA-200,MCA-250,MCF-200,MCF-250,MTX-150\nMotomorini|O:Calibro,Seiemmezzo,X-CAPE\nMotorino|O:Bacio,Bellavita,Cappuccino,Cappuccino150cc,Custom,Lambreta,Star,Velocette,Velvet,Vitesse,Volti\nMRX|O:230R\nMv Agusta|O:Brutale,F3,F4,F4-1000,Rivale\nMVK|P:Fox|O:Big Force,Black,Brx,Dual,Fenix,GO,Halley,Jurasic,MA,Simba,Sport,Spyder,Street,Super,Xrt\nNeta|M:Aya\nNissan|P:March|M:350Z,AX,Altima,GT-R,Infinit,Kait,King-Cab,Leaf,Livina,Maxima,Micra,NX,Primera,Quest,SX,Sentra,Stanza,Terrano,Tiida,Versa,ZX|S:Kicks,Murano,Pathfinder,X-TRAIL,Xterra|K:D-21,Frontier\nNIU|O:Nqi,Uqi\nOmoda|M:E5\nOrca|O:AX,JC,QM\nPegassi|O:BR\nPeugeot|P:206,207,208|M:106,205,306,307,308,405,406,407,408,504,505,508,605,607,806,807,E-Expert Cargo,Rcz,e-2008,e-208|S:2008,3008,5008 Griffe|G:Boxer,Expert,Partner|K:Hoggar|O:Buxy,Elyseo,Scoot,Speedake,Speedfight,Squab,Trekker,Vivacity,Zenith\nPiaggio|O:Ap\u00e9,Berverly,Beverly,E-Cargo,E-Passenger,Liberty,Liberty150,MP3,Nrg,Runner,Vespa,Zip\nPlymouth|M:Gran Voyager,Sundance\nPolaris|K:Ranger|O:General,Rzr,Sportsman,Xvr Xpedition\nPontiac|M:Trans-AM,Trans-Sport\nPorsche|M:718,911,928,968,Boxster,Cayene Black,Cayman,Panamera,Taycan|S:Cayenne,Macan\nRAM|K:1500,2500,3500,Classic,Dakota,Rampage\nRegal Raptor|O:Black,Fenix,Ghost,Spyder\nRely|M:Link\nRenault|P:Clio,Kwid,Sandero,Twingo|M:19,21,Boreal,Express,Fluence,Koleos E-Tech,Laguna,Logan,Megane,Safrane,Sc\u00e9nic,Stepway,Symbol,Zoe|S:Captur,Duster,Kardian|G:Kangoo,Kangoo Express,Master,Trafic|K:Duster Oroch,Oroch\nRiguete|O:TRC-01\nRolls-Royce|M:Cullinan,Dawn,Ghost,Phantom,Wraith\nRover|M:Mini Cooper\nRoyal Enfield|O:Bullet,Classic,Continental,Guerrilla,Himalayan,Hunter,Interceptor,Meteor,Scram,Shotgun,Super Meteor\nSaab|K:9000\nSanyang|O:Enjoy,Husky,Passing\nSaturn|M:SL-2\nSBM|O:150,250,400,600,Denver,Flash,Iron,Storm,Titanium\nSeat|P:Cordoba,Ibiza|M:Inca\nSeres|M:Seres\nShineray|M:SY1020,SY6370,SY6390,Tlux|G:X30|K:Dtruck|O:50-Q,Bolt,Free,Iron,Jef,PT-02,PT-03,PT-04 Pro,Retro,SE-1,SE-2,SHE-S,Shi,Sun,Super Smart,Titanium,Urban,Worker,XY\nSiamoto|O:Scross\nsmart|M:Fortwo\nSsangyong|M:Actyon,Chairman,Istana,Korando,Kyron,Musso,Rexton,Tivoli,Xlv\nSubaru|M:Impreza,Legacy,Svx,Vivio,XV|S:Forester,Outback,Tribeca\nSundown|P:Palio|O:Akros,Ergon,Fifty,Future,Hunter,Max,Pgo Speed,Stx,Super Fifty,Vblade,Web\nSuper Soco|O:Change Urban,Cux,TC,Tsx\nSuzuki|M:Baleno,Ignis,SX4,Samurai,Sidekick,Swift,Wagon,e-Vitara|S:Grand Vitara,Jimny,S-CROSS,Vitara|G:Super Carry|O:AN,Address,Boulevard,Burgman,DL,DR,DR-Z400E,EN,Freewind,GS,GSX-8R,GSX-8S,GSX-R,GSX-S,Gladius,Gsr,Gsx,Inazuma,Intruder,Katana,LT,Lets,Marauder,RF,RM,Rmx,SV650,Savage,TL,VX\nSWM|O:Shi\nTAC|M:Stark\nTargos|O:Trimoto\nTiger|O:Trciclo,Triciclo\nToyota|P:Etios,Yaris|M:Avalon,Camry,Celica,Corolla,Corona,MR-2,Paseo,Previa,Prius,Supra|S:Corolla Cross,Hilux SW4,Land Cruiser,RAV4,SW4,bZ4X|G:Hiace|K:Hilux,T-100\nTraxx|O:CJ,Dunna,JH,JL,JS,Sky,Work\nTriumph|S:Tracker|O:Adventurer,Bonneville,Daytona,Legend,Rocket,Scrambler,Speed,Sprint,Street,TT,Thruxton,Thunderbird,Tiger,Trident,Trophy\nTroller|M:Pantanal,RF Esport,T-4\nVentane Motors|O:Milano,Roma,Vtx,Wind\nVento|K:Triton|O:Rebellian,Vthunder\nVespa|O:946 Edi\u00e7\u00e3o,Gts,Gtv,Primavera,Sprint,Sxl,Vxl\nVolkswagen|P:Crossfox,Fox,Gol,Gol Trend,Polo,Polo Track,Up!|M:Apolo,Bora,Corrado,Eos Cab,Fusca,Golf,Jetta,Jetta Variant,Logus,New Beetle,Parati,Passat,Passat Variant,Pointer,Quantum,Santana,Spacecross,Spacefox,Virtus,Voyage|S:Nivus,T-Cross,Taos,Tera,Tiguan,Touareg|G:Caravelle,Delivery Express,Eurovan,Kombi|K:Amarok,Grand Saveiro,Saveiro\nVoltz|O:EV01,EV1,Evs\nVolvo|M:440,460,850,940,960,C30,C40,C70,EC40,EX30,EX40,EX90 Twin,S40,S60,S70,S80,S90,V40,V50,V60,V70,XC\nWake|M:Cross,Street,Way\nWalk|M:Buggy Walk\nWatts|O:W-Trail,W125,W160S,W2,WS120\nWuyang|O:Jet+,Mind X50q,WY\nYamaha|O:750 Virago,Aerox Connected,Axis,BW,Crypton,DT,FZ15,FZ25,FZ6,Fazer,Fluo,Fzr,Jog,MT-01,MT-03,MT-07,MT-09,Majesty,Neo,Neos Connected,Nmax,RD,Rdz,Royal,T115 Crypton,TT-R,Tdm,Tdr,Tmax,Trx,V-MAX,WR,XJ,XJ6,XT,XV,Xjr,Xmax,Xtz,Xvs,YS,YZ,Ybr,Yfm,Yfs,Yfz,Yzf,ZR\nZeekr|M:001,7X Flagship\nZontes|O:GK";
 
-/* ================= BASE FIPE (marcas, modelos e porte) ================= */
+/* ================= BASE FIPE (marcas, modelos e porte) =================
+   Duas camadas: a compacta (~1.800 modelos-base) vem embarcada e funciona
+   sem depender de nada. A completa (~9.300 versões, com trim/motor no nome)
+   mora no Supabase — o app baixa uma vez, guarda no aparelho e usa dali em
+   diante offline. Sem Supabase configurado, a compacta segue valendo. */
 var PORTE_COD={P:'Pequeno',M:'Médio',S:'SUV',G:'Grande',K:'Pickup',O:'Moto'};
-var FIPE=(function(){
+function semAcento(s){
+  return String(s).normalize?String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,''):String(s);
+}
+function construirIndice(lista){
+  lista.forEach(function(f){f.busca=semAcento((f.modelo+' '+f.marca).toLowerCase())});
+  return lista;
+}
+var FIPE_BASICO=(function(){
   var lista=[];
   FIPE_TXT.split('\n').forEach(function(linha){
     var partes=linha.split('|'),marca=partes[0];
@@ -3343,16 +3385,75 @@ var FIPE=(function(){
       var cod=grupo.charAt(0),porte=PORTE_COD[cod]||'Médio';
       grupo.slice(2).split(',').forEach(function(modelo){
         if(!modelo)return;
-        lista.push({marca:marca,modelo:modelo,porte:porte,
-          busca:semAcento((marca+' '+modelo).toLowerCase())});
+        lista.push({marca:marca,modelo:modelo,porte:porte});
       });
     });
   });
-  return lista;
+  return construirIndice(lista);
 })();
-function semAcento(s){
-  return String(s).normalize?String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,''):String(s);
+var FIPE=FIPE_BASICO,fipeCompleta=false;
+
+/* ---------- base completa: cache local + Supabase ---------- */
+var FIPE_CACHE_KEY='tjet_fipe_completa_v1';
+function carregarFipeCache(){
+  try{
+    var bruto=localStorage.getItem(FIPE_CACHE_KEY);
+    if(!bruto)return false;
+    var d=JSON.parse(bruto);
+    if(!d||!d.lista||!d.lista.length)return false;
+    FIPE=construirIndice(d.lista);fipeCompleta=true;
+    return true;
+  }catch(e){return false}
 }
+function salvarFipeCache(lista){
+  try{
+    localStorage.setItem(FIPE_CACHE_KEY,JSON.stringify({
+      lista:lista.map(function(f){return {marca:f.marca,modelo:f.modelo,porte:f.porte}}),
+      quando:isoAgora()
+    }));
+  }catch(e){registrarErro('Cache da base de veículos: '+e.message,'fipe')}
+}
+function baixarFipeDaNuvem(comAviso){
+  if(!nuvemPronta()){
+    if(comAviso)toast('Nuvem desligada','A base completa mora no Supabase. Configure em Admin › Nuvem.','warn');
+    return Promise.resolve(false);
+  }
+  var lbl=document.getElementById('fipeUpdateLbl');
+  return carregarSupabase().then(function(sb){
+    var lista=[],de=0,tam=1000;
+    function pagina(){
+      return sb.from('tjet_veiculos_fipe').select('marca,modelo,porte').range(de,de+tam-1)
+        .then(function(r){
+          if(r.error)throw new Error(r.error.message);
+          var linhas=r.data||[];
+          lista=lista.concat(linhas);
+          if(lbl)lbl.textContent='Baixando… '+lista.length.toLocaleString('pt-BR');
+          if(linhas.length===tam){de+=tam;return pagina()}
+        });
+    }
+    return pagina().then(function(){return lista});
+  }).then(function(lista){
+    if(!lista.length)throw new Error('tabela_vazia');
+    salvarFipeCache(lista);
+    FIPE=construirIndice(lista);fipeCompleta=true;
+    if(lbl)lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · atualizado agora';
+    if(comAviso)toast('Base atualizada',FIPE.length.toLocaleString('pt-BR')+' modelos carregados da nuvem.','ok');
+    return true;
+  }).catch(function(e){
+    var m=(e&&e.message)||'';
+    registrarErro('Base de veículos: '+m,'fipe');
+    if(lbl)lbl.textContent=(fipeCompleta?FIPE.length.toLocaleString('pt-BR')+' modelos (nuvem)':FIPE_BASICO.length.toLocaleString('pt-BR')+' modelos (embarcada)');
+    if(comAviso)toast('Não consegui atualizar',
+      m==='tabela_vazia'?'A tabela tjet_veiculos_fipe está vazia. Rode o SQL de instalação.':
+      /does not exist/i.test(m)?'A tabela tjet_veiculos_fipe não existe. Rode o SQL de instalação.':
+      'Sem internet no momento. Continuando com a base atual.','warn');
+    return false;
+  });
+}
+/* usa o cache na hora (instantâneo, sem rede) — o primeiro download da nuvem,
+   se for o caso, acontece mais adiante no boot (ver js/nav.js), depois que
+   todos os módulos (inclusive o da nuvem) já estiverem carregados */
+carregarFipeCache();
 function buscarModelos(q,limite){
   q=semAcento(String(q||'').trim().toLowerCase());
   if(q.length<2)return [];
@@ -3388,9 +3489,12 @@ modeloInput.addEventListener('input',function(){
   marcaSelecionada='';modeloSelecionado='';
   var achou=buscarModelos(modeloInput.value,10);
   if(!achou.length){modeloSuggest.classList.remove('show');return}
+  /* uma linha só: "Modelo completo Marca" — o modelo é o que identifica o
+     carro na hora, a marca é só uma confirmação ao lado, discreta */
   modeloSuggest.innerHTML=achou.map(function(f,i){
-    return '<div class="sug-item" data-fi="'+i+'"><b>'+esc(f.modelo)+'</b>'+
-      '<span>'+esc(f.marca)+' · '+esc(f.porte)+'</span></div>';
+    return '<div class="sug-item" data-fi="'+i+'">'+
+      '<b>'+esc(f.modelo+' '+f.marca)+'</b>'+
+      '<span class="sug-porte">'+esc(f.porte)+'</span></div>';
   }).join('');
   modeloSuggest.dataset.res=JSON.stringify(achou);
   modeloSuggest.classList.add('show');
@@ -3404,13 +3508,13 @@ modeloSuggest.addEventListener('click',function(e){
 });
 function aplicarModeloFipe(f){
   marcaSelecionada=f.marca;modeloSelecionado=f.modelo;
-  modeloInput.value=f.marca+' '+f.modelo;
+  modeloInput.value=f.modelo+' '+f.marca;
   var chips=document.getElementById('categoriaChips');
   if(chips&&f.porte){
     selecionarChip(chips,f.porte);
     if(typeof reprecificarSelecionados==='function')reprecificarSelecionados();
   }
-  toast('Porte aplicado',f.marca+' '+f.modelo+' · '+f.porte,'ok');
+  toast('Porte aplicado',f.modelo+' · '+f.porte,'ok');
 }
 document.addEventListener('click',function(e){
   if(!e.target.closest('#modeloInput'))modeloSuggest.classList.remove('show');
@@ -3419,10 +3523,13 @@ document.getElementById('fipeUpdateBtn').addEventListener('click',function(e){
   e.preventDefault();
   var lbl=document.getElementById('fipeUpdateLbl');
   lbl.textContent='Verificando…';
-  setTimeout(function(){
-    lbl.textContent=FIPE.length.toLocaleString('pt-BR')+' modelos · base FIPE embarcada';
-  },700);
+  seguro('fipe-update',function(){baixarFipeDaNuvem(true)});
 });
+/* rótulo inicial: diz de onde veio a lista que está em uso agora */
+(function(){
+  var lbl=document.getElementById('fipeUpdateLbl');
+  if(lbl)lbl.textContent=(fipeCompleta?FIPE.length.toLocaleString('pt-BR')+' modelos (nuvem)':FIPE_BASICO.length.toLocaleString('pt-BR')+' modelos (embarcada)');
+})();
 
 
 /* ================= MODAL DE HISTÓRICO ================= */
@@ -4714,7 +4821,7 @@ function confirmarEntrada(){
   }
 
   /* veículo */
-  var cor=document.querySelector('#corChips .cor-quad.on'),
+  var cor=document.querySelector('#corChips .cor-bola.on'),
       corNome=cor&&cor.dataset.cor!=='outra'?cor.dataset.cor:(document.getElementById('corOutraInput').value.trim()||'Não informada');
   var veic=veiculoPorPlaca(placa);
   var marca=marcaSelecionada||modeloTxt.split(' ')[0]||'',
@@ -9653,6 +9760,10 @@ renderPagamentosLista();
 setInterval(function(){if(document.getElementById('view-home').classList.contains('on'))renderHome()},30000);
 seguro('nuvem-boot',iniciarNuvem);
 if(configPerdida)setTimeout(function(){seguro('config-perdida',avisarConfigPerdida)},2200);
+/* primeira vez que abre com a nuvem configurada e nunca baixou a base completa
+   de veículos: busca uma vez, em silêncio, sem travar a tela nem avisar nada
+   se falhar — a base embarcada segue valendo até dar certo. */
+if(!fipeCompleta&&nuvemPronta())setTimeout(function(){seguro('fipe-boot',function(){baixarFipeDaNuvem(false)})},2800);
 bootOk=true;   /* daqui pra frente, erro é pontual e não derruba a inicialização */
 
 </script>
