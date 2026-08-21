@@ -873,7 +873,6 @@ button:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 /* ============ PÁTIO v2 ============ */
 .pcarro{cursor:grab;touch-action:pan-y}
 .pcarro:active{cursor:grabbing}
-.pcarro.arrastando{opacity:.55}
 .pcarro-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
 .pcarro-bar{height:4px;background:var(--painel2);border-radius:100px;margin-top:10px;overflow:hidden}
 .pcarro-bar i{display:block;height:100%;background:var(--azul);border-radius:100px;transition:width .5s}
@@ -1406,47 +1405,66 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
 .pcarro-obs span{font-weight:500}
 
 /* ===== ARRASTAR E SOLTAR NO PÁTIO =====
-   O objetivo é o usuário VER o card sendo levado e os outros abrindo espaço,
-   em vez de tudo trocar de posição de uma vez. */
+   A ideia: o card carregado passa POR CIMA dos outros, e os parados cedem
+   espaço girando levemente no eixo horizontal — como página de livro virando,
+   não como bloco pulando de posição. */
 
-/* No modo fallback (usado em boa parte dos celulares) existe um clone que
-   segue o dedo: esse ganha o visual de "card na mão". */
+/* a lista ganha perspectiva: sem isso o giro dos cards fica chapado,
+   sem noção de profundidade */
+#filaPatio{perspective:1400px;perspective-origin:50% 50%}
+
+/* o card na mão: sobe de verdade (translateZ), inclina e projeta sombra
+   longa — fica claro que está acima do plano dos outros */
 .pcarro.arrastando{
-  opacity:.97 !important;
-  transform:scale(1.03) rotate(-.6deg);
-  box-shadow:0 22px 46px rgba(2,10,22,.5),0 0 0 1px color-mix(in srgb,var(--teal) 45%,transparent);
+  opacity:1 !important;
+  transform:translateZ(60px) scale(1.04) rotate(-1.2deg) !important;
+  box-shadow:0 30px 60px -12px rgba(2,10,22,.65),
+             0 12px 24px -8px rgba(2,10,22,.5),
+             0 0 0 1px color-mix(in srgb,var(--teal) 50%,transparent);
   cursor:grabbing;
-  z-index:40;
+  z-index:100;
 }
-/* O card que permanece na lista marca o lugar de destino: vira uma silhueta
-   tracejada que desliza junto com os outros, mostrando onde vai encaixar. */
+
+/* o vão de destino: silhueta tracejada, recuada no eixo Z — parece o fundo
+   da página, esperando o card pousar */
 .pcarro.sortable-ghost{
   opacity:1 !important;
+  transform:translateZ(-30px) scale(.985) !important;
   background:color-mix(in srgb,var(--teal) 8%,transparent) !important;
   border:1.5px dashed color-mix(in srgb,var(--teal) 60%,var(--linha)) !important;
   border-left:3px solid color-mix(in srgb,var(--teal) 60%,var(--linha)) !important;
-  box-shadow:inset 0 0 22px color-mix(in srgb,var(--teal) 10%,transparent);
+  box-shadow:inset 0 0 26px color-mix(in srgb,var(--teal) 12%,transparent);
 }
-/* o conteúdo some quase por completo: o que importa ali é o vão, não repetir
-   a informação que já está sendo carregada na mão */
-.pcarro.sortable-ghost>*{opacity:.15;transition:opacity .2s}
+.pcarro.sortable-ghost>*{opacity:.14;transition:opacity .2s}
 
-/* os cards que não estão sendo arrastados deslizam para ceder espaço */
+/* os parados: giram no eixo X ao ceder espaço — o topo inclina para trás
+   enquanto o card passa, exatamente como uma página sendo virada */
 .reordenando .pcarro:not(.arrastando):not(.sortable-ghost){
-  transition:transform .26s cubic-bezier(.22,.68,0,1);
+  transition:transform .85s cubic-bezier(.34,.94,.28,1);   /* acompanha o animation:850 do JS */
+  transform-origin:50% 0;
+  will-change:transform;
 }
-.pcarro{transition:transform .26s cubic-bezier(.22,.68,0,1),box-shadow .2s,opacity .2s}
+.reordenando .pcarro:not(.arrastando):not(.sortable-ghost):hover{
+  transform:rotateX(2.5deg);
+}
+.pcarro{
+  transition:transform .85s cubic-bezier(.34,.94,.28,1),box-shadow .22s,opacity .22s;
+  transform-origin:50% 0;
+}
 
-/* pulso rápido no card recém-solto: confirma onde ele parou */
-.pcarro.recem-movido{animation:assentou .9s cubic-bezier(.22,.68,0,1)}
+/* pulso ao pousar: confirma onde o card parou */
+.pcarro.recem-movido{animation:assentou 1.1s cubic-bezier(.22,.68,0,1)}
 @keyframes assentou{
   0%  {box-shadow:0 0 0 0 color-mix(in srgb,var(--teal) 55%,transparent)}
   30% {box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 30%,transparent)}
   100%{box-shadow:0 0 0 0 transparent}
 }
+
 /* quem prefere menos movimento na tela não é obrigado a ver nada disso */
 @media(prefers-reduced-motion:reduce){
-  .pcarro,.pcarro.arrastando,.reordenando .pcarro{transition:none;transform:none}
+  #filaPatio{perspective:none}
+  .pcarro,.pcarro.arrastando,.pcarro.sortable-ghost,
+  .reordenando .pcarro{transition:none;transform:none !important}
   .pcarro.recem-movido{animation:none}
 }
 
@@ -1584,7 +1602,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <h2>Bom trabalho hoje</h2>
         <div class="hello-linha">
           <p id="homeData">—</p>
-          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.9.0</button>
+          <button class="versao-pill" id="homeVersao" title="Ver diagnóstico do sistema">v3.9.2</button>
           <span class="sync-pill off" id="syncPill">só neste aparelho</span>
         </div>
       </div>
@@ -1685,7 +1703,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         </div>
       </div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.2</span></span></div>
     </div>
 
     <div class="view" id="view-entrada">
@@ -1881,7 +1899,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       </div>
 
       <button class="entrar-btn" id="entrarBtn">Confirmar entrada</button>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.2</span></span></div>
     </div>
 
     <div class="view" id="view-patio">
@@ -1916,7 +1934,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
       <div class="patio-filtros" id="patioFiltros"></div>
       <div id="filaPatio"></div>
 
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.2</span></span></div>
     </div>
 
     <div class="view" id="view-clientes">
@@ -1931,7 +1949,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
         <input type="text" id="clienteBuscaInput" placeholder="Buscar por nome ou placa">
       </div>
       <div id="clientesLista"></div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.2</span></span></div>
     </div>
 
     <div class="view" id="view-pagamentos">
@@ -1945,7 +1963,7 @@ body.modo-publico>.app,body.modo-publico>.tabbar,body.modo-publico>.sidebar{disp
           <button id="novaFormaAddBtn">Adicionar</button>
         </div>
       </div>
-      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.0</span></span></div>
+      <div class="foot"><span>T-JET SISTEMA · <span class="versao-app">v3.9.2</span></span></div>
     </div>
 
     <div class="view" id="view-indicadores">
@@ -2772,8 +2790,8 @@ document.getElementById('entrarBtn').addEventListener('click',function(){
 });
 
 /* ================= VERSÃO E BLINDAGEM ================= */
-var TJET_VERSAO='3.9.0';
-var TJET_BUILD='20/08/2026 21:14';   /* preenchido pelo patch.py na montagem, com data e hora reais */
+var TJET_VERSAO='3.9.2';
+var TJET_BUILD='21/08/2026 11:29';   /* preenchido pelo patch.py na montagem, com data e hora reais */
 var errosApp=[];
 
 /* Um erro solto no meio do script derrubava tudo que vinha depois.
@@ -3810,10 +3828,11 @@ var arrastandoAgora=false,sortablePatio=null;
 function ligarArraste(){
   if(sortablePatio||typeof Sortable==='undefined')return false;
   sortablePatio=new Sortable(filaPatio,{
-    /* animação mais longa e com curva de saída suave: dá tempo de o olho
-       acompanhar os outros cards abrindo espaço e se acomodando */
-    animation:260,
-    easing:'cubic-bezier(.22,.68,0,1)',
+    /* 850ms: mais devagar que o padrão da biblioteca, dá tempo real de
+       acompanhar o card virando por cima dos outros — ajustado com o Allan
+       comparando 480/620/800ms lado a lado antes de fechar neste valor. */
+    animation:850,
+    easing:'cubic-bezier(.34,.94,.28,1)',
     delay:170,delayOnTouchOnly:true,touchStartThreshold:6,
     filter:'button,.prisma-chip',preventOnFilter:false,
     ghostClass:'sortable-ghost',chosenClass:'sortable-chosen',dragClass:'arrastando',
@@ -3946,7 +3965,7 @@ function destacarMovido(card){
   card.classList.remove('recem-movido');
   void card.offsetWidth;            /* reinicia a animação se mover de novo */
   card.classList.add('recem-movido');
-  setTimeout(function(){card.classList.remove('recem-movido')},900);
+  setTimeout(function(){card.classList.remove('recem-movido')},1100);   /* acompanha a animação de 1.1s */
 }
 
 
